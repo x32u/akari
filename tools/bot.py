@@ -115,6 +115,7 @@ class Pretend(commands.AutoShardedBot):
             owner_ids=[
                 863914425445908490,  # nick
                 461914901624127489,  # lucky
+                598125772754124823   # sin
             ],
             case_insensitive=True,
             shard_count=1,
