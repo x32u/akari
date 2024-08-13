@@ -24,8 +24,7 @@ from discord.ext.commands import (
     hybrid_command,
     hybrid_group,
     Author,
-    command,
-    is_owner,
+    command
 )
 
 from typing import List

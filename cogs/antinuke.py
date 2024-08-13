@@ -1,7 +1,5 @@
 import json
-import asyncio
 import datetime
-import humanize
 import humanfriendly
 
 from discord.abc import GuildChannel

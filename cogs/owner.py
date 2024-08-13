@@ -1,6 +1,4 @@
 import os
-import random
-import string
 import asyncio
 import datetime
 import discord
@@ -17,8 +15,6 @@ from posthog import Posthog
 posthog = Posthog(os.environ["hogkey"], "https://hog.semisol.dev")
 from tools.bot import Pretend
 from tools.helpers import PretendContext
-
-from discord.ext.commands import check
 
 
 class Owner(Cog):

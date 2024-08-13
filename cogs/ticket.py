@@ -16,7 +16,6 @@ from discord import (
     PermissionOverwrite,
     Member,
     Embed,
-    File,
     Role,
     CategoryChannel,
     TextChannel,

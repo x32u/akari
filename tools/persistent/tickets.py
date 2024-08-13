@@ -5,7 +5,7 @@ import datetime
 from discord.ext import commands 
 import chat_exporter
 import secrets
-from discord import PermissionOverwrite, Member, Embed, File, Role, CategoryChannel, TextChannel, Interaction, ButtonStyle, SelectOption
+from discord import TextChannel
 class TicketTopic(discord.ui.Modal, title="Add a ticket topic"): 
 
   name = discord.ui.TextInput(

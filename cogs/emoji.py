@@ -11,7 +11,7 @@ from discord.ext.commands import (
     command,
     bot_has_guild_permissions,
 )
-from discord import PartialEmoji, utils, Embed, Emoji, File, HTTPException
+from discord import PartialEmoji, Embed, Emoji, File, HTTPException
 
 from io import BytesIO
 from collections import defaultdict

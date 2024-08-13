@@ -11,7 +11,7 @@ from tools.bot import Pretend
 from io import BytesIO
 from typing import Literal
 from discord import Message, Embed, User, Member, File
-from discord.ext.commands import Cog, group, MissingRequiredArgument, Author, command
+from discord.ext.commands import Cog, group, Author, command
 
 
 class Lastfm(Cog):

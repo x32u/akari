@@ -9,7 +9,6 @@ import dateutil.parser
 import validators
 import os
 import aiohttp
-import secrets
 import json
 from nudenet import NudeDetector
 
@@ -20,13 +19,8 @@ from discord import TextChannel
 from playwright.async_api import async_playwright
 from io import BytesIO
 from typing import Union, Optional, Any
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 from shazamio import Shazam
 from ttapi import TikTokApi
-from tools.redis import PretendRedis
 from tools.bot import Pretend
 from tools.misc.views import Donate
 from tools.validators import ValidTime
@@ -50,16 +44,10 @@ from tools.handlers.socials.instagram import InstagramUser
 from tools.handlers.socials.weather import WeatherLocation
 from deep_translator import GoogleTranslator
 from deep_translator.exceptions import LanguageNotSupportedException
-from aiofiles import open as aio_open
 from io import BytesIO
 
 import re
 import rembg
-import sys
-import functools
-import tempfile
-from math import sqrt
-from PIL import Image
 
 
 class Color(commands.Converter):

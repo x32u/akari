@@ -1,5 +1,4 @@
 import re
-import json
 import datetime
 import google.generativeai as genai
 
@@ -17,8 +16,6 @@ from discord.ext.commands import (
     group,
     has_guild_permissions,
     bot_has_guild_permissions,
-    Author,
-    cooldown,
     max_concurrency,
     hybrid_command,
 )

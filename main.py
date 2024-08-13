@@ -1,9 +1,4 @@
-import uwuify
-import discord 
-import datetime
-import aiohttp
-import secrets
-import asyncio
+import discord
 from tools.bot import Pretend 
 from tools.helpers import PretendContext
 

@@ -1,8 +1,5 @@
 import aiohttp
-import re
 import json
-import string
-import random
 
 from .music import Music
 from .debug import Debug

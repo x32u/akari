@@ -1,10 +1,7 @@
-import os
-import psutil
 import discord
 
 from tools.bot import Pretend
 from tools.helpers import PretendContext
-from tools.validators import ValidCommand
 from io import BytesIO
 
 from discord import User, Embed, __version__, utils, Permissions

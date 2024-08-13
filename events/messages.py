@@ -3,8 +3,6 @@ import orjson
 import aiohttp
 import asyncio
 import datetime
-import discord
-import contextlib
 
 from collections import defaultdict
 from bs4 import BeautifulSoup
@@ -13,7 +11,7 @@ from typing import Optional
 from discord.ui import View, Button
 from discord.ext.commands import Cog, CooldownMapping, BucketType
 
-from discord import AllowedMentions, Message, MessageType, File, Embed, Member, Forbidden
+from discord import AllowedMentions, Message, MessageType, File, Embed
 
 from tools.bot import Pretend
 from tools.exceptions import ApiError

@@ -1,4 +1,3 @@
-import json
 import asyncio
 import aiohttp
 import datetime
@@ -6,11 +5,11 @@ import datetime
 from typing import Optional
 from collections import defaultdict
 from discord.ext.commands import Cog
-from discord import Embed, User, Member
+from discord import User, Member
 
 from collections import defaultdict
 
-from tools.bot import Pretend, PretendContext
+from tools.bot import Pretend
 
 class Members(Cog): 
   def __init__(self, bot: Pretend): 

@@ -26,8 +26,7 @@ from discord.ext.commands import (
     command,
     group,
     CurrentChannel,
-    bot_has_guild_permissions,
-    hybrid_group,
+    bot_has_guild_permissions
 )
 from discord.abc import GuildChannel
 
