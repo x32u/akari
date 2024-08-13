@@ -90,7 +90,7 @@ class Music(Cog):
             bot=self.bot,
             host="127.0.0.1",
             port=2333,
-            password="suckdick1337",
+            password="youshallnotpass",
             spotify_client_id="f567fb50e0b94b4e8224d2960a00e3ce",
             spotify_client_secret="f4294b7b837940f996b3a4dcf5230628",
             secure=False,

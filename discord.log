@@ -1,105 +1,2067 @@
-[2024-05-03 10:33:36] [INFO    ] discord.client: logging in using static token
-[2024-05-03 10:33:38] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: b141b5c13b21ee37f7dee82e02b45912).
-[2024-05-03 10:33:43] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 88050b4ac4e90dfe7c7cf549f33cac96).
-[2024-05-03 10:33:48] [INFO    ] discord.gateway: Shard ID 2 has connected to Gateway (Session ID: 089f7f18323d59e021cbaca5d976cff5).
-[2024-05-03 10:38:10] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session b141b5c13b21ee37f7dee82e02b45912.
-[2024-05-03 11:00:39] [INFO    ] discord.gateway: Shard ID 2 has successfully RESUMED session 089f7f18323d59e021cbaca5d976cff5.
-[2024-05-03 11:18:38] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 88050b4ac4e90dfe7c7cf549f33cac96.
-[2024-05-03 11:30:03] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session b141b5c13b21ee37f7dee82e02b45912.
-[2024-05-03 11:33:29] [ERROR   ] discord.client: Ignoring exception in on_message
+[2024-08-13 05:18:16] [INFO    ] discord.client: logging in using static token
+[2024-08-13 05:19:11] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: ffb6b432c2565a5543c3609af4f3a3e0).
+[2024-08-13 05:19:11] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
-    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
-                                                  ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:33:42] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:12] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
-    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
-                                                                                                ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:33:44] [ERROR   ] discord.client: Ignoring exception in on_message
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:12] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
-    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
-                                                  ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:33:47] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:13] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
-    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
-                                                                                                ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:33:52] [ERROR   ] discord.client: Ignoring exception in on_message
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:13] [ERROR   ] discord.client: Ignoring exception in on_ready
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
-    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
-                                                  ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:34:00] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+  File "/root/AkariBot/tools/bot.py", line 401, in on_ready
+    await Music(self).start_nodes()
+  File "/root/AkariBot/cogs/music.py", line 89, in start_nodes
+    await self.pomice.create_node(
+  File "/root/miniconda3/lib/python3.12/site-packages/pomice/pool.py", line 1046, in create_node
+    await node.connect()
+  File "/root/miniconda3/lib/python3.12/site-packages/pomice/pool.py", line 496, in connect
+    raise NodeConnectionFailure(
+pomice.exceptions.NodeConnectionFailure: The connection to node 'MAIN' failed.
+[2024-08-13 05:19:14] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
-    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
-                                                                                                ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:34:09] [ERROR   ] discord.client: Ignoring exception in on_message
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:14] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
-    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
-                                                  ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:34:11] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:15] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
-    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
-                                                                                                ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:34:18] [ERROR   ] discord.client: Ignoring exception in on_message
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:16] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
-    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
-                                                  ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:34:21] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:17] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
-    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
-                                                                                                ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'id'
-[2024-05-03 11:59:14] [ERROR   ] discord.client: Ignoring exception in on_audit_log_entry_create
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:19] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 371, in on_audit_log_entry_create
-    icon_url=entry.target.display_avatar.url
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'Object' object has no attribute 'display_avatar'
-[2024-05-03 11:59:27] [INFO    ] discord.gateway: Shard ID 2 has successfully RESUMED session 089f7f18323d59e021cbaca5d976cff5.
-[2024-05-03 12:21:49] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:22] [ERROR   ] discord.client: Ignoring exception in on_message
 Traceback (most recent call last):
-  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
     await coro(*args, **kwargs)
-  File "/root/PretendBot/cogs/logging.py", line 180, in on_message_delete
-    embed.set_image(url=a[0].url)
-                        ~^^^
-IndexError: list index out of range
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:24] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:25] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:29] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:30] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:34] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:35] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:36] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:36] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:39] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:40] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:41] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:42] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:42] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:45] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:45] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:45] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:46] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:47] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:50] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:54] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:19:57] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:01] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:02] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:03] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:03] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:04] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:09] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:10] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:14] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:15] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:17] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:19] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:20] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:20] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:24] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:26] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:27] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:27] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:28] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:29] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:29] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:29] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:36] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:36] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:39] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:40] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:41] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:41] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:44] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:48] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:51] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:55] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:20:58] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:02] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:03] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:03] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:04] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:06] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:07] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:15] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:15] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:16] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:17] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:18] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
+[2024-08-13 05:21:18] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/events/messages.py", line 383, in imageonly_check
+    if await self.bot.db.fetchrow(
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/pool.py", line 601, in fetchrow
+    return await con.fetchrow(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 749, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 1925, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/asyncpg/connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 166, in prepare
+asyncpg.exceptions.UndefinedTableError: relation "imgonly" does not exist
