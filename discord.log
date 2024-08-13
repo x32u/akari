@@ -1,0 +1,105 @@
+[2024-05-03 10:33:36] [INFO    ] discord.client: logging in using static token
+[2024-05-03 10:33:38] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: b141b5c13b21ee37f7dee82e02b45912).
+[2024-05-03 10:33:43] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 88050b4ac4e90dfe7c7cf549f33cac96).
+[2024-05-03 10:33:48] [INFO    ] discord.gateway: Shard ID 2 has connected to Gateway (Session ID: 089f7f18323d59e021cbaca5d976cff5).
+[2024-05-03 10:38:10] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session b141b5c13b21ee37f7dee82e02b45912.
+[2024-05-03 11:00:39] [INFO    ] discord.gateway: Shard ID 2 has successfully RESUMED session 089f7f18323d59e021cbaca5d976cff5.
+[2024-05-03 11:18:38] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 88050b4ac4e90dfe7c7cf549f33cac96.
+[2024-05-03 11:30:03] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session b141b5c13b21ee37f7dee82e02b45912.
+[2024-05-03 11:33:29] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
+    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
+                                                  ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:33:42] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
+    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
+                                                                                                ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:33:44] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
+    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
+                                                  ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:33:47] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
+    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
+                                                                                                ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:33:52] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
+    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
+                                                  ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:34:00] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
+    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
+                                                                                                ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:34:09] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
+    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
+                                                  ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:34:11] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
+    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
+                                                                                                ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:34:18] [ERROR   ] discord.client: Ignoring exception in on_message
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/leveling.py", line 81, in on_message
+    "SELECT * FROM leveling WHERE guild_id = $1", message.guild.id
+                                                  ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:34:21] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 141, in on_message_delete
+    if record := await self.bot.db.fetchval("SELECT messages FROM logging WHERE guild_id = $1", message.guild.id):
+                                                                                                ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+[2024-05-03 11:59:14] [ERROR   ] discord.client: Ignoring exception in on_audit_log_entry_create
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 371, in on_audit_log_entry_create
+    icon_url=entry.target.display_avatar.url
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Object' object has no attribute 'display_avatar'
+[2024-05-03 11:59:27] [INFO    ] discord.gateway: Shard ID 2 has successfully RESUMED session 089f7f18323d59e021cbaca5d976cff5.
+[2024-05-03 12:21:49] [ERROR   ] discord.client: Ignoring exception in on_message_delete
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/discord/client.py", line 444, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/PretendBot/cogs/logging.py", line 180, in on_message_delete
+    embed.set_image(url=a[0].url)
+                        ~^^^
+IndexError: list index out of range
