@@ -26,7 +26,6 @@ from discord.gateway import DiscordWebSocket
 from .persistent.vm import VoiceMasterView
 from .persistent.tickets import TicketView
 from .persistent.giveaway import GiveawayView
-from .persistent.verification import VerificationView
 
 from .helpers import (
     AkariContext,
@@ -384,7 +383,6 @@ class Akari(commands.AutoShardedBot):
         self.add_view(VoiceMasterView(self, vm_results))
         self.add_view(GiveawayView())
         self.add_view(TicketView(self, True))
-        self.add_view(VerificationView())
 
     async def __chunk_guilds(self):
         for guild in self.guilds:

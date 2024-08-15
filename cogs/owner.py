@@ -275,52 +275,6 @@ class Owner(Cog):
             {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
         )
 
-    @command(name="idauthlogs", aliases=["ial"])
-    @is_owner()
-    async def idauthlogs(self, ctx: AkariContext, unique_id: str = ""):
-        """
-        Unknown
-        """
-
-        if unique_id != "":
-            verify_log = await self.bot.db.fetch(
-                "SELECT * FROM verify_logs WHERE unique_id = $1",
-                unique_id
-            )
-            if len(verify_log) <= 0:
-                return await ctx.send_warning("This iD Log Entry does not exist.")
-            embed = discord.Embed(
-            title=f"iD Log Entry - {unique_id}",
-            color=discord.Color.blue()
-            )
-            data = verify_log[0]
-            tv = data.get("time_verified")
-            milliseconds = int(tv.timestamp()) * 1000
-            timestamp = datetime.datetime.utcfromtimestamp(milliseconds / 1000)
-            discord_timestamp = discord.utils.format_dt(timestamp, style='R')
-            embed.set_author(name="iD Logs")
-            embed.add_field(name="User", value=f"<@{data.get('user_id')}> (`{data.get('user_id')}`)", inline=False)
-            embed.add_field(name="Guild", value=f"{self.bot.get_guild(data.get('guild_id')) or 'Unknown'} (`{data.get('guild_id')}`)", inline=False)
-            embed.add_field(name="Time Verified", value=f"{discord_timestamp}", inline=False)
-            embed.add_field(name="IP Address", value=f"||{data.get('ip_address')}||", inline=False)
-            embed.add_field(name="Unique ID", value=f"{data.get('unique_id')}", inline=False)
-            return await ctx.send(embed=embed)
-        verify_logs = await self.bot.db.fetch(
-            "SELECT * FROM verify_logs;"
-        )
-        if len(verify_logs) <= 0:
-            return await ctx.send_warning("There are no iD verification logs.")
-        verify_list = [
-            f"<@{obj['user_id']}> / {self.bot.get_guild(obj['guild_id']) or 'Unknown'} — ||{obj['ip_address']}|| [{obj['unique_id']}]"
-            for obj in sorted(verify_logs, key=lambda x: x.get("time_verified"), reverse=True)
-        ]
-
-        return await ctx.paginate(
-            verify_list,
-            f"iD Verification Logs:",
-            {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
-        )
-
     @command(aliases=["trace"])
     async def error(self, ctx: AkariContext, code: str):
         """

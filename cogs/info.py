@@ -134,7 +134,7 @@ class Info(Cog):
         embed = (
             Embed(
                 color=self.bot.color,
-                description=f"Premium multi-purpose discord bot made by [**The Akari Team**](https://discord.gg/Akari)\nUsed by **{sum(g.member_count for g in self.bot.guilds):,}** members in **{len(self.bot.guilds):,}** servers",
+                description=f"Premium multi-purpose discord bot made by [**The Akari Team**](https://discord.gg/akaribot)\nUsed by **{sum(g.member_count for g in self.bot.guilds):,}** members in **{len(self.bot.guilds):,}** servers",
             )
             .set_author(
                 name=self.bot.user.name, icon_url=self.bot.user.display_avatar.url
