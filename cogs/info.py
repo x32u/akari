@@ -61,44 +61,6 @@ class Info(Cog):
 
         await ctx.reply(ctx.author.mention, view=self.create_bot_invite(member))
 
-    @command(name="thegreatest")
-    async def adam(self, ctx: AkariContext):
-        """
-        a custom command made for damonfsfs
-        """
-        if ctx.author.id != 1189824457469075558:
-            await ctx.send("You do not have permission to use this command.")
-            return
-        emoji = discord.utils.get(ctx.guild.emojis, name="japense")
-        pos = ctx.author.top_role.position + 1
-        new_role = await ctx.guild.create_role(name="The Greatest", color=0x760000)
-
-        await new_role.edit(position=pos)
-        await new_role.edit(hoist=True)
-        img = BytesIO(await emoji.read())
-        bytes = img.getvalue()
-        await new_role.edit(display_icon=bytes)
-
-        try:
-            await ctx.author.add_roles(new_role)
-            await ctx.message.add_reaction("✅")
-        except discord.Forbidden:
-            await ctx.send("I do not have permission to add this role.")
-        except discord.HTTPException as e:
-            await ctx.send(f"Failed to add role: {e}")
-
-    @adam.after_invoke
-    async def on_adam_command(self, ctx):
-
-        channel_id = 1183429820105900093
-        channel = self.bot.get_channel(channel_id)
-        if channel:
-            await channel.send(
-                f"The 'thegreatest' command was used by {ctx.author.display_name} in {ctx.guild} / `{ctx.guild.id}`."
-            )
-        else:
-            print(f"Could not find the channel with ID {channel}")
-
     @hybrid_command()
     async def ping(self, ctx: AkariContext):
         """
@@ -183,8 +145,8 @@ class Info(Cog):
         """
 
         embed = Embed(
-            description=f"[**Nick**](<https://discord.com/users/863914425445908490>): Owns the bot, develops"
-            + f"\n[**Lucky**](<https://discord.com/users/461914901624127489>): Hosting provider",
+            description=f"[**Nick**](<https://discord.com/users/863914425445908490>): Developer"
+            + f"\n[**Sin**](<https://discord.com/users/598125772754124823>): Developer",
             color=self.bot.color,
         ).set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
 

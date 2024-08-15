@@ -1321,7 +1321,7 @@ async def pictures(
     """Get a random picture from a category"""
 
     path = os.path.join(
-        "./PretendImages", 
+        "/root/akari/api/images/Pfps/", 
         type.capitalize(), 
         category.capitalize()
     )
@@ -1348,7 +1348,7 @@ async def pictures(
     
         await app.cache.set(
             key,
-            f"./PretendImages/{type.capitalize()}/{category.capitalize()}/{img[:-4]}"
+            f"/root/akari/api/images/Pfps/{type.capitalize()}/{category.capitalize()}/{img[:-4]}"
         )
 
     return {

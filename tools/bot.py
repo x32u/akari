@@ -272,7 +272,7 @@ class Akari(commands.AutoShardedBot):
                 for result in results:
                     if channel := self.get_channel(result.channel_id):
                         await asyncio.sleep(0.001)
-                        directory = f"/root/AkariImages/{kind.capitalize()}"
+                        directory = f"/root/AkariBot/api/images/{kind.capitalize()}"
                         category = (
                             result.category
                             if result.category != "random"
