@@ -47,7 +47,6 @@ from .misc.tasks import (
     gw_loop,
     reminder_task,
     counter_update,
-    verify_task
 )
 
 from .handlers.embedbuilder import EmbedScript
