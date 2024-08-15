@@ -228,12 +228,12 @@ class Automod(Cog):
         if await self.bot.db.fetchrow(
             "SELECT * FROM anti_join WHERE guild_id = $1", ctx.guild.id
         ):
-            return await ctx.send_error("Mass join protection is **already** enabled")
+            return await ctx.error("Mass join protection is **already** enabled")
 
         await self.bot.db.execute(
             "INSERT INTO anti_join VALUES ($1,$2)", ctx.guild.id, 7
         )
-        return await ctx.send_success(
+        return await ctx.success(
             "Enabled **mass join** protection\nRate: **7** joins per **5** seconds allowed"
         )
 
@@ -244,12 +244,12 @@ class Automod(Cog):
         if not await self.bot.db.fetchrow(
             "SELECT * FROM anti_join WHERE guild_id = $1", ctx.guild.id
         ):
-            return await ctx.send_error("Mass join protection is **not** enabled")
+            return await ctx.error("Mass join protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM anti_join WHERE guild_id = $1", ctx.guild.id
         )
-        return await ctx.send_success("Disabled mass join protection")
+        return await ctx.success("Disabled mass join protection")
 
     @filter_joins.command(name="rate", brief="administrator")
     @has_guild_permissions(administrator=True)
@@ -262,9 +262,9 @@ class Automod(Cog):
                 "UPDATE anti_join SET rate = $1 WHERE guild_id = $2", rate, ctx.guild.id
             )
         else:
-            return await ctx.send_warning("Mass join protection is **not** enabled")
+            return await ctx.warning("Mass join protection is **not** enabled")
 
-        await ctx.send_success(
+        await ctx.success(
             f"Changed mass join rate to **{rate}** joins per **5** seconds"
         )
 
@@ -286,7 +286,7 @@ class Automod(Cog):
                 8,
                 120,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 "Anti spam is **now** enabled\nRate: **8** messages in **10 seconds**\nTimeout punishment: **2 minutes**"
             )
 
@@ -327,12 +327,12 @@ class Automod(Cog):
     async def chat_filter_spam_rate(self, ctx: AkariContext, rate: int):
         """change the limit of sending messages per 10 seconds"""
         if rate < 2:
-            return await ctx.send_warning("The rate cannot be lower than **2**")
+            return await ctx.warning("The rate cannot be lower than **2**")
 
         await self.bot.db.execute(
             "UPDATE antispam SET rate = $1 WHERE guild_id = $2", rate, ctx.guild.id
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Modified rate\nNew rate: **{rate}** messages per **10 seconds**"
         )
 
@@ -344,7 +344,7 @@ class Automod(Cog):
         await self.bot.db.execute(
             "UPDATE antispam SET timeout = $1 WHERE guild_id = $2", time, ctx.guild.id
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Modified time out punishment\nTimeout punishment: **{humanfriendly.format_timespan(time)}**"
         )
 
@@ -423,7 +423,7 @@ class Automod(Cog):
             channel = await TextChannelConverter().convert(ctx, target)
             return await self.chat_filter_spam_uwl_channel(ctx, channel)
         else:
-            return await ctx.send_warning("Available types: user, channel")
+            return await ctx.warning("Available types: user, channel")
 
     async def chat_filter_spam_uwl_user(self, ctx: AkariContext, member: NoStaff):
         """unwhitelist an user from antispam"""
@@ -434,20 +434,20 @@ class Automod(Cog):
             check = json.loads(check)
 
             if not member.id in check:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This user is **not** anti spam whitelisted"
                 )
 
             check.remove(member.id)
         else:
-            return await ctx.send_warning("This user is **not** anti spam whitelisted")
+            return await ctx.warning("This user is **not** anti spam whitelisted")
 
         await self.bot.db.execute(
             "UPDATE antispam SET users = $1 WHERE guild_id = $2",
             json.dumps(check),
             ctx.guild.id,
         )
-        return await ctx.send_success(f"Unwhitelisted {member.mention} from anti spam")
+        return await ctx.success(f"Unwhitelisted {member.mention} from anti spam")
 
     async def chat_filter_spam_uwl_channel(
         self, ctx: AkariContext, channel: TextChannel
@@ -460,13 +460,13 @@ class Automod(Cog):
             check = json.loads(check)
 
             if not channel.id in check:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This channel is **not** anti spam whitelisted"
                 )
 
             check.remove(channel.id)
         else:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This channel is **not** anti spam whitelisted"
             )
 
@@ -475,7 +475,7 @@ class Automod(Cog):
             json.dumps(check),
             ctx.guild.id,
         )
-        return await ctx.send_success(f"Unwhitelisted {channel.mention} from anti spam")
+        return await ctx.success(f"Unwhitelisted {channel.mention} from anti spam")
 
     @chat_filter_spam.command(
         name="whitelist",
@@ -496,7 +496,7 @@ class Automod(Cog):
             channel = await TextChannelConverter().convert(ctx, target)
             return await self.chat_filter_spam_wl_channel(ctx, channel)
         else:
-            return await ctx.send_warning("Available types: user, channel")
+            return await ctx.warning("Available types: user, channel")
 
     async def chat_filter_spam_wl_channel(
         self, ctx: AkariContext, channel: TextChannel
@@ -509,7 +509,7 @@ class Automod(Cog):
             check = json.loads(check)
 
             if channel.id in check:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This channel is **already** anti spam whitelisted"
                 )
 
@@ -522,7 +522,7 @@ class Automod(Cog):
             json.dumps(check),
             ctx.guild.id,
         )
-        return await ctx.send_success(f"Whitelisted {channel.mention} from anti spam")
+        return await ctx.success(f"Whitelisted {channel.mention} from anti spam")
 
     async def chat_filter_spam_wl_user(self, ctx: AkariContext, member: NoStaff):
         """whitelist an user for antispam"""
@@ -533,7 +533,7 @@ class Automod(Cog):
             check = json.loads(check)
 
             if member.id in check:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This user is **already** anti spam whitelisted"
                 )
 
@@ -546,7 +546,7 @@ class Automod(Cog):
             json.dumps(check),
             ctx.guild.id,
         )
-        return await ctx.send_success(f"Whitelisted {member.mention} from anti spam")
+        return await ctx.success(f"Whitelisted {member.mention} from anti spam")
 
     @chat_filter.group(name="invites", invoke_without_command=True)
     async def chat_filter_invites(self, ctx):
@@ -588,7 +588,7 @@ class Automod(Cog):
             await self.bot.db.execute(
                 "INSERT INTO filter VALUES ($1,$2,$3)", ctx.guild.id, "invites", mod.id
             )
-            return await ctx.send_success(f"Enabled the filter for discord invites")
+            return await ctx.success(f"Enabled the filter for discord invites")
         else:
             mod = await ctx.guild.fetch_automod_rule(check[0])
             if mod:
@@ -596,13 +596,13 @@ class Automod(Cog):
                     await mod.edit(
                         enabled=True, reason=f"invites filter enabled by {ctx.author}"
                     )
-                    return await ctx.send_success(
+                    return await ctx.success(
                         f"Enabled the filter for discord invites"
                     )
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "The filter for discord invites is **already** enabled"
                 )
-            return await ctx.send_error("The automod rule was not found")
+            return await ctx.error("The automod rule was not found")
 
     @chat_filter_invites.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -616,16 +616,16 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Invites filter is **not** enabled")
+            return await ctx.warning("Invites filter is **not** enabled")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if mod:
             await mod.delete(reason=f"invites filter disabled by {ctx.author}")
-            await ctx.send_success("Disabled the filter for discord invites")
+            await ctx.success("Disabled the filter for discord invites")
 
         else:
-            await ctx.send_error("The automod rule was not found")
+            await ctx.error("The automod rule was not found")
 
         await self.bot.db.execute(
             "DELETE FROM filter WHERE guild_id = $1 AND mode = $2",
@@ -649,17 +649,17 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Invites filter is **not** configured")
+            return await ctx.warning("Invites filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **invites filter** automod rule. Please clear it and create a new one"
             )
 
         if channel.id in mod.exempt_channel_ids:
-            return await ctx.send_error("This channel is **already** exempted")
+            return await ctx.error("This channel is **already** exempted")
 
         channels = mod.exempt_channels
         channels.append(channel)
@@ -668,7 +668,7 @@ class Automod(Cog):
             reason=f"Invites filter rule edited by {ctx.author}",
         )
 
-        await ctx.send_success(
+        await ctx.success(
             f"{channel.mention} is now **exempted** from the invites filter"
         )
 
@@ -688,17 +688,17 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Invites filter is **not** configured")
+            return await ctx.warning("Invites filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **invites filter** automod rule. Please clear it and create a new one"
             )
 
         if not channel.id in mod.exempt_channel_ids:
-            return await ctx.send_error("This channel is **not** exempted")
+            return await ctx.error("This channel is **not** exempted")
 
         channels = mod.exempt_channels
         channels.remove(channel)
@@ -707,7 +707,7 @@ class Automod(Cog):
             reason=f"Invites filter rule edited by {ctx.author}",
         )
 
-        await ctx.send_success(
+        await ctx.success(
             f"{channel.mention} removed from the invites filter exempted channels"
         )
 
@@ -721,17 +721,17 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Invites filter is **not** configured")
+            return await ctx.warning("Invites filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **invites filter** automod rule. Please clear it and create a new one"
             )
 
         if len(mod.exempt_channel_ids) == 0:
-            return await ctx.send_error("No exempted channels for invites filter")
+            return await ctx.error("No exempted channels for invites filter")
 
         await ctx.paginate(
             [f"<#{c}>" for c in mod.exempt_channel_ids],
@@ -778,13 +778,13 @@ class Automod(Cog):
             await self.bot.db.execute(
                 "INSERT INTO filter VALUES ($1,$2,$3)", ctx.guild.id, "words", mod.id
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Created **word filter** with the word **{word}**"
             )
         else:
             mod = await ctx.guild.fetch_automod_rule(check[0])
             if not mod:
-                return await ctx.send_error(
+                return await ctx.error(
                     "Unable to find the **words filter** automod rule. Please clear it and create a new one"
                 )
             filters = mod.trigger.keyword_filter
@@ -795,7 +795,7 @@ class Automod(Cog):
                 ),
                 reason=f"Words filter rule edited by {ctx.author}",
             )
-            return await ctx.send_success(f"Added **{word}** to the words filter")
+            return await ctx.success(f"Added **{word}** to the words filter")
 
     @chat_filter_words.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -809,19 +809,19 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Word filter is **not** configured")
+            return await ctx.warning("Word filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **words filter** automod rule. Please clear it and create a new one"
             )
 
         filters = mod.trigger.keyword_filter
 
         if not "*" + word + "*" in filters:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"The word **{word}** is not in the word filter list"
             )
 
@@ -832,7 +832,7 @@ class Automod(Cog):
             ),
             reason=f"Words filter rule edited by {ctx.author}",
         )
-        return await ctx.send_success(f"Removed **{word}** from the words filter")
+        return await ctx.success(f"Removed **{word}** from the words filter")
 
     @chat_filter_words.command(name="clear", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -846,7 +846,7 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Word filter is **not** configured")
+            return await ctx.warning("Word filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
@@ -858,7 +858,7 @@ class Automod(Cog):
             ctx.guild.id,
             "words",
         )
-        return await ctx.send_success("Word filter has been clear")
+        return await ctx.success("Word filter has been clear")
 
     @chat_filter_words.command(name="list")
     async def chat_filter_words_list(self, ctx: AkariContext):
@@ -870,12 +870,12 @@ class Automod(Cog):
         )
 
         if not results:
-            return await ctx.send_warning("Word filter is **not** configured")
+            return await ctx.warning("Word filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(results[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **words filter** automod rule. Please clear it and create a new one"
             )
 
@@ -905,24 +905,24 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Word filter is **not** configured")
+            return await ctx.warning("Word filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **words filter** automod rule. Please clear it and create a new one"
             )
 
         if channel.id in mod.exempt_channel_ids:
-            return await ctx.send_error("This channel is **already** exempted")
+            return await ctx.error("This channel is **already** exempted")
 
         channels = mod.exempt_channels
         channels.append(channel)
         await mod.edit(
             exempt_channels=channels, reason=f"Word filter rule edited by {ctx.author}"
         )
-        await ctx.send_success(
+        await ctx.success(
             f"{channel.mention} is now **exempted** from the word filter"
         )
 
@@ -942,17 +942,17 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Word filter is **not** configured")
+            return await ctx.warning("Word filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **words filter** automod rule. Please clear it and create a new one"
             )
 
         if not channel.id in mod.exempt_channel_ids:
-            return await ctx.send_error("This channel is **not** exempted")
+            return await ctx.error("This channel is **not** exempted")
 
         channels = mod.exempt_channels
         channels.remove(channel)
@@ -960,7 +960,7 @@ class Automod(Cog):
             exempt_channels=channels, reason=f"Word filter rule edited by {ctx.author}"
         )
 
-        await ctx.send_success(
+        await ctx.success(
             f"{channel.mention} removed from the word filter exempted channels"
         )
 
@@ -974,17 +974,17 @@ class Automod(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Word filter is **not** configured")
+            return await ctx.warning("Word filter is **not** configured")
 
         mod = await ctx.guild.fetch_automod_rule(check[0])
 
         if not mod:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Unable to find the **words filter** automod rule. Please clear it and create a new one"
             )
 
         if len(mod.exempt_channel_ids) == 0:
-            return await ctx.send_error("No exempted channels for words filter")
+            return await ctx.error("No exempted channels for words filter")
 
         await ctx.paginate(
             [f"<#{c}>" for c in mod.exempt_channel_ids],

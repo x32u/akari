@@ -273,7 +273,7 @@ class Voicemaster(Cog):
                 "SELECT * FROM voicemaster WHERE guild_id = $1", ctx.guild.id
             )
             if not check:
-                return await ctx.send_warning("VoiceMaster is **not** configured")
+                return await ctx.warning("VoiceMaster is **not** configured")
 
             mes = await ctx.send(
                 embed=Embed(
@@ -370,7 +370,7 @@ class Voicemaster(Cog):
             overwrite=overwrite,
             reason=f"Channel locked by {ctx.author}",
         )
-        return await ctx.send_success(f"locked <#{ctx.author.voice.channel.id}>")
+        return await ctx.success(f"locked <#{ctx.author.voice.channel.id}>")
 
     @voice.command(help="config", brief="vc owner")
     @check_vc_owner()
@@ -387,7 +387,7 @@ class Voicemaster(Cog):
             overwrite=overwrite,
             reason=f"Channel unlocked by {ctx.author}",
         )
-        return await ctx.send_success(f"Unlocked <#{ctx.author.voice.channel.id}>")
+        return await ctx.success(f"Unlocked <#{ctx.author.voice.channel.id}>")
 
     @voice.command(brief="vc owner")
     @check_vc_owner()
@@ -399,7 +399,7 @@ class Voicemaster(Cog):
         """
 
         await ctx.author.voice.channel.edit(name=name)
-        return await ctx.send_success(f"Renamed the voice channel to **{name}**")
+        return await ctx.success(f"Renamed the voice channel to **{name}**")
 
     @voice.command(brief="vc owner")
     @check_vc_owner()
@@ -416,7 +416,7 @@ class Voicemaster(Cog):
             overwrite=overwrite,
             reason=f"Channel hidden by {ctx.author}",
         )
-        return await ctx.send_success(f"Hidden <#{ctx.author.voice.channel.id}>")
+        return await ctx.success(f"Hidden <#{ctx.author.voice.channel.id}>")
 
     @voice.command(brief="vc owner")
     @check_vc_owner()
@@ -433,7 +433,7 @@ class Voicemaster(Cog):
             overwrite=overwrite,
             reason=f"Channel revealed by {ctx.author}",
         )
-        return await ctx.send_success(f"Revealed <#{ctx.author.voice.channel.id}>")
+        return await ctx.success(f"Revealed <#{ctx.author.voice.channel.id}>")
 
     @voice.command(brief="vc owner")
     @check_vc_owner()
@@ -444,7 +444,7 @@ class Voicemaster(Cog):
         """
 
         await ctx.author.voice.channel.set_permissions(member, connect=True)
-        return await ctx.send_success(
+        return await ctx.success(
             f"{member.mention} is allowed to join <#{ctx.author.voice.channel.id}>"
         )
 
@@ -463,7 +463,7 @@ class Voicemaster(Cog):
             await member.move_to(channel=None)
 
         await ctx.author.voice.channel.set_permissions(member, connect=False)
-        return await ctx.send_success(
+        return await ctx.success(
             f"{member.mention} is not allowed to join <#{ctx.author.voice.channel.id}> anymore"
         )
 
@@ -479,12 +479,12 @@ class Voicemaster(Cog):
             return await ctx.reply("why would u wanna kick urself >_<")
 
         if not member in ctx.author.voice.channel.members:
-            return await ctx.send_error(
+            return await ctx.error(
                 f"{member.mention} isn't in **your** voice channel"
             )
 
         await member.move_to(channel=None)
-        return await ctx.send_success(
+        return await ctx.success(
             f"{member.mention} got kicked from <#{ctx.author.voice.channel.id}>"
         )
 
@@ -495,29 +495,29 @@ class Voicemaster(Cog):
         """
 
         if not ctx.author.voice:
-            return await ctx.send_warning("You are **not** in a voice channel")
+            return await ctx.warning("You are **not** in a voice channel")
 
         check = await self.bot.db.fetchrow(
             "SELECT user_id FROM vcs WHERE voice = $1", ctx.author.voice.channel.id
         )
 
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "You are **not** in a voice channel made by the bot"
             )
 
         if ctx.author.id == check[0]:
-            return await ctx.send_warning("You are the **owner** of this voice channel")
+            return await ctx.warning("You are the **owner** of this voice channel")
 
         if check[0] in [m.id for m in ctx.author.voice.channel.members]:
-            return await ctx.send_warning("The owner is still in the voice channel")
+            return await ctx.warning("The owner is still in the voice channel")
 
         await self.bot.db.execute(
             "UPDATE vcs SET user_id = $1 WHERE voice = $2",
             ctx.author.id,
             ctx.author.voice.channel.id,
         )
-        return await ctx.send_success("**You** are the new owner of this voice channel")
+        return await ctx.success("**You** are the new owner of this voice channel")
 
     @voice.command(brief="vc owner")
     @check_vc_owner()
@@ -527,12 +527,12 @@ class Voicemaster(Cog):
         """
 
         if not member in ctx.author.voice.channel.members:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"{member.mention} is not in your voice channel"
             )
 
         if member == ctx.author:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "You are already the **owner** of this **voice channel**"
             )
 
@@ -541,7 +541,7 @@ class Voicemaster(Cog):
             member.id,
             ctx.author.voice.channel.id,
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Transfered the voice ownership to {member.mention}"
         )
 
@@ -556,7 +556,7 @@ class Voicemaster(Cog):
         """
 
         if len(status) > 500:
-            return await ctx.send_warning(f"Status can't be over **500 characters**")
+            return await ctx.warning(f"Status can't be over **500 characters**")
         
         await ctx.author.voice.channel.edit(status=status)
         await ctx.message.add_reaction("✅")

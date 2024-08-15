@@ -23,7 +23,6 @@ from playwright.async_api import async_playwright
 from io import BytesIO
 from typing import Union, Optional, Any
 from shazamio import Shazam
-from ttapi import TikTokApi
 
 from tools.bot import Akari
 from tools.misc.views import Donate
@@ -76,7 +75,6 @@ class Utility(commands.Cog):
         self.bot = bot
         self.tz = Timezone(bot)
         self.description = "Utility commands"
-        self.tiktok = TikTokApi(debug=True)
         self.afk_cd = commands.CooldownMapping.from_cooldown(
             3, 3, commands.BucketType.channel
         )
@@ -267,36 +265,28 @@ class Utility(commands.Cog):
         )
         return await ctx.send(embed=embed)
 
-    @commands.hybrid_command(aliases=["foryou", "foryoupage"])
+    @commands.command(aliases=["foryou", "foryoupage"])
     async def fyp(self, ctx: AkariContext):
-        """
-        Get a random tiktok video
-        """
+        "Get a random TikTok video"
 
         async with ctx.typing():
-            fyp_videos = await self.tiktok.feed.for_you(count=1)
-            video = random.choice([vid for vid in fyp_videos])
-            no_watermark_download = video["download_urls"]["no_watermark"]
-            video_binary = await self.tiktok.video.get_video_binary(
-                no_watermark_download
-            )
-            bytes_io = BytesIO(video_binary)
+            recommended = await self.bot.session.get_json(url="https://www.tiktok.com/api/recommend/item_list/?WebIdLastTime=1709562791&aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F124.0.0.0%20Safari%2F537.36&channel=tiktok_web&clientABVersions=70508271%2C72097972%2C72118536%2C72139452%2C72142433%2C72147654%2C72156694%2C72157773%2C72174908%2C72183344%2C72191581%2C72191933%2C72203590%2C72211002%2C70405643%2C71057832%2C71200802%2C71957976&cookie_enabled=true&count=9&coverFormat=2&device_id=7342516164603889184&device_platform=web_pc&device_type=web_h264&focus_state=true&from_page=fyp&history_len=3&isNonPersonalized=false&is_fullscreen=false&is_page_visible=true&language=en&odinId=7342800074206741537&os=windows&priority_region=&pullType=1&referer=&region=BA&screen_height=1440&screen_width=2560&showAboutThisAd=true&showAds=false&tz_name=Europe%2FLondon&watchLiveLastTime=1713523355360&webcast_language=en&msToken=W3zoVLSFi9M0BsPE6uC63GCdeoVC7hmjRNelZIe-7FP7x-1LRee6WYHYfpWXg3NYPoreJf_dMxfRWTZprVN8UU70_IaHnBMNirtZIRNp2QuR1nBivJgnetgiM-XTh7_KGbNswVs=&X-Bogus=DFSzswVOmtvANegtt2bDG-OckgSu&_signature=_02B4Z6wo00001BozSvQAAIDBhqj5OL8769AaM05AAGCne")
+            recommended = recommended['itemList'][0]
             embed = discord.Embed(color=self.bot.color)
-            embed.description = f'[{video["description"]}]({video["video_url"]})'
+            embed.description = f'[{recommended["desc"]}](https://tiktok.com/@{recommended["author"]["uniqueId"]}/video/{recommended["id"]})'
 
-            embed.set_author(
-                name="@" + video["author"]["username"],
-                icon_url=video["author"]["avatar_url"],
-            )
             embed.set_footer(
-                text=f"❤️ {self.human_format(video['stats']['likes'])} 💬 {self.human_format(video['stats']['comment_count'])} 🔗 {self.human_format(video['stats']['shares'])} ({self.human_format(video['stats']['views'])} views)"
+                text=f"❤️ {self.bot.session.human_format(recommended['stats']['diggCount'])} 💬 {self.bot.session.human_format(recommended['stats']['commentCount'])} 🔗 {self.bot.session.human_format(recommended['stats']['shareCount'])} ({self.bot.session.human_format(recommended['stats']['playCount'])} views)"
             )
-
+            
+            final = await self.bot.session.get_json("https://tikwm.com/api/", params={"url": f'https://tiktok.com/@{recommended["author"]["uniqueId"]}/video/{recommended["id"]}'})
             await ctx.reply(
                 embed=embed,
-                file=discord.File(fp=bytes_io, filename="AkariTikTok.mp4"),
+                file=discord.File(fp=await self.bot.session.getbyte(url=final['data']['play']), filename='resenttiktok.mp4')
             )
-
+            try: await ctx.message.delete()
+            except: pass
+  
     @commands.command(aliases=["avh"])
     async def avatarhistory(
         self, ctx: AkariContext, *, member: discord.User = commands.Author
@@ -310,7 +300,7 @@ class Utility(commands.Cog):
         length = len(json.loads(results["avatars"])) if results else 0
         if not results:
             does = "don't" if member == ctx.author else f"doesn't"
-            return await ctx.send_error(
+            return await ctx.error(
                 f"{'You' if member == ctx.author else f'{member.mention}'} {does} have an **avatar history**"
             )
 
@@ -331,7 +321,7 @@ class Utility(commands.Cog):
             "SELECT * FROM avatar_history WHERE user_id = $1", str(ctx.author.id)
         )
         if not check:
-            return await ctx.send_warning("There are no avatars saved for you")
+            return await ctx.warning("There are no avatars saved for you")
 
         async def yes_func(interaction: discord.Interaction):
             await self.bot.db.execute(
@@ -454,7 +444,7 @@ class Utility(commands.Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added sticky message to {channel.mention}\n```{code}```"
         )
 
@@ -466,14 +456,14 @@ class Utility(commands.Cog):
             "SELECT * FROM stickymessage WHERE channel_id = $1", channel.id
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no sticky message configured in this channel"
             )
 
         await self.bot.db.execute(
             "DELETE FROM stickymessage WHERE channel_id = $1", channel.id
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Deleted the sticky message from {channel.mention}"
         )
 
@@ -487,7 +477,7 @@ class Utility(commands.Cog):
             "SELECT * FROM usernames WHERE user_id = $1", user.id
         )
         if len(results) == 0:
-            return await ctx.send_error(
+            return await ctx.error(
                 f"{'You' if user == ctx.author else f'{user.mention}'} doesn't have **past usernames**"
             )
 
@@ -509,7 +499,7 @@ class Utility(commands.Cog):
             "SELECT * FROM usernames WHERE user_id = $1", ctx.author.id
         )
         if not check:
-            return await ctx.send_warning("There are no usernames saved for you")
+            return await ctx.warning("There are no usernames saved for you")
 
         async def yes_func(interaction: discord.Interaction):
             await self.bot.db.execute(
@@ -552,14 +542,14 @@ class Utility(commands.Cog):
             banner = cache["banner"]
 
             if banner is None:
-                return await ctx.send_error(f"{member.mention} doesn't have a banner")
+                return await ctx.error(f"{member.mention} doesn't have a banner")
 
         else:
             user = await self.bot.fetch_user(member.id)
 
             if not user.banner:
                 await self.cache_profile(user)
-                return await ctx.send_error(f"{member.mention} doesn't have a banner")
+                return await ctx.error(f"{member.mention} doesn't have a banner")
 
             banner = user.banner.url
 
@@ -700,7 +690,7 @@ class Utility(commands.Cog):
                     snipes.remove(s)
                 await self.bot.cache.set(i, snipes)
 
-        await ctx.send_success("Cleared all snipes from this channel")
+        await ctx.success("Cleared all snipes from this channel")
 
     @commands.command(aliases=["rs"])
     async def reactionsnipe(self, ctx: AkariContext, index: int = 1):
@@ -709,7 +699,7 @@ class Utility(commands.Cog):
         """
 
         if not self.bot.cache.get("reaction_snipe"):
-            return await ctx.send_warning("No reaction snipes found in this channel")
+            return await ctx.warning("No reaction snipes found in this channel")
 
         snipes = [
             s
@@ -718,10 +708,10 @@ class Utility(commands.Cog):
         ]
 
         if len(snipes) == 0:
-            return await ctx.send_warning("No reaction snipes found in this channel")
+            return await ctx.warning("No reaction snipes found in this channel")
 
         if index > len(snipes):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"There are only **{len(snipes)}** reaction snipes in this channel"
             )
 
@@ -743,7 +733,7 @@ class Utility(commands.Cog):
             url = f"https://{url}"
 
         if not validators.url(url):
-            return await ctx.send_warning("That is not a **URL**")
+            return await ctx.warning("That is not a **URL**")
 
         async with async_playwright() as p:
             browser = await p.chromium.launch()
@@ -767,7 +757,7 @@ class Utility(commands.Cog):
                 re.search(r"\b{}\b".format(keyword), page_content, re.IGNORECASE)
                 for keyword in keywords
             ):
-                await ctx.send_error(
+                await ctx.error(
                     "This website contains explicit content. I cannot send the screenshot."
                 )
                 return
@@ -782,7 +772,7 @@ class Utility(commands.Cog):
                     or prediction["class"] == "BUTTOCKS_EXPOSED"
                 ):
 
-                    await ctx.send_error(
+                    await ctx.error(
                         "This website contains explicit content. I cannot send the screenshot."
                     )
                     return
@@ -804,7 +794,7 @@ class Utility(commands.Cog):
         """
 
         if not self.bot.cache.get("edit_snipe"):
-            return await ctx.send_warning("No edit snipes found in this channel")
+            return await ctx.warning("No edit snipes found in this channel")
 
         snipes = [
             s
@@ -813,10 +803,10 @@ class Utility(commands.Cog):
         ]
 
         if len(snipes) == 0:
-            return await ctx.send_warning("No edit snipes found in this channel")
+            return await ctx.warning("No edit snipes found in this channel")
 
         if index > len(snipes):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"There are only **{len(snipes)}** edit snipes in this channel"
             )
 
@@ -839,14 +829,14 @@ class Utility(commands.Cog):
         """
         try:
             if not self.bot.cache.get("snipe"):
-                return await ctx.send_warning("No snipes found in this channel")
+                return await ctx.warning("No snipes found in this channel")
             snipes = [
                 s for s in self.bot.cache.get("snipe") if s["channel"] == ctx.channel.id
             ]
             if len(snipes) == 0:
-                return await ctx.send_warning("No snipes found in this channel")
+                return await ctx.warning("No snipes found in this channel")
             if index > len(snipes):
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"There are only **{len(snipes)}** snipes in this channel"
                 )
             result = snipes[::-1][index - 1]
@@ -879,7 +869,7 @@ class Utility(commands.Cog):
 
             return await ctx.send(embed=embed)
         except Exception as e:
-            return await ctx.send_warning("There was an error getting snipes.")
+            return await ctx.warning("There was an error getting snipes.")
 
     @commands.hybrid_command(aliases=["mc"])
     async def membercount(self, ctx: AkariContext, invite: discord.Invite = None):
@@ -1159,7 +1149,7 @@ class Utility(commands.Cog):
         )
 
         if results.get("detail"):
-            return await ctx.send_error(results["detail"])
+            return await ctx.error(results["detail"])
 
         await ctx.paginator(list(map(lambda s: s["url"], results["stories"])))
 
@@ -1265,7 +1255,7 @@ class Utility(commands.Cog):
             guild = ctx.guild
 
         if not guild.splash:
-            return await ctx.send_error("This server has no splash image")
+            return await ctx.error("This server has no splash image")
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(guild.splash.url),
@@ -1289,7 +1279,7 @@ class Utility(commands.Cog):
             guild = ctx.guild
 
         if not guild.banner:
-            return await ctx.send_error("This server has no banner")
+            return await ctx.error("This server has no banner")
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(guild.banner.url),
@@ -1313,7 +1303,7 @@ class Utility(commands.Cog):
             guild = ctx.guild
 
         if not guild.icon:
-            return await ctx.send_error("This server has no icon")
+            return await ctx.error("This server has no icon")
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(guild.icon.url),
@@ -1337,7 +1327,7 @@ class Utility(commands.Cog):
 
         defs = data["list"]
         if len(defs) == 0:
-            return await ctx.send_error(f"No definition found for **{word}**")
+            return await ctx.error(f"No definition found for **{word}**")
 
         for defi in defs:
             e = (
@@ -1375,7 +1365,7 @@ class Utility(commands.Cog):
 
             await ctx.send(embed=embed)
         except LanguageNotSupportedException:
-            return await ctx.send_error("This language is **not** supported")
+            return await ctx.error("This language is **not** supported")
 
     @commands.hybrid_command()
     async def seen(
@@ -1396,7 +1386,7 @@ class Utility(commands.Cog):
         )
 
         if not time:
-            return await ctx.send_error("This member doesn't have any last seen record")
+            return await ctx.error("This member doesn't have any last seen record")
 
         await ctx.Akari_send(
             f"**{member}** was last seen **{self.bot.humanize_date(datetime.datetime.fromtimestamp(time.timestamp()))}**"
@@ -1553,7 +1543,7 @@ class Utility(commands.Cog):
                 overwrite=overwrite,
                 reason=f"Picture permissions removed by {ctx.author}",
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Removed pic perms from {member.mention} in {channel.mention}"
             )
         else:
@@ -1564,7 +1554,7 @@ class Utility(commands.Cog):
                 overwrite=overwrite,
                 reason=f"Picture permissions granted by {ctx.author}",
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Added pic perms to {member.mention} in {channel.mention}"
             )
 
@@ -1685,10 +1675,10 @@ class Utility(commands.Cog):
         if isinstance(role, str):
             role = ctx.find_role(role)
             if not role:
-                return await ctx.send_error("Role not found")
+                return await ctx.error("Role not found")
 
         if len(role.members) > 200:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Cannot view roles with more than **200** members"
             )
 
@@ -1785,7 +1775,7 @@ class Utility(commands.Cog):
             ctx.author.id,
         )
 
-        return await ctx.send_success(f"You succesfully deleted your timezone")
+        return await ctx.success(f"You succesfully deleted your timezone")
 
     @timezone.command(name="list")
     async def timezone_list(self, ctx: AkariContext):
@@ -1850,7 +1840,7 @@ class Utility(commands.Cog):
             ctx.author.id,
         )
 
-        return await ctx.send_success(f"You succesfully deleted your birthday")
+        return await ctx.success(f"You succesfully deleted your birthday")
 
     @birthday.command(name="list")
     async def bday_list(self, ctx: AkariContext):
@@ -1883,7 +1873,7 @@ class Utility(commands.Cog):
         """
 
         if time < 60:
-            return await ctx.send_warning("Reminder time can't be less than a minute")
+            return await ctx.warning("Reminder time can't be less than a minute")
 
         else:
             try:
@@ -1903,7 +1893,7 @@ class Utility(commands.Cog):
                     f"🕰️ {ctx.author.mention}: I'm going to remind you in {humanfriendly.format_timespan(time)} about **{task}**"
                 )
             except:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"You already have a reminder set in this channel. Use `{ctx.clean_prefix}reminder stop` to cancel the reminder"
                 )
 
@@ -1924,7 +1914,7 @@ class Utility(commands.Cog):
             ctx.author.id,
         )
 
-        return await ctx.send_success("Deleted a reminder")
+        return await ctx.success("Deleted a reminder")
 
     @commands.command(aliases=["remindme"])
     @reminder_exists()
@@ -1934,7 +1924,7 @@ class Utility(commands.Cog):
         """
 
         if time < 60:
-            return await ctx.send_warning("Reminder time can't be less than a minute")
+            return await ctx.warning("Reminder time can't be less than a minute")
         else:
             try:
                 await self.bot.db.execute(
@@ -1952,7 +1942,7 @@ class Utility(commands.Cog):
                     f"🕰️ {ctx.author.mention}: I'm going to remind you in {humanfriendly.format_timespan(time)} about **{task}**"
                 )
             except:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"You already have a reminder set in this channel. Use `{ctx.clean_prefix}reminder stop` to cancel the reminder"
                 )
 
@@ -1973,7 +1963,7 @@ class Utility(commands.Cog):
         )
 
         if not check:
-            return await ctx.send_warning(f"No tag found for **{tag}**")
+            return await ctx.warning(f"No tag found for **{tag}**")
 
         x = await self.bot.embed_build.convert(ctx, check["response"])
         await ctx.send(**x)
@@ -1988,7 +1978,7 @@ class Utility(commands.Cog):
         args = args.split(",", maxsplit=1)
 
         if len(args) == 1:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "No response found. Make sure to use a `,` to split the trigger from the response"
             )
 
@@ -2004,7 +1994,7 @@ class Utility(commands.Cog):
             ctx.guild.id,
             name,
         ):
-            return await ctx.send_warning(f"A tag for **{name}** already exists!")
+            return await ctx.warning(f"A tag for **{name}** already exists!")
 
         await self.bot.db.execute(
             """
@@ -2016,7 +2006,7 @@ class Utility(commands.Cog):
             name,
             response,
         )
-        await ctx.send_success(f"Added tag for **{name}**" + f"\n```{response}```")
+        await ctx.success(f"Added tag for **{name}**" + f"\n```{response}```")
 
     @tag.command(name="remove", aliases=["delete", "del"], brief="manage server")
     @commands.has_guild_permissions(manage_guild=True)
@@ -2034,7 +2024,7 @@ class Utility(commands.Cog):
             ctx.guild.id,
             tag,
         ):
-            return await ctx.send_warning(f"That is **not** an existing tag")
+            return await ctx.warning(f"That is **not** an existing tag")
 
         await self.bot.db.execute(
             """
@@ -2045,7 +2035,7 @@ class Utility(commands.Cog):
             ctx.guild.id,
             tag,
         )
-        await ctx.send_success(f"Deleted the tag **{tag}**")
+        await ctx.success(f"Deleted the tag **{tag}**")
 
     @tag.command(name="reset", brief="manage server")
     @commands.has_guild_permissions(manage_guild=True)
@@ -2061,7 +2051,7 @@ class Utility(commands.Cog):
       """,
             ctx.guild.id,
         ):
-            return await ctx.send_warning(f"There are **no** tags set")
+            return await ctx.warning(f"There are **no** tags set")
 
         async def yes_func(interaction: discord.Interaction):
             await self.bot.db.execute(
@@ -2108,7 +2098,7 @@ class Utility(commands.Cog):
         )
 
         if not results:
-            return await ctx.send_warning(f"There are **no** tags set")
+            return await ctx.warning(f"There are **no** tags set")
 
         await ctx.paginate(
             [f"{result['name']} - {result['response']}" for result in results],
@@ -2133,7 +2123,7 @@ class Utility(commands.Cog):
         )
 
         if not result:
-            return await ctx.send_warning(f"There are **no** tags set")
+            return await ctx.warning(f"There are **no** tags set")
 
         x = await self.bot.embed_build.convert(ctx, result["response"])
         x["content"] = f"({result['name']}) {x['content'] or ''}"
@@ -2148,7 +2138,7 @@ class Utility(commands.Cog):
         args = args.split(",", maxsplit=1)
 
         if len(args) == 1:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "No response found. Make sure to use a `,` to split the trigger from the response"
             )
 
@@ -2166,10 +2156,10 @@ class Utility(commands.Cog):
         )
 
         if not check:
-            return await ctx.send_warning(f"No tag found for **{name}**")
+            return await ctx.warning(f"No tag found for **{name}**")
 
         if check["author_id"] != ctx.author.id:
-            return await ctx.send_warning(f"You are not the **author** of this tag")
+            return await ctx.warning(f"You are not the **author** of this tag")
 
         await self.bot.db.execute(
             """
@@ -2182,7 +2172,7 @@ class Utility(commands.Cog):
             ctx.guild.id,
             name,
         )
-        await ctx.send_success(f"Updated tag for **{name}**" + f"\n```{response}```")
+        await ctx.success(f"Updated tag for **{name}**" + f"\n```{response}```")
 
     @tag.command(name="creator", aliases=["author"])
     async def tag_creator(self, ctx: AkariContext, *, tag: str):
@@ -2201,7 +2191,7 @@ class Utility(commands.Cog):
         )
 
         if not check:
-            return await ctx.send_warning(f"No tag found for **{tag}**")
+            return await ctx.warning(f"No tag found for **{tag}**")
 
         user = self.bot.get_user(check["author_id"])
         return await ctx.Akari_send(f"The author of this tag is **{user}**")
@@ -2222,7 +2212,7 @@ class Utility(commands.Cog):
         )
 
         if not results:
-            return await ctx.send_warning(f"No **tags** found")
+            return await ctx.warning(f"No **tags** found")
 
         await ctx.paginate(
             [f"**{result['name']}**" for result in results], title=f"Tags like {query}"
@@ -2271,7 +2261,7 @@ class Utility(commands.Cog):
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         if not re.findall(regex, url):
-            return await ctx.send_error("The image provided is not an url")
+            return await ctx.error("The image provided is not an url")
         
         try:
             async with ctx.channel.typing(), asyncio.timeout(15):
@@ -2283,7 +2273,7 @@ class Utility(commands.Cog):
                 )
                 
         except Exception: 
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Couldn't make the image **transparent**"
             )
                 
@@ -2302,7 +2292,7 @@ class Utility(commands.Cog):
         )
 
         if not response:
-            return await ctx.send_warning(f"No results found for **{query}**")
+            return await ctx.warning(f"No results found for **{query}**")
 
         entries = [
             discord.Embed(

@@ -27,7 +27,7 @@ class Events(Cog):
 
         x = await self.bot.embed_build.convert(ctx, check["message"])
         mes = await channel.send(**x)
-        return await ctx.send_success(f"Sent the message {mes.jump_url}")
+        return await ctx.success(f"Sent the message {mes.jump_url}")
 
     @Cog.listener()
     async def on_guild_channel_delete(self, channel: abc.GuildChannel):
@@ -66,7 +66,7 @@ class Events(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added welcome message to {channel.mention}\n```{code}```"
         )
 
@@ -78,14 +78,14 @@ class Events(Cog):
             "SELECT * FROM welcome WHERE channel_id = $1", channel.id
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no welcome message configured in this channel"
             )
 
         await self.bot.db.execute(
             "DELETE FROM welcome WHERE channel_id = $1", channel.id
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Deleted the welcome message from {channel.mention}"
         )
 
@@ -97,7 +97,7 @@ class Events(Cog):
             "SELECT * FROM welcome WHERE guild_id = $1", ctx.guild.id
         )
         if not results:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no welcome message configured in this server"
             )
 
@@ -134,7 +134,7 @@ class Events(Cog):
         )
 
         if len(check) == 0:
-            return await ctx.send_error(
+            return await ctx.error(
                 "You have **no** welcome messages in this server"
             )
 
@@ -194,7 +194,7 @@ class Events(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added leave message to {channel.mention}\n```{code}```"
         )
 
@@ -206,12 +206,12 @@ class Events(Cog):
             "SELECT * FROM leave WHERE channel_id = $1", channel.id
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no leave message configured in this channel"
             )
 
         await self.bot.db.execute("DELETE FROM leave WHERE channel_id = $1", channel.id)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Deleted the leave message from {channel.mention}"
         )
 
@@ -223,7 +223,7 @@ class Events(Cog):
             "SELECT * FROM leave WHERE guild_id = $1", ctx.guild.id
         )
         if not results:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no leave message configured in this server"
             )
 
@@ -260,7 +260,7 @@ class Events(Cog):
         )
 
         if len(check) == 0:
-            return await ctx.send_error("You have **no** leave messages in this server")
+            return await ctx.error("You have **no** leave messages in this server")
 
         async def yes_callback(interaction: Interaction):
             await interaction.client.db.execute(
@@ -320,7 +320,7 @@ class Events(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added boost message to {channel.mention}\n```{code}```"
         )
 
@@ -332,12 +332,12 @@ class Events(Cog):
             "SELECT * FROM boost WHERE channel_id = $1", channel.id
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no boost message configured in this channel"
             )
 
         await self.bot.db.execute("DELETE FROM boost WHERE channel_id = $1", channel.id)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Deleted the boost message from {channel.mention}"
         )
 
@@ -349,7 +349,7 @@ class Events(Cog):
             "SELECT * FROM boost WHERE guild_id = $1", ctx.guild.id
         )
         if not results:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There is no boost message configured in this server"
             )
 
@@ -386,7 +386,7 @@ class Events(Cog):
         )
 
         if len(check) == 0:
-            return await ctx.send_error("You have **no** boost messages in this server")
+            return await ctx.error("You have **no** boost messages in this server")
 
         async def yes_callback(interaction: Interaction):
             await interaction.client.db.execute(

@@ -29,13 +29,13 @@ class Responders(Cog):
         """create an autoreact using a trigger for this server"""
         con = content.split(", ")
         if len(con) == 1:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "No reactions found. Make sure to use a `,` to split the trigger from the reactions"
             )
 
         trigger = con[0].strip()
         if trigger == "":
-            return await ctx.send_warning("No trigger found")
+            return await ctx.warning("No trigger found")
 
         custom_regex = re.compile(r"(<a?)?:\w+:(\d{18}>)?")
         unicode_regex = re.compile(
@@ -61,7 +61,7 @@ class Responders(Cog):
         ]
 
         if len(reactions) == 0:
-            return await ctx.send_error("No emojis found")
+            return await ctx.error("No emojis found")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM autoreact WHERE guild_id = $1 AND trigger = $2",
@@ -84,7 +84,7 @@ class Responders(Cog):
                 trigger,
             )
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Your autoreact for **{trigger}** has been created with the reactions {' '.join(reactions)}"
         )
 
@@ -99,14 +99,14 @@ class Responders(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("There is no **autoreact** with this trigger")
+            return await ctx.warning("There is no **autoreact** with this trigger")
 
         await self.bot.db.execute(
             "DELETE FROM autoreact WHERE guild_id = $1 AND trigger = $2",
             ctx.guild.id,
             trigger,
         )
-        return await ctx.send_success(f"Removed **{trigger}** from autoreact")
+        return await ctx.success(f"Removed **{trigger}** from autoreact")
 
     @autoreact.command(name="list")
     async def autoreact_list(self, ctx: AkariContext):
@@ -115,7 +115,7 @@ class Responders(Cog):
             "SELECT * FROM autoreact WHERE guild_id = $1", ctx.guild.id
         )
         if not check:
-            return await ctx.send_error(
+            return await ctx.error(
                 "There are no autoreactions available in this server"
             )
 
@@ -139,14 +139,14 @@ class Responders(Cog):
         """add an autoresponder to the server"""
         responses = response.split(", ", maxsplit=1)
         if len(responses) == 1:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Response not found! Please use `,` to split the trigger and the response"
             )
 
         trigger = responses[0].strip()
 
         if trigger == "":
-            return await ctx.send_warning("No trigger found")
+            return await ctx.warning("No trigger found")
 
         resp = responses[1].strip()
 
@@ -157,7 +157,7 @@ class Responders(Cog):
 
         resp = resp.replace(" --not_strict", "")
         if not response:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Response not found! Please use `,` to split the trigger and the response"
             )
 
@@ -167,7 +167,7 @@ class Responders(Cog):
             trigger.lower(),
         )
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"An autoresponder for **{trigger}** already exists"
             )
         else:
@@ -179,7 +179,7 @@ class Responders(Cog):
                 strict,
             )
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added autoresponder for **{trigger}** - {resp} {'(not strict)' if strict is False else ''}"
         )
 
@@ -194,7 +194,7 @@ class Responders(Cog):
         )
 
         if not check:
-            return await ctx.send_error(
+            return await ctx.error(
                 "There is no autoresponder with the trigger you have provided"
             )
 
@@ -203,7 +203,7 @@ class Responders(Cog):
             ctx.guild.id,
             trigger,
         )
-        return await ctx.send_success(f"Deleted the autoresponder for **{trigger}**")
+        return await ctx.success(f"Deleted the autoresponder for **{trigger}**")
 
     @autoresponder.command(name="list")
     async def ar_list(self, ctx: AkariContext):
@@ -213,7 +213,7 @@ class Responders(Cog):
         )
 
         if not results:
-            return await ctx.send_warning(f"No **autoresponders** are set!")
+            return await ctx.warning(f"No **autoresponders** are set!")
 
         return await ctx.paginate(
             [f"{result['trigger']} - {result['response']}" for result in results],

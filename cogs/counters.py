@@ -66,7 +66,7 @@ class Counters(Cog):
         )
 
         if not results:
-            return await ctx.send_warning("There are no counters")
+            return await ctx.warning("There are no counters")
 
         return await ctx.paginate(
             [
@@ -100,7 +100,7 @@ class Counters(Cog):
             ctx.guild.id,
             countertype,
         )
-        return await ctx.send_success(f"Removed **{countertype}** counter")
+        return await ctx.success(f"Removed **{countertype}** counter")
 
     @counter.group(invoke_without_command=True, name="add", brief="manage guild")
     async def counter_add(self, ctx):
@@ -125,7 +125,7 @@ class Counters(Cog):
         )
 
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"<#{check['channel_id']}> is already a **member** counter"
             )
 
@@ -141,7 +141,7 @@ class Counters(Cog):
             message,
             ctx.command.name,
         )
-        await ctx.send_success(f"Created **member** counter -> {channel.mention}")
+        await ctx.success(f"Created **member** counter -> {channel.mention}")
 
     @counter_add.command(name="humans", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -161,7 +161,7 @@ class Counters(Cog):
         )
 
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"<#{check['channel_id']}> is already a **humans** counter"
             )
 
@@ -180,7 +180,7 @@ class Counters(Cog):
             message,
             ctx.command.name,
         )
-        await ctx.send_success(f"Created **humans** counter -> {channel.mention}")
+        await ctx.success(f"Created **humans** counter -> {channel.mention}")
 
     @counter_add.command(name="bots", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -200,7 +200,7 @@ class Counters(Cog):
         )
 
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"<#{check['channel_id']}> is already a **bots** counter"
             )
 
@@ -216,7 +216,7 @@ class Counters(Cog):
             message,
             ctx.command.name,
         )
-        await ctx.send_success(f"Created **bots** counter -> {channel.mention}")
+        await ctx.success(f"Created **bots** counter -> {channel.mention}")
 
     @counter_add.command(name="voice", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -236,7 +236,7 @@ class Counters(Cog):
         )
 
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"<#{check['channel_id']}> is already a **voice** counter"
             )
 
@@ -255,7 +255,7 @@ class Counters(Cog):
             message,
             ctx.command.name,
         )
-        await ctx.send_success(f"Created **voice** counter -> {channel.mention}")
+        await ctx.success(f"Created **voice** counter -> {channel.mention}")
 
     @counter_add.command(
         name="boosters",
@@ -279,7 +279,7 @@ class Counters(Cog):
         )
 
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"<#{check['channel_id']}> is already a **booster** counter"
             )
 
@@ -295,7 +295,7 @@ class Counters(Cog):
             message,
             ctx.command.name,
         )
-        await ctx.send_success(f"Created **boosters** counter -> {channel.mention}")
+        await ctx.success(f"Created **boosters** counter -> {channel.mention}")
 
 
 async def setup(bot: Akari) -> None:

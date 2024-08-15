@@ -77,12 +77,12 @@ class Boosterrole(Cog):
         if await self.bot.db.fetchrow(
             "SELECT * FROM booster_module WHERE guild_id = $1", ctx.guild.id
         ):
-            return await ctx.send_warning("Booster role is **already** configured")
+            return await ctx.warning("Booster role is **already** configured")
 
         await self.bot.db.execute(
             "INSERT INTO booster_module (guild_id) VALUES ($1)", ctx.guild.id
         )
-        return await ctx.send_success("Configured booster role module")
+        return await ctx.success("Configured booster role module")
 
     @boosterrole.command(name="reset", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -142,14 +142,14 @@ class Boosterrole(Cog):
             ctx.guild.id,
             role.id,
         ):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This role is **already** a booster role award"
             )
 
         await self.bot.db.execute(
             "INSERT INTO br_award VALUES ($1,$2)", ctx.guild.id, role.id
         )
-        return await ctx.send_success(f"Added {role.mention} as a booster role award")
+        return await ctx.success(f"Added {role.mention} as a booster role award")
 
     @br_award.command(name="remove", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -163,14 +163,14 @@ class Boosterrole(Cog):
             ctx.guild.id,
             role.id,
         ):
-            return await ctx.send_warning("This role is **not** a booster role award")
+            return await ctx.warning("This role is **not** a booster role award")
 
         await self.bot.db.execute(
             "DELETE FROM br_award WHERE guild_id = $1 AND role_id = $2",
             ctx.guild.id,
             role.id,
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Removed {role.mention} from the booster role awards"
         )
 
@@ -189,7 +189,7 @@ class Boosterrole(Cog):
                 {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
             )
 
-        return await ctx.send_error("No booster role awards in this server")
+        return await ctx.error("No booster role awards in this server")
 
     @boosterrole.command(name="base", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -204,7 +204,7 @@ class Boosterrole(Cog):
         )
         if role is None:
             if check is None:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "Booster role module **base role** isn't set"
                 )
 
@@ -213,14 +213,14 @@ class Boosterrole(Cog):
                 None,
                 ctx.guild.id,
             )
-            return await ctx.send_success("Removed base role")
+            return await ctx.success("Removed base role")
 
         await self.bot.db.execute(
             "UPDATE booster_module SET base = $1 WHERE guild_id = $2",
             role.id,
             ctx.guild.id,
         )
-        return await ctx.send_success(f"Set {role.mention} as base role")
+        return await ctx.success(f"Set {role.mention} as base role")
 
     @boosterrole.command(name="create", brief="server booster")
     @br_is_configured()
@@ -230,7 +230,7 @@ class Boosterrole(Cog):
         """
 
         if not ctx.author.premium_since:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "You have to **boost** this server to be able to use this command"
             )
 
@@ -246,7 +246,7 @@ class Boosterrole(Cog):
             ctx.guild.id,
             ctx.author.id,
         ):
-            return await ctx.send_warning(f"You already have a booster role")
+            return await ctx.warning(f"You already have a booster role")
 
         ro = ctx.guild.get_role(che)
         role = await ctx.guild.create_role(name=name)
@@ -261,7 +261,7 @@ class Boosterrole(Cog):
             ctx.author.id,
             role.id,
         )
-        await ctx.send_success("Booster role created")
+        await ctx.success("Booster role created")
 
     @boosterrole.command(name="name", brief="server booster")
     @has_br_role()
@@ -271,7 +271,7 @@ class Boosterrole(Cog):
         """
 
         if len(name) > 32:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "The booster role name cannot have more than **32** characters"
             )
 
@@ -283,12 +283,12 @@ class Boosterrole(Cog):
             )
         )
         if not role:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Your booster role was deleted\nPlease use `{ctx.clean_prefix}br delete` then `{ctx.clean_prefix}br create`"
             )
 
         await role.edit(name=name, reason="Edited booster role name")
-        await ctx.send_success(f"Edited the booster role name to **{name}**")
+        await ctx.success(f"Edited the booster role name to **{name}**")
 
     @boosterrole.command(name="color", brief="server booster")
     @has_br_role()
@@ -305,7 +305,7 @@ class Boosterrole(Cog):
             )
         )
         if not role:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Your booster role was deleted\nPlease use `{ctx.clean_prefix}br delete` then `{ctx.clean_prefix}br create`"
             )
 
@@ -333,7 +333,7 @@ class Boosterrole(Cog):
             )
         )
         if not role:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Your booster role was deleted\nPlease use `{ctx.clean_prefix}br delete` then `{ctx.clean_prefix}br create`"
             )
 
@@ -343,7 +343,7 @@ class Boosterrole(Cog):
             ),
             reason="Edited the booster role icon",
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Booster role icon succesfully changed to **{emoji.name if isinstance(emoji, PartialEmoji) else emoji}**"
         )
 
@@ -370,7 +370,7 @@ class Boosterrole(Cog):
             ctx.guild.id,
             ctx.author.id,
         )
-        return await ctx.send_success("Booster role deleted")
+        return await ctx.success("Booster role deleted")
 
     @boosterrole.command(name="list")
     async def br_list(self, ctx: AkariContext):
@@ -382,7 +382,7 @@ class Boosterrole(Cog):
             "SELECT * FROM booster_roles WHERE guild_id = $1", ctx.guild.id
         )
         if len(results) == 0:
-            return await ctx.send_error("No **booster roles** found in this server")
+            return await ctx.error("No **booster roles** found in this server")
 
         return await ctx.paginate(
             [

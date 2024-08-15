@@ -25,7 +25,7 @@ async def disabled_command(ctx: AkariContext):
     str(ctx.command)
   ):
     if not ctx.author.guild_permissions.administrator:
-      await ctx.send_error(f"The command **{str(ctx.command)}** is **disabled** in this server")   
+      await ctx.error(f"The command **{str(ctx.command)}** is **disabled** in this server")   
       return False
     return True
 
@@ -38,7 +38,7 @@ async def disabled_command(ctx: AkariContext):
   )
   if global_disabled:
     if global_disabled.get("disabled") and ctx.author.id not in ctx.bot.owner_ids:
-      await ctx.send_warning("This command is currently disabled by the admin team of Akari, for further information please join the [Akari Server](https://discord.gg/akaribot).")   
+      await ctx.warning("This command is currently disabled by the admin team of Akari, for further information please join the [Akari Server](https://discord.gg/akaribot).")   
       return False 
   return True
 
@@ -55,7 +55,7 @@ async def disabled_module(ctx: AkariContext):
       ctx.command.cog_name
     ):
       if not ctx.author.guild_permissions.administrator:
-        await ctx.send_warning(f"The module **{str(ctx.command.cog_name.lower())}** is **disabled** in this server")
+        await ctx.warning(f"The module **{str(ctx.command.cog_name.lower())}** is **disabled** in this server")
         return False
       else:
         return True
@@ -90,7 +90,7 @@ async def restricted_command(ctx: AkariContext):
         )
 
       if not role in ctx.author.roles:
-        await ctx.send_warning(f"You cannot use `{ctx.command.qualified_name}`")
+        await ctx.warning(f"You cannot use `{ctx.command.qualified_name}`")
         return False
       return True
   return True

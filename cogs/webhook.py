@@ -54,7 +54,7 @@ class Webhooks(Cog):
             name or self.bot.user.name,
             self.bot.user.display_avatar.url,
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Created webhook named **{name or self.bot.user.name}** in {channel.mention} with the code `{code}`. Please save it in order to send webhooks with it"
         )
 
@@ -88,7 +88,7 @@ class Webhooks(Cog):
             ctx.guild.id,
             code,
         )
-        return await ctx.send_success(f"Webhook name changed to **{name}**")
+        return await ctx.success(f"Webhook name changed to **{name}**")
 
     @webhook_edit.command(name="avatar", aliases=["icon"], brief="manage webhooks")
     @has_guild_permissions(manage_webhooks=True)
@@ -101,12 +101,12 @@ class Webhooks(Cog):
 
         if not url:
             if not ctx.message.attachments:
-                return await ctx.send_error("Avatar not found")
+                return await ctx.error("Avatar not found")
 
             if not ctx.message.attachments[0].filename.endswith(
                 (".png", ".jpeg", ".jpg")
             ):
-                return await ctx.send_error("Attachment must be a png or jpeg")
+                return await ctx.error("Attachment must be a png or jpeg")
 
             url = ctx.message.attachments[0].proxy_url
 
@@ -121,7 +121,7 @@ class Webhooks(Cog):
             ctx.guild.id,
             code,
         )
-        return await ctx.send_success("Changed webhook's avatar")
+        return await ctx.success("Changed webhook's avatar")
 
     @webhook_editor.command(name="send", brief="manage webhooks")
     @has_guild_permissions(manage_webhooks=True)
@@ -150,11 +150,11 @@ class Webhooks(Cog):
             webhook = discord.Webhook.from_url(url=check["url"], session=session)
 
             if not webhook:
-                return await ctx.send_error("No webhook found with this code")
+                return await ctx.error("No webhook found with this code")
 
             w = await self.bot.fetch_webhook(webhook.id)
             mes = await w.send(**script)
-            await ctx.send_success(f"Sent webhook -> {mes.jump_url}")
+            await ctx.success(f"Sent webhook -> {mes.jump_url}")
 
     @webhook_editor.command(name="list")
     async def webhook_list(self, ctx: AkariContext):
@@ -167,7 +167,7 @@ class Webhooks(Cog):
         )
 
         if len(results) == 0:
-            return await ctx.send_error("There are no webhooks in this server")
+            return await ctx.error("There are no webhooks in this server")
 
         await ctx.paginate(
             [f"`{result['code']}` - {result['channel']}" for result in results],
@@ -197,7 +197,7 @@ class Webhooks(Cog):
             )
             await webhook.delete(reason=f"Webhook deleted by {ctx.author}")
 
-        return await ctx.send_success("Deleted webhook")
+        return await ctx.success("Deleted webhook")
 
 
 async def setup(bot: Akari) -> None:

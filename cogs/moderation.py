@@ -187,7 +187,7 @@ class Moderation(Cog):
             )
 
             if not check:
-                return await ctx.send_error("This member doesn't have any roles saved")
+                return await ctx.error("This member doesn't have any roles saved")
 
             roles = [
                 ctx.guild.get_role(r)
@@ -213,7 +213,7 @@ class Moderation(Cog):
                 ctx.guild.id,
                 member.id,
             )
-            return await ctx.send_success(f"Restored {member.mention}'s roles")
+            return await ctx.success(f"Restored {member.mention}'s roles")
 
     @command(brief="administrator")
     @has_guild_permissions(administrator=True)
@@ -227,9 +227,9 @@ class Moderation(Cog):
             if await self.bot.db.fetchrow(
                 "SELECT * FROM jail WHERE guild_id = $1", ctx.guild.id
             ):
-                return await ctx.send_warning("Jail is **already** configured")
+                return await ctx.warning("Jail is **already** configured")
 
-            mes = await ctx.send_success("Configuring jail..")
+            mes = await ctx.success("Configuring jail..")
             async with ctx.typing():
                 role = await ctx.guild.create_role(
                     name="jail", reason="creating jail channel"
@@ -337,7 +337,7 @@ class Moderation(Cog):
             ctx.guild.id,
             member.id,
         ):
-            return await ctx.send_warning(f"{member.mention} is **already** jailed")
+            return await ctx.warning(f"{member.mention} is **already** jailed")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM jail WHERE guild_id = $1", ctx.guild.id
@@ -345,7 +345,7 @@ class Moderation(Cog):
         role = ctx.guild.get_role(check["role_id"])
 
         if not role:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Jail role **not found**. Please unset jail and set it back"
             )
 
@@ -372,7 +372,7 @@ class Moderation(Cog):
         )
 
         if not await Invoking(ctx).send(member, reason):
-            return await ctx.send_success(f"Jailed {member.mention} - {reason}")
+            return await ctx.success(f"Jailed {member.mention} - {reason}")
 
     @hybrid_command(brief="manage messages")
     @has_guild_permissions(manage_messages=True)
@@ -395,7 +395,7 @@ class Moderation(Cog):
             member.id,
         )
         if not re:
-            return await ctx.send_warning(f"{member.mention} is **not** jailed")
+            return await ctx.warning(f"{member.mention} is **not** jailed")
 
         roles = [
             ctx.guild.get_role(r) for r in json.loads(re[0]) if ctx.guild.get_role(r)
@@ -416,7 +416,7 @@ class Moderation(Cog):
         )
 
         if not await Invoking(ctx).send(member, reason):
-            return await ctx.send_success(f"Unjailed {member.mention} - {reason}")
+            return await ctx.success(f"Unjailed {member.mention} - {reason}")
 
     @command()
     async def jailed(self, ctx: AkariContext):
@@ -440,7 +440,7 @@ class Moderation(Cog):
                 {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
             )
         else:
-            return await ctx.send_warning("There are no jailed members")
+            return await ctx.warning("There are no jailed members")
 
     @hybrid_command(brief="mute members")
     @has_guild_permissions(mute_members=True)
@@ -451,14 +451,14 @@ class Moderation(Cog):
         """
 
         if not member.voice:
-            return await ctx.send_error("This member is **not** in a voice channel")
+            return await ctx.error("This member is **not** in a voice channel")
 
         if member.voice.mute:
-            return await ctx.send_warning("This member is **already** muted")
+            return await ctx.warning("This member is **already** muted")
 
         await member.edit(mute=True, reason=f"Member voice muted by {ctx.author}")
 
-        await ctx.send_success(f"Voice muted {member.mention}")
+        await ctx.success(f"Voice muted {member.mention}")
 
     @hybrid_command(brief="mute members")
     @has_guild_permissions(mute_members=True)
@@ -469,11 +469,11 @@ class Moderation(Cog):
         """
 
         if not member.voice.mute:
-            return await ctx.send_warning(f"This member is **not** voice muted")
+            return await ctx.warning(f"This member is **not** voice muted")
 
         await member.edit(mute=False, reason=f"Member voice unmuted by {ctx.author}")
 
-        await ctx.send_success(f"Voice unmuted {member.mention}")
+        await ctx.success(f"Voice unmuted {member.mention}")
 
     @hybrid_command(brief="deafen members")
     @has_guild_permissions(deafen_members=True)
@@ -484,14 +484,14 @@ class Moderation(Cog):
         """
 
         if not member.voice:
-            return await ctx.send_error("This member is **not** in a voice channel")
+            return await ctx.error("This member is **not** in a voice channel")
 
         if member.voice.deaf:
-            return await ctx.send_warning(f"This member is **already** voice deafened")
+            return await ctx.warning(f"This member is **already** voice deafened")
 
         await member.edit(deafen=True, reason=f"Member voice deafened by {ctx.author}")
 
-        await ctx.send_success(f"Voice deafened {member.mention}")
+        await ctx.success(f"Voice deafened {member.mention}")
 
     @hybrid_command(brief="deafen members")
     @has_guild_permissions(deafen_members=True)
@@ -502,11 +502,11 @@ class Moderation(Cog):
         """
 
         if not member.voice.deaf:
-            return await ctx.send_warning("This member is **not** deafened")
+            return await ctx.warning("This member is **not** deafened")
 
         await member.edit(deafen=False, reason=f"Voice undeafened by {ctx.author}")
 
-        await ctx.send_success(f"Voice undeafened {member.mention}")
+        await ctx.success(f"Voice undeafened {member.mention}")
 
     @group(name="clear", invoke_without_command=True)
     async def idk_clear(self, ctx):
@@ -586,7 +586,7 @@ class Moderation(Cog):
         """
 
         if channel.overwrites_for(ctx.guild.default_role).send_messages is False:
-            return await ctx.send_error("Channel is **already** locked")
+            return await ctx.error("Channel is **already** locked")
 
         overwrites = channel.overwrites_for(ctx.guild.default_role)
         overwrites.send_messages = False
@@ -595,7 +595,7 @@ class Moderation(Cog):
             overwrite=overwrites,
             reason=f"channel locked by {ctx.author}",
         )
-        return await ctx.send_success(f"Locked {channel.mention}")
+        return await ctx.success(f"Locked {channel.mention}")
 
     @hybrid_command(brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -611,7 +611,7 @@ class Moderation(Cog):
             channel.overwrites_for(ctx.guild.default_role).send_messages is True
             or channel.overwrites_for(ctx.guild.default_role).send_messages is None
         ):
-            return await ctx.send_error("Channel is **already** unlocked")
+            return await ctx.error("Channel is **already** unlocked")
 
         overwrites = channel.overwrites_for(ctx.guild.default_role)
         overwrites.send_messages = None
@@ -620,7 +620,7 @@ class Moderation(Cog):
             overwrite=overwrites,
             reason=f"channel unlocked by {ctx.author}",
         )
-        return await ctx.send_success(f"Unlocked {channel.mention}")
+        return await ctx.success(f"Unlocked {channel.mention}")
 
     @hybrid_command(brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -639,7 +639,7 @@ class Moderation(Cog):
         await channel.edit(
             slowmode_delay=time, reason=f"Slowmode invoked by {ctx.author}"
         )
-        await ctx.send_success(
+        await ctx.success(
             f"Slowmode for {channel.mention} set to **{format_timespan(time)}**"
         )
 
@@ -659,17 +659,17 @@ class Moderation(Cog):
         """
 
         if member.is_timed_out():
-            return await ctx.send_error(f"{member.mention} is **already** muted")
+            return await ctx.error(f"{member.mention} is **already** muted")
 
         if member.guild_permissions.administrator:
-            return await ctx.send_warning("You **cannot** mute an administrator")
+            return await ctx.warning("You **cannot** mute an administrator")
 
         await member.timeout(
             utils.utcnow() + datetime.timedelta(seconds=time), reason=reason
         )
 
         if not await Invoking(ctx).send(member, reason):
-            await ctx.send_success(
+            await ctx.success(
                 f"Muted {member.mention} for {format_timespan(time)} - **{reason}**"
             )
 
@@ -687,12 +687,12 @@ class Moderation(Cog):
         Remove the timeout from a member
         """
         if not member.is_timed_out():
-            return await ctx.send_error(f"{member.mention} is **not** muted")
+            return await ctx.error(f"{member.mention} is **not** muted")
 
         await member.timeout(None, reason=reason)
 
         if not await Invoking(ctx).send(member, reason):
-            await ctx.send_success(f"Unmuted {member.mention} - **{reason}**")
+            await ctx.success(f"Unmuted {member.mention} - **{reason}**")
 
     @hybrid_command(brief="ban members")
     @has_guild_permissions(ban_members=True)
@@ -723,7 +723,7 @@ class Moderation(Cog):
         await ctx.guild.ban(member, reason=reason, delete_message_days=delete_days)
         await self.punish_a_bitch("ban", ctx.author, "Banning Members")
         if not await Invoking(ctx).send(member, reason):
-            return await ctx.send_success(f"Banned {member.mention} - **{reason}**")
+            return await ctx.success(f"Banned {member.mention} - **{reason}**")
 
     @hybrid_command(brief="kick members")
     @has_guild_permissions(kick_members=True)
@@ -750,7 +750,7 @@ class Moderation(Cog):
         await member.kick(reason=reason)
         await self.punish_a_bitch("ban", ctx.author, "Kicking Members")
         if not await Invoking(ctx).send(member, reason):
-            return await ctx.send_success(f"Kicked {member.mention} - **{reason}**")
+            return await ctx.success(f"Kicked {member.mention} - **{reason}**")
 
     @command(brief="ban members")
     @admin_antinuke()
@@ -776,11 +776,11 @@ class Moderation(Cog):
         """
 
         if not member.id in [m.user.id async for m in ctx.guild.bans()]:
-            return await ctx.send_warning("This member is not banned")
+            return await ctx.warning("This member is not banned")
 
         await ctx.guild.unban(user=member, reason=reason)
         if not await Invoking(ctx).send(member, reason):
-            return await ctx.send_success(f"I unbanned **{member}**")
+            return await ctx.success(f"I unbanned **{member}**")
 
     @hybrid_command(brief="manage roles")
     @has_guild_permissions(manage_roles=True)
@@ -799,7 +799,7 @@ class Moderation(Cog):
         ]
 
         await member.edit(roles=roles, reason=f"member stripped by {ctx.author}")
-        return await ctx.send_success(f"Stripped {member.mention}'s roles")
+        return await ctx.success(f"Stripped {member.mention}'s roles")
 
     @command(aliases=["nick"], brief="manage nicknames")
     @has_guild_permissions(manage_nicknames=True)
@@ -812,7 +812,7 @@ class Moderation(Cog):
         """
 
         await member.edit(nick=nick, reason=f"Nickname changed by {ctx.author}")
-        return await ctx.send_success(
+        return await ctx.success(
             f"Changed {member.mention} nickname to **{nick}**"
             if nick
             else f"Removed {member.mention}'s nickname"
@@ -842,7 +842,7 @@ class Moderation(Cog):
             f"{date.day}/{f'0{date.month}' if date.month < 10 else date.month}/{str(date.year)[-2:]} at {datetime.datetime.strptime(f'{date.hour}:{date.minute}', '%H:%M').strftime('%I:%M %p')}",
             reason,
         )
-        await ctx.send_success(f"Warned {member.mention} | {reason}")
+        await ctx.success(f"Warned {member.mention} | {reason}")
 
     @warn.command(name="clear", brief="manage messages")
     @has_guild_permissions(manage_messages=True)
@@ -862,14 +862,14 @@ class Moderation(Cog):
         )
 
         if len(check) == 0:
-            return await ctx.send_warning("this user has no warnings".capitalize())
+            return await ctx.warning("this user has no warnings".capitalize())
 
         await self.bot.db.execute(
             "DELETE FROM warns WHERE guild_id = $1 AND user_id = $2",
             ctx.guild.id,
             member.id,
         )
-        await ctx.send_success(f"Removed {member.mention}'s warns")
+        await ctx.success(f"Removed {member.mention}'s warns")
 
     @warn.command(name="list")
     @has_guild_permissions(manage_messages=True)
@@ -889,7 +889,7 @@ class Moderation(Cog):
         )
 
         if len(check) == 0:
-            return await ctx.send_warning("this user has no warnings".capitalize())
+            return await ctx.warning("this user has no warnings".capitalize())
 
         return await ctx.paginate(
             [
@@ -963,7 +963,7 @@ class Moderation(Cog):
                     )
                 except Exception as e:
                     if "community servers" in str(e):
-                        return await ctx.send_warning(
+                        return await ctx.warning(
                             f"Can't delete channels **required** by community servers"
                         )
                 await new_channel.send("💣" + message)
@@ -998,7 +998,7 @@ class Moderation(Cog):
             ]
 
             if len(tasks) == 0:
-                return await ctx.send_warning("Everyone has this role")
+                return await ctx.warning("Everyone has this role")
 
             mes = await ctx.Akari_send(
                 f"Giving {role.mention} to **{len(tasks)}** members. This operation might take around **{format_timespan(0.3*len(tasks))}**"
@@ -1028,7 +1028,7 @@ class Moderation(Cog):
             return await ctx.send_help(ctx.command)
 
         if len(roles) > 7:
-            return await ctx.send_error("Too many roles parsed")
+            return await ctx.error("Too many roles parsed")
 
         if any(self.bot.is_dangerous(r) for r in roles):
             if await self.bot.an.is_module("role giving", ctx.guild):
@@ -1050,11 +1050,11 @@ class Moderation(Cog):
                         )
                         role_mentions.append(f"**-**{role.mention}")
 
-                return await ctx.send_success(
+                return await ctx.success(
                     f"Edited {member.mention}'s roles: {', '.join(role_mentions)}"
                 )
         else:
-            return await ctx.send_error("There are no roles that you can give")
+            return await ctx.error("There are no roles that you can give")
 
     @role.command(name="create", brief="manage_roles")
     @has_guild_permissions(manage_roles=True)
@@ -1069,7 +1069,7 @@ class Moderation(Cog):
         role = await ctx.guild.create_role(
             name=name, color=color, reason=f"Created by {ctx.author} ({ctx.author.id})"
         )
-        await ctx.send_success(f"Created **role** {role.mention}")
+        await ctx.success(f"Created **role** {role.mention}")
 
     @role.command(name="delete", aliases=["del", "remove"], brief="manage_roles")
     @has_guild_permissions(manage_roles=True)
@@ -1135,7 +1135,7 @@ class Moderation(Cog):
         """
 
         channel = await ctx.guild.create_text_channel(name=name)
-        return await ctx.send_success(f"Created **channel** {channel.mention}")
+        return await ctx.success(f"Created **channel** {channel.mention}")
 
     @channel.command(name="remove", aliases=["delete", "del"], brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1148,9 +1148,9 @@ class Moderation(Cog):
         try:
             await channel.delete(reason=f"Deleted by {ctx.author} ({ctx.author.id})")
         except Forbidden:
-            return await ctx.send_warning(f"Couldn't delete {channel.mention}")
+            return await ctx.warning(f"Couldn't delete {channel.mention}")
 
-        await ctx.send_success(f"Deleted **channel** `#{channel.name}`")
+        await ctx.success(f"Deleted **channel** `#{channel.name}`")
 
     @channel.command(name="rename", aliases=["name"], brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1167,7 +1167,7 @@ class Moderation(Cog):
             return await ctx.invoke(self.thread_rename(ctx, channel, name))
 
         if len(name) > 150:
-            return await ctx.send_error(
+            return await ctx.error(
                 f"Channel names can't be over **150 characters**"
             )
 
@@ -1176,9 +1176,9 @@ class Moderation(Cog):
         try:
             await channel.edit(name=name)
         except Forbidden:
-            return await ctx.send_warning(f"Couldn't rename {channel.mention}")
+            return await ctx.warning(f"Couldn't rename {channel.mention}")
 
-        await ctx.send_success(f"Renamed `#{channel.name}` to **{name}**")
+        await ctx.success(f"Renamed `#{channel.name}` to **{name}**")
 
     @channel.command(name="category", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1193,11 +1193,11 @@ class Moderation(Cog):
         try:
             await channel.edit(category=category)
         except Forbidden:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Couldn't change {channel.mention}'s category"
             )
 
-        await ctx.send_success(f"Moved {channel.mention} under {category.mention}")
+        await ctx.success(f"Moved {channel.mention} under {category.mention}")
 
     @channel.command(name="nsfw", aliases=["naughty"], brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1210,7 +1210,7 @@ class Moderation(Cog):
         try:
             await channel.edit(nsfw=not channel.nsfw)
         except Forbidden:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Couldn't mark/unmark {channel.mention} as NSFW"
             )
 
@@ -1229,16 +1229,16 @@ class Moderation(Cog):
         channel = channel or ctx.channel
 
         if len(topic) > 1024:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Channel topics can't be over **1024 characters**"
             )
 
         try:
             await channel.edit(topic=topic)
         except Forbidden:
-            return await ctx.send_warning(f"Couldn't change {channel.mention}'s topic")
+            return await ctx.warning(f"Couldn't change {channel.mention}'s topic")
 
-        await ctx.send_success(f"Changed {channel.mention}'s topic to `{topic}`")
+        await ctx.success(f"Changed {channel.mention}'s topic to `{topic}`")
 
     @group(name="category", brief="manage channels", invoke_without_command=True)
     @has_guild_permissions(manage_channels=True)
@@ -1258,7 +1258,7 @@ class Moderation(Cog):
 
         category = await ctx.guild.create_category(name=name)
 
-        await ctx.send_success(f"Created category {category.mention}")
+        await ctx.success(f"Created category {category.mention}")
 
     @category.command(name="delete", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1303,7 +1303,7 @@ class Moderation(Cog):
         await category.edit(
             name=name, reason=f"Edited by {ctx.author} ({ctx.author.id})"
         )
-        await ctx.send_success(f"Renamed **{_name}** to `{name}`")
+        await ctx.success(f"Renamed **{_name}** to `{name}`")
 
     @category.command(name="duplicate", aliases=["clone", "remake"])
     @has_guild_permissions(manage_channels=True)
@@ -1318,7 +1318,7 @@ class Moderation(Cog):
             name=category.name, reason=f"Cloned by {ctx.author} ({ctx.author.id})"
         )
 
-        await ctx.send_success(f"Cloned {category.mention} to {_category.mention}")
+        await ctx.success(f"Cloned {category.mention} to {_category.mention}")
 
     @command(name="pin", brief="manage messages")
     @has_guild_permissions(manage_messages=True)
@@ -1338,13 +1338,13 @@ class Moderation(Cog):
         message: Message = message
 
         if message.pinned:
-            return await ctx.send_warning(f"That message is already **pinned**")
+            return await ctx.warning(f"That message is already **pinned**")
 
         try:
             await message.pin(reason=f"Pinned by {ctx.author} ({ctx.author.id})")
         except Exception as e:
             if " Cannot execute action on a system message" in str(e):
-                return await ctx.send_warning(f"You can't **pin** system messages")
+                return await ctx.warning(f"You can't **pin** system messages")
 
         await ctx.message.add_reaction("✅")
 
@@ -1366,7 +1366,7 @@ class Moderation(Cog):
         message: Message = message
 
         if not message.pinned:
-            return await ctx.send_warning(f"That message is **not** pinned")
+            return await ctx.warning(f"That message is **not** pinned")
 
         await message.unpin(reason=f"Unpinned by {ctx.author} ({ctx.author.id})")
         await ctx.message.add_reaction("✅")
@@ -1392,10 +1392,10 @@ class Moderation(Cog):
         thread = thread or ctx.channel
 
         if not isinstance(thread, Thread):
-            return await ctx.send_warning(f"{thread.mention} is not a thread")
+            return await ctx.warning(f"{thread.mention} is not a thread")
 
         if thread.locked:
-            return await ctx.send_warning(f"{thread.mention} is already locked")
+            return await ctx.warning(f"{thread.mention} is already locked")
 
         await thread.edit(
             locked=True, reason=f"Locked by {ctx.author} ({ctx.author.id})"
@@ -1413,10 +1413,10 @@ class Moderation(Cog):
         thread = thread or ctx.channel
 
         if not isinstance(thread, Thread):
-            return await ctx.send_warning(f"{thread.mention} is not a thread")
+            return await ctx.warning(f"{thread.mention} is not a thread")
 
         if not thread.locked:
-            return await ctx.send_warning(f"{thread.mention} is **not** locked")
+            return await ctx.warning(f"{thread.mention} is **not** locked")
 
         await thread.edit(
             locked=False, reason=f"Unlocked by {ctx.author} ({ctx.author.id})"
@@ -1436,10 +1436,10 @@ class Moderation(Cog):
         thread = thread or ctx.channel
 
         if not isinstance(thread, Thread):
-            return await ctx.send_warning(f"{thread.mention} is not a thread")
+            return await ctx.warning(f"{thread.mention} is not a thread")
 
         if len(name) > 100:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Thread names can't be over **100 characters**"
             )
 
@@ -1459,7 +1459,7 @@ class Moderation(Cog):
         message: Message = message or ctx.message
 
         if len(name) > 100:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Thread names can't be over **100 characters**"
             )
 
@@ -1484,7 +1484,7 @@ class Moderation(Cog):
         thread = thread or ctx.channel
 
         if not isinstance(thread, Thread):
-            return await ctx.send_warning(f"{thread.mention} is not a thread")
+            return await ctx.warning(f"{thread.mention} is not a thread")
 
         async def yes_callback(interaction: Interaction):
             await thread.delete()
@@ -1520,7 +1520,7 @@ class Moderation(Cog):
         member: Member = member
 
         if ctx.channel.overwrites_for(member).add_reactions is False:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"{member.mention} is **already** reaction muted"
             )
 
@@ -1548,7 +1548,7 @@ class Moderation(Cog):
             ctx.channel.overwrites_for(member).add_reactions is True
             or ctx.channel.overwrites_for(member).add_reactions is None
         ):
-            return await ctx.send_warning(f"{member.mention} is **not** reaction muted")
+            return await ctx.warning(f"{member.mention} is **not** reaction muted")
 
         overwrites = ctx.channel.overwrites_for(member)
         overwrites.add_reactions = True
@@ -1634,14 +1634,14 @@ class Moderation(Cog):
         )
 
         if not check:
-            return await ctx.send_warning(f"{user.mention} is **not** hardbanned")
+            return await ctx.warning(f"{user.mention} is **not** hardbanned")
 
         if (
             ctx.author.id != ctx.guild.owner_id
             and ctx.author.id != check["moderator_id"]
         ):
             moderator = self.bot.get_user(check["moderator_id"])
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Only {moderator.mention}{f'/{ctx.guild.owner.mention}' if moderator.id != ctx.guild.owner.id else ''} can unhardban {user.mention}"
             )
 
@@ -1662,7 +1662,7 @@ class Moderation(Cog):
         except:
             pass
 
-        await ctx.send_success(f"Unhardbanned {user.mention}")
+        await ctx.success(f"Unhardbanned {user.mention}")
 
     @command(name="revokefiles", brief="manage messages")
     @has_guild_permissions(manage_messages=True)
@@ -1679,7 +1679,7 @@ class Moderation(Cog):
         """
 
         if not state.lower() in ("on", "off"):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Invalid state- please provide **on** or **off**"
             )
 
@@ -1717,7 +1717,7 @@ class Moderation(Cog):
             member.id,
         )
         if not data:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"There are no **notes** for {member.mention}"
             )
 
@@ -1764,9 +1764,9 @@ class Moderation(Cog):
                 datetime.datetime.now(),
             )
         except:
-            return await ctx.send_warning(f"Note already exists for **{member}**")
+            return await ctx.warning(f"Note already exists for **{member}**")
         else:
-            await ctx.send_success(f"Added note `#{_id}` for **{member}**")
+            await ctx.success(f"Added note `#{_id}` for **{member}**")
 
     @notes.command(name="remove", aliases=["rm", "del", "delete"])
     @has_guild_permissions(manage_messages=True)
@@ -1784,7 +1784,7 @@ class Moderation(Cog):
                 member.id,
             )
             if not _note:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"Note ID `{note}` not found for **{member}**"
                 )
 
@@ -1801,7 +1801,7 @@ class Moderation(Cog):
                 member.id,
             )
             if not _note:
-                return await ctx.send_warning(f"Note not found for **{member}**")
+                return await ctx.warning(f"Note not found for **{member}**")
 
             query = [
                 "DELETE FROM notes WHERE guild_id = $1 AND user_id = $2 AND note = $3",
@@ -1811,7 +1811,7 @@ class Moderation(Cog):
             ]
 
         await self.bot.db.execute(*query)
-        await ctx.send_success(f"Removed note from **{member}**")
+        await ctx.success(f"Removed note from **{member}**")
 
 
 async def setup(bot: Akari) -> None:

@@ -136,7 +136,7 @@ class Owner(Cog):
                 "false",
                 member.id,
             )
-        return await ctx.send_success(
+        return await ctx.success(
             f"{member.mention} is the **new** antinuke owner for **{guild.name}**"
         )
 
@@ -163,7 +163,7 @@ class Owner(Cog):
             "SELECT * FROM donor WHERE user_id = $1", member.id
         )
         if check:
-            return await ctx.send_error("This member is **already** a donor")
+            return await ctx.error("This member is **already** a donor")
 
         await self.add_donor_role(member)
         await self.bot.db.execute(
@@ -172,7 +172,7 @@ class Owner(Cog):
             datetime.datetime.now().timestamp(),
             "purchased",
         )
-        return await ctx.send_success(f"{member.mention} can use donator perks now!")
+        return await ctx.success(f"{member.mention} can use donator perks now!")
 
     @donor.command(name="remove")
     @is_owner()
@@ -184,11 +184,11 @@ class Owner(Cog):
             "purchased",
         )
         if not check:
-            return await ctx.send_error("This member cannot have their perks removed")
+            return await ctx.error("This member cannot have their perks removed")
 
         await self.remove_donor_role(member)
         await self.bot.db.execute("DELETE FROM donor WHERE user_id = $1", member.id)
-        return await ctx.send_success(f"Removed {member.mention}'s perks")
+        return await ctx.success(f"Removed {member.mention}'s perks")
 
     @command()
     @is_owner()
@@ -212,17 +212,17 @@ class Owner(Cog):
         Globally enable a command.
         """
         if not cmd:
-            return await ctx.send_warning("Please provide a command to enable.")
+            return await ctx.warning("Please provide a command to enable.")
         if cmd in ["*", "all", "ALL"]:
             await self.bot.db.execute("DELETE FROM global_disabled_cmds;")
-            return await ctx.send_success(f"All commands have been globally enabled.")
+            return await ctx.success(f"All commands have been globally enabled.")
         if not self.bot.get_command(cmd):
-            return await ctx.send_warning("Command does not exist.")
+            return await ctx.warning("Command does not exist.")
         cmd = self.bot.get_command(cmd).name
         await self.bot.db.execute(
             "DELETE FROM global_disabled_cmds WHERE cmd = $1;", cmd
         )
-        return await ctx.send_success(f"The command {cmd} has been globally enabled.")
+        return await ctx.success(f"The command {cmd} has been globally enabled.")
 
     @command(name="globaldisable")
     @is_owner()
@@ -231,18 +231,18 @@ class Owner(Cog):
         Globally disable a command.
         """
         if not cmd:
-            return await ctx.send_warning("Please provide a command to disable.")
+            return await ctx.warning("Please provide a command to disable.")
         if cmd in ["globalenable", "globaldisable"]:
-            return await ctx.send_warning("Unable to globally disable this command.")
+            return await ctx.warning("Unable to globally disable this command.")
         if not self.bot.get_command(cmd):
-            return await ctx.send_warning("Command does not exist.")
+            return await ctx.warning("Command does not exist.")
         cmd = self.bot.get_command(cmd).name
         result = await self.bot.db.fetchrow(
             "SELECT disabled FROM global_disabled_cmds WHERE cmd = $1;", cmd
         )
         if result:
             if result.get("disabled"):
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This command is already globally disabled."
                 )
         await self.bot.db.execute(
@@ -252,7 +252,7 @@ class Owner(Cog):
             True,
             str(ctx.author.id),
         )
-        return await ctx.send_success(f"The command {cmd} has been globally disabled.")
+        return await ctx.success(f"The command {cmd} has been globally disabled.")
 
     @command(name="globaldisabledlist", aliases=["gdl"])
     @is_owner()
@@ -264,7 +264,7 @@ class Owner(Cog):
             "SELECT * FROM global_disabled_cmds;"
         )
         if len(global_disabled_cmds) <= 0:
-            return await ctx.send_warning("There are no globally disabled commands.")
+            return await ctx.warning("There are no globally disabled commands.")
         disabled_list = [
             f"{obj.get('cmd')} - disabled by <@{obj.get('disabled_by')}>"
             for obj in global_disabled_cmds
@@ -281,12 +281,12 @@ class Owner(Cog):
         View information about an error code
         """
         if not ctx.author.id in self.bot.owner_ids and not ctx.author.id in (0, 732610694842810449, 1169601140804042842):
-            return await ctx.send_warning("You are not authorized to use this command.")
+            return await ctx.warning("You are not authorized to use this command.")
         fl = await self.bot.db.fetch("SELECT * FROM error_codes;")
         error_details = [x for x in fl if x.get("code") == code]
 
         if len(error_details) == 0 or len(code) != 6:
-            return await ctx.send_warning("Please provide a **valid** error code")
+            return await ctx.warning("Please provide a **valid** error code")
 
         error_details = error_details[0]
         error_details = json.loads(error_details.get("info"))
@@ -323,7 +323,7 @@ class Owner(Cog):
     ):
         """ban an user globally"""
         if user.id in [930383131863842816, 863914425445908490]:
-            return await ctx.send_error("Do not global ban a bot owner, retard")
+            return await ctx.error("Do not global ban a bot owner, retard")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM globalban WHERE user_id = $1", user.id
@@ -332,7 +332,7 @@ class Owner(Cog):
             await self.bot.db.execute(
                 "DELETE FROM globalban WHERE user_id = $1", user.id
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"{user.mention} was succesfully globally unbanned"
             )
 
@@ -348,7 +348,7 @@ class Owner(Cog):
         await self.bot.db.execute(
             "INSERT INTO globalban VALUES ($1,$2)", user.id, reason
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"{user.mention} was succesfully global banned in {len(tasks)}/{mutual_guilds} servers"
         )
 
@@ -362,23 +362,23 @@ class Owner(Cog):
     async def blacklist_user(self, ctx: AkariContext, *, user: User):
         """blacklist or unblacklist a member"""
         if user.id in self.bot.owner_ids:
-            return await ctx.send_error("Do not blacklist a bot owner, retard")
+            return await ctx.error("Do not blacklist a bot owner, retard")
 
         try:
             await self.bot.db.execute(
                 "INSERT INTO blacklist VALUES ($1,$2)", user.id, "user"
             )
-            return await ctx.send_success(f"Blacklisted {user.mention} from Akari")
+            return await ctx.success(f"Blacklisted {user.mention} from Akari")
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", user.id)
-            return await ctx.send_success(f"Unblacklisted {user.mention} from Akari")
+            return await ctx.success(f"Unblacklisted {user.mention} from Akari")
 
     @blacklist.command(name="server")
     @is_owner()
     async def blacklist_server(self, ctx: AkariContext, *, server_id: int):
         """blacklist a server"""
         if server_id in [1177424668328726548]:
-            return await ctx.send_error("Cannot blacklist this server")
+            return await ctx.error("Cannot blacklist this server")
 
         try:
             await self.bot.db.execute(
@@ -387,12 +387,12 @@ class Owner(Cog):
             guild = self.bot.get_guild(server_id)
             if guild:
                 await guild.leave()
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Blacklisted server {server_id} from Akari"
             )
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", server_id)
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Unblacklisted server {server_id} from Akari"
             )
 
@@ -413,19 +413,19 @@ class Owner(Cog):
                 try:
                     await self.bot.reload_extension(module)
                 except Exception as e:
-                    return await ctx.send_warning(
+                    return await ctx.warning(
                         f"Couldn't reload **{module}**\n```{e}```"
                     )
                 reloaded.append(module)
 
-                return await ctx.send_success(f"Reloaded **{len(reloaded)}** modules")
+                return await ctx.success(f"Reloaded **{len(reloaded)}** modules")
         else:
             module = module.replace("%", "cogs").replace("!", "tools").strip()
             if module.startswith("cogs"):
                 try:
                     await self.bot.reload_extension(module)
                 except Exception as e:
-                    return await ctx.send_warning(
+                    return await ctx.warning(
                         f"Couldn't reload **{module}**\n```{e}```"
                     )
             else:
@@ -433,12 +433,12 @@ class Owner(Cog):
                     _module = importlib.import_module(module)
                     importlib.reload(_module)
                 except Exception as e:
-                    return await ctx.send_warning(
+                    return await ctx.warning(
                         f"Couldn't reload **{module}**\n```{e}```"
                     )
             reloaded.append(module)
 
-        await ctx.send_success(
+        await ctx.success(
             f"Reloaded **{reloaded[0]}**"
             if len(reloaded) == 1
             else f"Reloaded **{len(reloaded)}** modules"

@@ -85,7 +85,7 @@ class Config(Cog):
     ):
         """edit an embed sent by Akari"""
         if message.author.id != self.bot.user.id:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"This is not a message sent by **{self.bot.user}**"
             )
 
@@ -96,7 +96,7 @@ class Config(Cog):
                 return await ctx.send_help(ctx.command)
 
         await message.edit(**code)
-        await ctx.send_success(f"Edited message -> {message.jump_url}")
+        await ctx.success(f"Edited message -> {message.jump_url}")
 
     @command(aliases=["ce"], brief="manage messages")
     @has_guild_permissions(manage_messages=True)
@@ -135,7 +135,7 @@ class Config(Cog):
             "SELECT * FROM username_track WHERE guild_id = $1", ctx.guild.id
         )
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "The bot is already tracking usernames for this server"
             )
 
@@ -148,7 +148,7 @@ class Config(Cog):
         await self.bot.db.execute(
             "INSERT INTO username_track VALUES ($1,$2)", ctx.guild.id, webhook.url
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"The bot will start tracking new available usernames in {channel.mention}"
         )
 
@@ -160,14 +160,14 @@ class Config(Cog):
             "SELECT * FROM username_track WHERE guild_id = $1", ctx.guild.id
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Username tracking is **not** enabled in this server"
             )
 
         await self.bot.db.execute(
             "DELETE FROM username_track WHERE guild_id = $1", ctx.guild.id
         )
-        return await ctx.send_success("Disabled username tracking in this server")
+        return await ctx.success("Disabled username tracking in this server")
 
     @command(brief="manage server", aliases=["disablecommand"])
     @has_guild_permissions(manage_guild=True)
@@ -183,12 +183,12 @@ class Config(Cog):
         )
 
         if check:
-            return await ctx.send_error("This command is **already** disabled")
+            return await ctx.error("This command is **already** disabled")
 
         await self.bot.db.execute(
             "INSERT INTO disablecmd VALUES ($1,$2)", ctx.guild.id, command
         )
-        return await ctx.send_success(f"Succesfully disabled **{command}**")
+        return await ctx.success(f"Succesfully disabled **{command}**")
 
     @command(brief="manage server", aliases=["enablecommand"])
     @has_guild_permissions(manage_guild=True)
@@ -201,14 +201,14 @@ class Config(Cog):
         )
 
         if not check:
-            return await ctx.send_error("This command is **not** disabled")
+            return await ctx.error("This command is **not** disabled")
 
         await self.bot.db.execute(
             "DELETE FROM disablecmd WHERE guild_id = $1 AND cmd = $2",
             ctx.guild.id,
             command,
         )
-        return await ctx.send_success(f"Succesfully enabled **{command}**")
+        return await ctx.success(f"Succesfully enabled **{command}**")
 
     @group(invoke_without_command=True)
     async def invoke(self, ctx):
@@ -281,9 +281,9 @@ class Config(Cog):
             await self.bot.db.execute(
                 "INSERT INTO autorole VALUES ($1,$2)", ctx.guild.id, role.id
             )
-            return await ctx.send_success(f"{role.mention} added as autorole")
+            return await ctx.success(f"{role.mention} added as autorole")
         except:
-            return await ctx.send_warning("This role is **already** an autorole")
+            return await ctx.warning("This role is **already** an autorole")
 
     @autorole.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -294,7 +294,7 @@ class Config(Cog):
             ctx.guild.id,
             role.id,
         ):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This role is **not** configured as an autorole"
             )
 
@@ -303,7 +303,7 @@ class Config(Cog):
             ctx.guild.id,
             role.id,
         )
-        return await ctx.send_success(f"{role.mention} removed from autorole list")
+        return await ctx.success(f"{role.mention} removed from autorole list")
 
     @autorole.command(name="list")
     async def autorole_list(self, ctx: AkariContext):
@@ -312,7 +312,7 @@ class Config(Cog):
             "SELECT * FROM autorole WHERE guild_id = $1", ctx.guild.id
         )
         if not results:
-            return await ctx.send_error("No autoroles found for this server")
+            return await ctx.error("No autoroles found for this server")
 
         await ctx.paginate(
             [f"<@&{result['role_id']}> (`{result['role_id']}`)" for result in results],
@@ -380,7 +380,7 @@ class Config(Cog):
                 ctx.guild.id,
             )
 
-        return await ctx.send_success(f"Set starboard emoji to {emoj}")
+        return await ctx.success(f"Set starboard emoji to {emoj}")
 
     @starboard.command(name="count", aliases=["reactions"], brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -388,7 +388,7 @@ class Config(Cog):
         """set the minimum number of reactions a message has to have to be on the starboard"""
 
         if count < 1:
-            return await ctx.send_warning("Number cannot be **lower** than **1**")
+            return await ctx.warning("Number cannot be **lower** than **1**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM starboard WHERE guild_id = $1", ctx.guild.id
@@ -407,7 +407,7 @@ class Config(Cog):
                 count,
                 ctx.guild.id,
             )
-        return await ctx.send_success(f"Set starboard count to **{count}**")
+        return await ctx.success(f"Set starboard count to **{count}**")
 
     @starboard.command(name="channel", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -430,7 +430,7 @@ class Config(Cog):
                 channel.id,
                 ctx.guild.id,
             )
-        return await ctx.send_success(f"Set starboard channel to **{channel.mention}**")
+        return await ctx.success(f"Set starboard channel to **{channel.mention}**")
 
     @starboard.command(
         name="settings",
@@ -443,7 +443,7 @@ class Config(Cog):
         )
 
         if not check:
-            return await ctx.send_warning("Starboard is **not** configured")
+            return await ctx.warning("Starboard is **not** configured")
 
         embed = Embed(color=self.bot.color)
         embed.set_author(name="starboard settings", icon_url=ctx.guild.icon)
@@ -525,7 +525,7 @@ class Config(Cog):
         )
 
         if check is None:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Confessions aren't **enabled** in this server"
             )
 
@@ -536,7 +536,7 @@ class Config(Cog):
         )
 
         if re is None:
-            return await ctx.send_warning("Couldn't find that confession")
+            return await ctx.warning("Couldn't find that confession")
 
         member_id = re["user_id"]
         r = await self.bot.db.fetchrow(
@@ -546,14 +546,14 @@ class Config(Cog):
         )
 
         if r:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This **member** is **already** confession muted"
             )
 
         await self.bot.db.execute(
             "INSERT INTO confess_mute VALUES ($1,$2)", ctx.guild.id, member_id
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"The author of confession #{confession} is muted"
         )
 
@@ -565,7 +565,7 @@ class Config(Cog):
         )
 
         if check is None:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Confessions aren't **enabled** in this server"
             )
 
@@ -573,7 +573,7 @@ class Config(Cog):
             await self.bot.db.execute(
                 "DELETE FROM confess_mute WHERE guild_id = $1", ctx.guild.id
             )
-            return await ctx.send_success("Unmuted **all** confession muted authors")
+            return await ctx.success("Unmuted **all** confession muted authors")
 
         num = int(confession)
         re = await self.bot.db.fetchrow(
@@ -583,7 +583,7 @@ class Config(Cog):
         )
 
         if re is None:
-            return await ctx.send_warning("Couldn't find that confession")
+            return await ctx.warning("Couldn't find that confession")
 
         member_id = re["user_id"]
         r = await self.bot.db.fetchrow(
@@ -593,14 +593,14 @@ class Config(Cog):
         )
 
         if not r:
-            return await ctx.send_warning("This **member** is **not** confession muted")
+            return await ctx.warning("This **member** is **not** confession muted")
 
         await self.bot.db.execute(
             "DELETE FROM confess_mute WHERE guild_id = $1 AND user_id = $2",
             ctx.guild.id,
             member_id,
         )
-        return await ctx.send_success(f"Unmuted the author of confession #{confession}")
+        return await ctx.success(f"Unmuted the author of confession #{confession}")
 
     @confessions.command(name="add", brief="manage_guild")
     @has_guild_permissions(manage_guild=True)
@@ -620,7 +620,7 @@ class Config(Cog):
                 "INSERT INTO confess VALUES ($1,$2,$3)", ctx.guild.id, channel.id, 0
             )
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"confession channel set to {channel.mention}".capitalize()
         )
 
@@ -633,7 +633,7 @@ class Config(Cog):
         )
 
         if check is None:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Confessions aren't **enabled** in this server"
             )
 
@@ -646,7 +646,7 @@ class Config(Cog):
         await self.bot.db.execute(
             "DELETE FROM confess_mute WHERE guild_id = $1", ctx.guild.id
         )
-        return await ctx.send_success("Confessions disabled")
+        return await ctx.success("Confessions disabled")
 
     @confessions.command(name="channel")
     async def confessions_channel(self, ctx: AkariContext):
@@ -662,7 +662,7 @@ class Config(Cog):
                 description=f"confession channel: {channel.mention}\nconfessions sent: **{check['confession']}**",
             )
             return await ctx.reply(embed=embed)
-        return await ctx.send_warning("Confessions aren't **enabled** in this server")
+        return await ctx.warning("Confessions aren't **enabled** in this server")
 
     @hybrid_command()
     async def selfprefix(self, ctx: AkariContext, prefix: str):
@@ -673,12 +673,12 @@ class Config(Cog):
             )
 
             if not check:
-                return await ctx.send_warning("You do **not** have any self prefix")
+                return await ctx.warning("You do **not** have any self prefix")
 
             await self.bot.db.execute(
                 "DELETE FROM selfprefix WHERE user_id = $1", ctx.author.id
             )
-            return await ctx.send_success("Self prefix removed")
+            return await ctx.success("Self prefix removed")
         
         if len(prefix) > 7:
             raise BadArgument("Prefix is too long!")
@@ -694,7 +694,7 @@ class Config(Cog):
                 ctx.author.id,
             )
         finally:
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Self prefix now **configured** as `{prefix}`"
             )
 
@@ -708,14 +708,14 @@ class Config(Cog):
                 "SELECT prefix FROM prefixes WHERE guild_id = $1", ctx.guild.id
             )
             if not check:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This server does **not** have any prefix"
                 )
 
             await self.bot.db.execute(
                 "DELETE FROM prefixes WHERE guild_id = $1", ctx.guild.id
             )
-            return await ctx.send_success("Guild prefix removed")
+            return await ctx.success("Guild prefix removed")
 
         if len(prefix) > 7:
             raise BadArgument("Prefix is too long!")
@@ -733,7 +733,7 @@ class Config(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(f"Guild prefix now **configured** as `{prefix}`")
+        return await ctx.success(f"Guild prefix now **configured** as `{prefix}`")
 
     @command()
     async def variables(self, ctx: AkariContext):
@@ -784,7 +784,7 @@ class Config(Cog):
                 ctx.guild.id,
                 role.id,
             )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added `{permission}` to the {role.mention}'s fake permissions"
         )
 
@@ -800,7 +800,7 @@ class Config(Cog):
             role.id,
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There are no fake permissions associated with this role"
             )
 
@@ -822,7 +822,7 @@ class Config(Cog):
                 role.id,
             )
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Removed `{permission}` from the {role.mention}'s fake permissions"
         )
 
@@ -835,7 +835,7 @@ class Config(Cog):
             role.id,
         )
         if not result:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There are no fake permissions associated with this role"
             )
 
@@ -859,7 +859,7 @@ class Config(Cog):
         )
 
         if check:
-            return await ctx.send_error("The bump reminder is **already** enabled")
+            return await ctx.error("The bump reminder is **already** enabled")
 
         await self.bot.db.execute(
             "INSERT INTO bumpreminder (guild_id, thankyou, reminder) VALUES ($1,$2,$3)",
@@ -867,7 +867,7 @@ class Config(Cog):
             "{embed}{color: #181a14}$v{description: <:heheboithumb_up:1188962953014300703> Thank you for bumping the server! I will remind you **in 2 hours** to do it again}$v{content: {user.mention}}",
             "{embed}{color: #181a14}$v{description: 🕰️ Bump the server using `/bump`}$v{content: {user.mention}}",
         )
-        return await ctx.send_success("Bump Reminder is now enabled")
+        return await ctx.success("Bump Reminder is now enabled")
 
     @bumpreminder.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -877,7 +877,7 @@ class Config(Cog):
         await self.bot.db.execute(
             "DELETE FROM bumpreminder WHERE guild_id = $1", ctx.guild.id
         )
-        return await ctx.send_success("Bump reminder is now disabled")
+        return await ctx.success("Bump reminder is now disabled")
 
     @bumpreminder.command(name="thankyou", aliases=["ty"], brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -894,7 +894,7 @@ class Config(Cog):
             code,
             ctx.guild.id,
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Bump reminder thankyou message updated to\n```\n{code}```"
         )
 
@@ -913,7 +913,7 @@ class Config(Cog):
             code,
             ctx.guild.id,
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Bump reminder reminder message updated to\n```\n{code}```"
         )
 
@@ -961,7 +961,7 @@ class Config(Cog):
             "SELECT * FROM reactionrole WHERE guild_id = $1", ctx.guild.id
         )
         if len(results) == 0:
-            return await ctx.send_error("No reaction roles available for this server")
+            return await ctx.error("No reaction roles available for this server")
 
         return await ctx.paginate(
             [
@@ -990,7 +990,7 @@ class Config(Cog):
             str(emoji),
         )
         if not check:
-            return await ctx.send_error(
+            return await ctx.error(
                 "No reaction role found for the message provided"
             )
 
@@ -1002,7 +1002,7 @@ class Config(Cog):
             str(emoji),
         )
         await message.remove_reaction(emoji, ctx.guild.me)
-        return await ctx.send_success(
+        return await ctx.success(
             "Removed the reaction role from the message provided"
         )
 
@@ -1030,7 +1030,7 @@ class Config(Cog):
             str(emoji),
         )
         if check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "A similar reaction role is **already** added"
             )
 
@@ -1043,7 +1043,7 @@ class Config(Cog):
             role.id,
         )
         await message.add_reaction(emoji)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added reaction role [**here**]({message.jump_url})"
         )
 
@@ -1059,7 +1059,7 @@ class Config(Cog):
     ):
         """edit a role's name"""
         await role.edit(name=name, reason=f"Role name edited by {ctx.author}")
-        return await ctx.send_success(f"Role name edited to **{name}**")
+        return await ctx.success(f"Role name edited to **{name}**")
 
     @editrole.command(name="icon", brief="manage roles")
     @has_guild_permissions(manage_roles=True)
@@ -1079,7 +1079,7 @@ class Config(Cog):
             ),
             reason=f"Role icon edited by {ctx.author}",
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Role icon succesfully changed to **{emoji.name if isinstance(emoji, PartialEmoji) else emoji}**"
         )
 
@@ -1091,7 +1091,7 @@ class Config(Cog):
         await role.edit(
             hoist=not role.hoist, reason=f"Role hoist edited by {ctx.author}"
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Role {'is now hoisted' if not role.hoist else 'is not hoisted anymore'}"
         )
 
@@ -1128,10 +1128,10 @@ class Config(Cog):
 
         _command = self.bot.get_command(command)
         if not _command:
-            return await ctx.send_error(f"`{command}` is not a command")
+            return await ctx.error(f"`{command}` is not a command")
 
         if self.bot.get_command(alias):
-            return await ctx.send_error(f"`{alias}` is already a command")
+            return await ctx.error(f"`{alias}` is already a command")
 
         if check := await self.bot.db.fetch(
             """
@@ -1141,7 +1141,7 @@ class Config(Cog):
             ctx.guild.id,
         ):
             if len(check) >= 75:
-                return await ctx.send_warning(f"You can only have **75 aliases**")
+                return await ctx.warning(f"You can only have **75 aliases**")
 
         await self.bot.db.execute(
             """
@@ -1152,7 +1152,7 @@ class Config(Cog):
             command,
             alias,
         )
-        await ctx.send_success(
+        await ctx.success(
             f"Added `{alias}` as an alias for `{_command.qualified_name}`"
         )
 
@@ -1171,7 +1171,7 @@ class Config(Cog):
             ctx.guild.id,
             alias,
         ):
-            return await ctx.send_warning(f"`{alias}` is **not** an alias")
+            return await ctx.warning(f"`{alias}` is **not** an alias")
 
         await self.bot.db.execute(
             """
@@ -1182,7 +1182,7 @@ class Config(Cog):
             ctx.guild.id,
             alias,
         )
-        return await ctx.send_success(f"Removed the **alias** `{alias}`")
+        return await ctx.success(f"Removed the **alias** `{alias}`")
 
     @alias.command(name="list", brief="manage server")
     @has_guild_permissions(manage_guild=True)  # WHY IS GIT LIKE THIS
@@ -1199,7 +1199,7 @@ class Config(Cog):
             ctx.guild.id,
         )
         if not results:
-            return await ctx.send_warning(f"No **aliases** are set")
+            return await ctx.warning(f"No **aliases** are set")
 
         await ctx.paginate(
             [
@@ -1236,7 +1236,7 @@ class Config(Cog):
         command = command.replace(".", "")
         _command = self.bot.get_command(command)
         if not _command:
-            return await ctx.send_warning(f"Command `{command}` does not exist")
+            return await ctx.warning(f"Command `{command}` does not exist")
 
         if _command.name in ("help", "restrictcommand", "disablecmd", "enablecmd"):
             return await ctx.send("no lol")
@@ -1257,11 +1257,11 @@ class Config(Cog):
                 role.id,
             )
         else:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"`{_command.qualified_name}` is **already** restricted to {role.mention}"
             )
 
-        await ctx.send_success(
+        await ctx.success(
             f"Allowing members with {role.mention} to use `{_command.qualified_name}`"
         )
 
@@ -1279,7 +1279,7 @@ class Config(Cog):
         command = command.replace(".", "")
         _command = self.bot.get_command(command)
         if not _command:
-            return await ctx.send_warning(f"Command `{command}` does not exist")
+            return await ctx.warning(f"Command `{command}` does not exist")
 
         if await self.bot.db.fetchrow(
             "SELECT * FROM restrictcommand WHERE guild_id = $1 AND command = $2 AND role_id = $3",
@@ -1299,11 +1299,11 @@ class Config(Cog):
                 role.id,
             )
         else:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"`{_command.qualified_name}` is **not** restricted to {role.mention}"
             )
 
-        await ctx.send_success(
+        await ctx.success(
             f"No longer allowing members with {role.mention} to use `{_command.qualified_name}`"
         )
 
@@ -1323,7 +1323,7 @@ class Config(Cog):
         )
 
         if not results:
-            return await ctx.send_warning(f"There are **no** restricted commands")
+            return await ctx.warning(f"There are **no** restricted commands")
 
         await ctx.paginate(
             [
@@ -1354,13 +1354,13 @@ class Config(Cog):
         """
 
         if len(name) > 200:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Server names can't be over **200 characters**"
             )
 
         _name = ctx.guild.name
         await ctx.guild.edit(name=name)
-        await ctx.send_success(f"Changed **{_name}**'s name")
+        await ctx.success(f"Changed **{_name}**'s name")
 
     @set.command(name="icon", aliases=["picture", "pic"], brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -1378,7 +1378,7 @@ class Config(Cog):
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         if not re.findall(regex, url):
-            return await ctx.send_error("The image provided is not an url")
+            return await ctx.error("The image provided is not an url")
 
         icon = await self.bot.getbyte(url)
         _icon = icon.read()
@@ -1386,8 +1386,8 @@ class Config(Cog):
         try:
             await ctx.guild.edit(icon=_icon)
         except ValueError:
-            return await ctx.send_warning(f"Invalid **media type**")
-        await ctx.send_success(f"Set the server icon to [`Attachment`]({url})")
+            return await ctx.warning(f"Invalid **media type**")
+        await ctx.success(f"Set the server icon to [`Attachment`]({url})")
 
     @set.command(name="banner", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -1397,7 +1397,7 @@ class Config(Cog):
         """
 
         if ctx.guild.premium_tier < 2:
-            return await ctx.send_warning(f"You haven't **unlocked** banners")
+            return await ctx.warning(f"You haven't **unlocked** banners")
 
         if not url:
             url = await ctx.get_attachment()
@@ -1408,7 +1408,7 @@ class Config(Cog):
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         if not re.findall(regex, url):
-            return await ctx.send_error("The attachment provided is not an url")
+            return await ctx.error("The attachment provided is not an url")
 
         banner = await self.bot.getbyte(url)
         _banner = banner.read()
@@ -1416,7 +1416,7 @@ class Config(Cog):
         try:
             await ctx.guild.edit(banner=_banner)
         except ValueError:
-            return await ctx.send_warning(f"Invalid **media type**")
+            return await ctx.warning(f"Invalid **media type**")
 
     @set.command(name="splash", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -1426,7 +1426,7 @@ class Config(Cog):
         """
 
         if ctx.guild.premium_tier < 1:
-            return await ctx.send_warning(f"You haven't **unlocked** splash")
+            return await ctx.warning(f"You haven't **unlocked** splash")
 
         if not url:
             url = await ctx.get_attachment()
@@ -1437,7 +1437,7 @@ class Config(Cog):
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         if not re.findall(regex, url):
-            return await ctx.send_error("The image provided is not an url")
+            return await ctx.error("The image provided is not an url")
 
         icon = await self.bot.getbyte(url)
         _icon = icon.read()
@@ -1445,8 +1445,8 @@ class Config(Cog):
         try:
             await ctx.guild.edit(splash=_icon)
         except ValueError:
-            return await ctx.send_warning(f"Invalid **media type**")
-        await ctx.send_success(f"Set the server icon to [`Attachment`]({url})")
+            return await ctx.warning(f"Invalid **media type**")
+        await ctx.success(f"Set the server icon to [`Attachment`]({url})")
 
     @group(
         name="imageonly",
@@ -1480,7 +1480,7 @@ class Config(Cog):
             ctx.guild.id,
             channel.id,
         ):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"{channel.mention} is **already** an image only channel"
             )
 
@@ -1492,7 +1492,7 @@ class Config(Cog):
             ctx.guild.id,
             channel.id,
         )
-        await ctx.send_success(f"{channel.mention} is now an **image only** channel")
+        await ctx.success(f"{channel.mention} is now an **image only** channel")
 
     @imageonly.command(name="remove", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1510,7 +1510,7 @@ class Config(Cog):
             ctx.guild.id,
             channel.id,
         ):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"{channel.mention} is **not** an image only channel"
             )
 
@@ -1523,7 +1523,7 @@ class Config(Cog):
             ctx.guild.id,
             channel.id,
         )
-        await ctx.send_success(
+        await ctx.success(
             f"{channel.mention} is no longer an **image only** channel"
         )
 
@@ -1542,7 +1542,7 @@ class Config(Cog):
             ctx.guild.id,
         )
         if not results:
-            return await ctx.send_warning(f"There are **no** image only channels")
+            return await ctx.warning(f"There are **no** image only channels")
 
         await ctx.paginate(
             [
@@ -1586,7 +1586,7 @@ class Config(Cog):
             ctx.guild.id,
             module,
         ):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"The `{module}` module is **already** disabled"
             )
 
@@ -1598,7 +1598,7 @@ class Config(Cog):
             ctx.guild.id,
             module,
         )
-        await ctx.send_success(f"Successfully disabled **{module}**")
+        await ctx.success(f"Successfully disabled **{module}**")
 
     @disablemodule.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -1616,7 +1616,7 @@ class Config(Cog):
             ctx.guild.id,
             module,
         ):
-            return await ctx.send_warning(f"The `{module}` module is **not** disabled")
+            return await ctx.warning(f"The `{module}` module is **not** disabled")
 
         await self.bot.db.execute(
             """
@@ -1627,7 +1627,7 @@ class Config(Cog):
             ctx.guild.id,
             module,
         )
-        await ctx.send_success(f"Successfully enabled **{module}**")
+        await ctx.success(f"Successfully enabled **{module}**")
 
     @disablemodule.command(name="list", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -1645,7 +1645,7 @@ class Config(Cog):
         )
 
         if not results:
-            return await ctx.send_warning(f"There are **no** disabled modules")
+            return await ctx.warning(f"There are **no** disabled modules")
 
         await ctx.paginate(
             [f"**{result['module']}**" for result in results],

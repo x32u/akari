@@ -17,7 +17,7 @@ def leveling_enabled():
     if await ctx.bot.db.fetchrow("SELECT * FROM leveling WHERE guild_id = $1", ctx.guild.id): 
      return True 
     
-    await ctx.send_warning("Leveling is **not** enabled")
+    await ctx.warning("Leveling is **not** enabled")
     return False
    return check(predicate)
 
@@ -31,10 +31,10 @@ def antinuke_owner():
   async def predicate(ctx: AkariContext):
    if owner_id := await ctx.bot.db.fetchval("SELECT owner_id FROM antinuke WHERE guild_id = $1", ctx.guild.id):
     if ctx.author.id != owner_id: 
-      await ctx.send_warning(f"Only <@!{owner_id}> can use this command!")
+      await ctx.warning(f"Only <@!{owner_id}> can use this command!")
       return False 
     return True 
-   await ctx.send_warning("Antinuke is **not** configured")
+   await ctx.warning("Antinuke is **not** configured")
    return False
   return check(predicate)
 
@@ -42,7 +42,7 @@ def antinuke_configured():
   async def predicate(ctx: AkariContext):
    check = await ctx.bot.db.fetchval("SELECT configured FROM antinuke WHERE guild_id = $1", ctx.guild.id)
    if not check or check == "false":
-    await ctx.send_warning("Antinuke is **not** configured")
+    await ctx.warning("Antinuke is **not** configured")
    return str(check) == "true"
   return check(predicate)
 
@@ -55,11 +55,11 @@ def admin_antinuke():
       allowed.extend([id for id in json.loads(check['admins'])])
 
      if not ctx.author.id in allowed: 
-      await ctx.send_warning("You **cannot** use this command")
+      await ctx.warning("You **cannot** use this command")
       return False 
      return True 
     else: 
-     await ctx.send_warning("Antinuke is **not** configured")
+     await ctx.warning("Antinuke is **not** configured")
      return False
   return check(predicate)  
 
@@ -73,7 +73,7 @@ def br_is_configured():
   async def predicate(ctx: AkariContext):
     check = await ctx.bot.db.fetchrow('SELECT * FROM booster_module WHERE guild_id = $1', ctx.guild.id)
     if not check: 
-      await ctx.send_warning("Booster roles are **not** configured")
+      await ctx.warning("Booster roles are **not** configured")
     return check is not None 
   return check(predicate)  
 
@@ -81,7 +81,7 @@ def has_br_role():
   async def predicate(ctx: AkariContext): 
     check = await ctx.bot.db.fetchrow("SELECT * FROM booster_roles WHERE guild_id = $1 AND user_id = $2", ctx.guild.id, ctx.author.id)
     if not check: 
-      await ctx.send_warning(f"You do not have a booster role set\nPlease use `{ctx.clean_prefix}br create` to create a booster role") 
+      await ctx.warning(f"You do not have a booster role set\nPlease use `{ctx.clean_prefix}br create` to create a booster role") 
     return check is not None 
   return check(predicate)
 """
@@ -94,7 +94,7 @@ def query_limit(table: str):
   async def predicate(ctx: AkariContext):
     check = await ctx.bot.db.fetchval(f"SELECT COUNT(*) FROM {table} WHERE guild_id = $1", ctx.guild.id)
     if check == 5: 
-      await ctx.send_warning(f"You cannot create more than **5** {table} messages") 
+      await ctx.warning(f"You cannot create more than **5** {table} messages") 
       return False 
     return True 
   return check(predicate)
@@ -102,7 +102,7 @@ def query_limit(table: str):
 def boosted_to(level: int):
   async def predicate(ctx: AkariContext):
    if ctx.guild.premium_tier < level: 
-    await ctx.send_warning(f"The server has to be boosted to level **{level}** to be able to use this command")
+    await ctx.warning(f"The server has to be boosted to level **{level}** to be able to use this command")
    return ctx.guild.premium_tier >= level
   return check(predicate)
 
@@ -110,7 +110,7 @@ def max_gws():
  async def predicate(ctx: AkariContext):
   check = await ctx.bot.db.fetchval("SELECT COUNT(*) FROM giveaway WHERE guild_id = $1", ctx.guild.id)
   if check == 5:
-   await ctx.send_warning("You cannot host more than **5** giveaways in the same time")
+   await ctx.warning("You cannot host more than **5** giveaways in the same time")
    return False
   return True
  return check(predicate)
@@ -124,7 +124,7 @@ OWNER PREDICATES
 def guild_owner():
   async def predicate(ctx: AkariContext): 
     if ctx.author.id != ctx.guild.owner_id: 
-     await ctx.send_warning(f"This command can be only used by **{ctx.guild.owner}**")
+     await ctx.warning(f"This command can be only used by **{ctx.guild.owner}**")
     return ctx.author.id == ctx.guild.owner_id 
   return check(predicate)
 
@@ -145,7 +145,7 @@ def is_jail():
 def antispam_enabled():
  async def predicate(ctx: AkariContext):
   if not await ctx.bot.db.fetchrow("SELECT * FROM antispam WHERE guild_id = $1", ctx.guild.id):
-    await ctx.send_warning("Antispam is **not** enabled in this server")
+    await ctx.warning("Antispam is **not** enabled in this server")
     return False 
   return True 
  return check(predicate)
@@ -159,7 +159,7 @@ DONATOR PREDICATES
 def create_reskin():
  async def predicate(ctx: AkariContext):
   if not await ctx.reskin_enabled():
-   await ctx.send_warning("Reskin is **not** enabled in this server")
+   await ctx.warning("Reskin is **not** enabled in this server")
    return False 
 
   check = await ctx.bot.db.fetchrow("SELECT * FROM reskin WHERE user_id = $1", ctx.author.id)
@@ -174,7 +174,7 @@ def has_perks():
   async def predicate(ctx: AkariContext): 
    check = await ctx.bot.db.fetchrow("SELECT * FROM donor WHERE user_id = $1", ctx.author.id)
    if not check: 
-    await ctx.send_warning(f"You need [**donator**](https://discord.gg/akaribot) perks to use this command")   
+    await ctx.warning(f"You need [**donator**](https://discord.gg/akaribot) perks to use this command")   
    return check is not None
   return check(predicate)
 
@@ -187,11 +187,11 @@ MUSIC PREDICATES
 def is_voice():
   async def predicate(ctx: AkariContext): 
    if not ctx.author.voice: 
-    await ctx.send_warning("You are not in a voice channel")
+    await ctx.warning("You are not in a voice channel")
     return False
    if ctx.guild.me.voice: 
     if ctx.guild.me.voice.channel.id != ctx.author.voice.channel.id: 
-     await ctx.send_warning("You are not in the same voice channel as the bot")
+     await ctx.warning("You are not in the same voice channel as the bot")
      return False
    return True 
   return check(predicate)  
@@ -199,7 +199,7 @@ def is_voice():
 def bot_is_voice():
  async def predicate(ctx: AkariContext):   
   if not ctx.guild.me.voice: 
-    await ctx.send_warning("The bot is not in a voice channel")
+    await ctx.warning("The bot is not in a voice channel")
     return False
 
   if ctx.voice_client: 
@@ -268,7 +268,7 @@ def rename_cooldown():
 async def check_owner(ctx: AkariContext):
   check = await ctx.bot.db.fetchrow("SELECT * FROM vcs WHERE voice = $1 AND user_id = $2", ctx.author.voice.channel.id, ctx.author.id)
   if check is None: 
-   await ctx.send_warning("You are not the owner of this voice channel")
+   await ctx.warning("You are not the owner of this voice channel")
    return True                
 
 async def check_voice(ctx: AkariContext):
@@ -278,11 +278,11 @@ async def check_voice(ctx: AkariContext):
    voicechannel = ctx.guild.get_channel(channeid)
    category = voicechannel.category 
    if ctx.author.voice is None:
-     await ctx.send_warning("You are not in a voice channel")
+     await ctx.warning("You are not in a voice channel")
      return True
    elif ctx.author.voice is not None:
      if ctx.author.voice.channel.category != category:
-       await ctx.send_warning("You are not in a voice channel created by the bot")
+       await ctx.warning("You are not in a voice channel created by the bot")
        return True   
 
 def is_vm(): 
@@ -312,7 +312,7 @@ def get_ticket():
  async def predicate(ctx: AkariContext):  
   check = await ctx.bot.db.fetchrow("SELECT * FROM opened_tickets WHERE guild_id = $1 AND channel_id = $2", ctx.guild.id, ctx.channel.id)
   if check is None: 
-   await ctx.send_warning("This message has to be used in an opened ticket")
+   await ctx.warning("This message has to be used in an opened ticket")
    return False 
   return True 
  return check(predicate)
@@ -324,15 +324,15 @@ def manage_ticket():
    role = ctx.guild.get_role(check[0])
    if role: 
     if not role in ctx.author.roles and not ctx.author.guild_permissions.manage_channels: 
-     await ctx.send_warning(f"Only members with {role.mention} role and members with the `manage_channels` permission can **add** or **remove** new members from the ticket")
+     await ctx.warning(f"Only members with {role.mention} role and members with the `manage_channels` permission can **add** or **remove** new members from the ticket")
      return False 
    else: 
     if not ctx.author.guild_permissions.manage_channels:
-     await ctx.send_warning(f"Only members with the `manage_channels` permission can **add** or **remove** new members from the ticket")
+     await ctx.warning(f"Only members with the `manage_channels` permission can **add** or **remove** new members from the ticket")
      return False   
   else:
    if not ctx.author.guild_permissions.manage_channels:
-     await ctx.send_warning(f"Only members with the `manage_channels` permission can **add** or **remove** new members from the ticket")
+     await ctx.warning(f"Only members with the `manage_channels` permission can **add** or **remove** new members from the ticket")
      return False 
   return True 
  return check(predicate) 
@@ -355,7 +355,7 @@ def bump_enabled():
   async def predicate(ctx: AkariContext): 
     check = await ctx.bot.db.fetchrow("SELECT guild_id FROM bumpreminder WHERE guild_id = $1", ctx.guild.id)
     if not check: 
-     return await ctx.send_error("Bump reminder feature is **not** enabled")
+     return await ctx.error("Bump reminder feature is **not** enabled")
     return check is not None 
   return check(predicate)
 def auth_perms():
@@ -374,7 +374,7 @@ def is_there_a_reminder():
   async def predicate(ctx: AkariContext):
     check = await ctx.bot.db.fetchrow("SELECT * FROM reminder WHERE guild_id = $1 AND user_id = $2", ctx.guild.id, ctx.author.id)
     if not check: 
-     await ctx.send_warning("You don't have a reminder set in this server")
+     await ctx.warning("You don't have a reminder set in this server")
     return check is not None
   return check(predicate)
 
@@ -382,7 +382,7 @@ def reminder_exists():
   async def predicate(ctx: AkariContext):
    check = await ctx.bot.db.fetchrow("SELECT * FROM reminder WHERE guild_id = $1 AND user_id = $2", ctx.guild.id, ctx.author.id)
    if check:
-    await ctx.send_warning("You already have a reminder in this channel")
+    await ctx.warning("You already have a reminder in this channel")
     return False 
    return True
   return check(predicate)
@@ -396,7 +396,7 @@ def whitelist_enabled():
     """,
     ctx.guild.id
   ):
-   await ctx.send_warning(f"Whitelist is **not** enabled")
+   await ctx.warning(f"Whitelist is **not** enabled")
    return False
   return True
  return check(predicate)

@@ -52,7 +52,7 @@ class Autopfp(commands.Cog):
             self.bot.pfps_send = True
             asyncio.ensure_future(self.bot.autoposting("pfps"))
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Sending **{category}** pfps to {channel.mention}"
         )
 
@@ -79,7 +79,7 @@ class Autopfp(commands.Cog):
             category,
         )
 
-        return await ctx.send_success(f"Stopped sending **{category}** pfps")
+        return await ctx.success(f"Stopped sending **{category}** pfps")
 
     @commands.hybrid_group()
     async def autobanner(self, ctx: AkariContext):
@@ -118,7 +118,7 @@ class Autopfp(commands.Cog):
             self.bot.banners_send = True
             asyncio.ensure_future(self.bot.autoposting("banners"))
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Sending **{category}** banners to {channel.mention}"
         )
 
@@ -143,7 +143,7 @@ class Autopfp(commands.Cog):
             category,
         )
 
-        return await ctx.send_success(f"Stopped sending **{category}** banners")
+        return await ctx.success(f"Stopped sending **{category}** banners")
 
     @commands.hybrid_command(name="report")
     async def report(
@@ -162,12 +162,12 @@ class Autopfp(commands.Cog):
         directory = f"/root/AkariImages/{type.capitalize()}/"
 
         if not category.capitalize() in os.listdir(directory):
-            return await ctx.send_warning(f"This is not a **{type}** category")
+            return await ctx.warning(f"This is not a **{type}** category")
 
         directory += f"{category.capitalize()}/"
 
         if not image_id in [i[:-4] for i in os.listdir(directory)]:
-            return await ctx.send_warning("This is not a valid image id")
+            return await ctx.warning("This is not a valid image id")
 
         file_path = os.path.join(
             directory, next(e for e in os.listdir(directory) if image_id == e[:-4])
@@ -191,7 +191,7 @@ class Autopfp(commands.Cog):
                 + f"\n{ctx.author} ({ctx.author.id}) reported the image with ID {image_id} in the {category} category."
             )
 
-        return await ctx.send_success(f"Reported picture with ID **{image_id}**")
+        return await ctx.success(f"Reported picture with ID **{image_id}**")
 
 
 async def setup(bot):

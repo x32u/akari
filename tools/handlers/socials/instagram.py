@@ -8,4 +8,4 @@ class InstagramUser(commands.Converter):
         try: 
             return await ctx.bot.api.get_instagram_user(argument)
         except HTTPError as err: 
-            return await ctx.send_error(err.args[0])
+            return await ctx.error(err.args[0])

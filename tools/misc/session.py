@@ -1,4 +1,5 @@
-import aiohttp 
+import aiohttp, humanize
+from io import BytesIO
 from typing import Optional
 
 class Session:
@@ -41,4 +42,13 @@ class Session:
     
     async with aiohttp.ClientSession(headers=headers or self.headers) as cs: 
       async with cs.get(url, headers=headers, params=params, proxy=proxy) as r: 
-       return await r.read()     
+       return await r.read()
+      
+  def human_format(self, number: int) -> str:
+        if number > 999:
+            return humanize.naturalsize(number, False, True)
+
+        return number.__str__()
+    
+  async def getbyte(self, url: str) -> BytesIO:
+      return BytesIO(await self.get_bytes(url))

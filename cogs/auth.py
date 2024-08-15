@@ -196,7 +196,7 @@ class Auth(commands.Cog):
             invite,
         )
 
-        return await ctx.send_success(f"Updated monthly payment for **{invite}**")
+        return await ctx.success(f"Updated monthly payment for **{invite}**")
 
     @auth.command(name="inspect")
     @auth_perms()
@@ -252,7 +252,7 @@ class Auth(commands.Cog):
                 or list(map(lambda invite: invite.url, await guild.invites))[0]
             )
         except IndexError:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This server doesn't have any available invites"
             )
 
@@ -292,7 +292,7 @@ class Auth(commands.Cog):
         transfers = check["transfers"]
         till = check["till"]
         if transfers == 0:
-            return await ctx.send_error("This server has ran out of transfers :(")
+            return await ctx.error("This server has ran out of transfers :(")
 
         if not till:
             await self.bot.db.execute(
@@ -369,7 +369,7 @@ class Auth(commands.Cog):
         )
 
         if not results:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "There are no guilds authorized for this member"
             )
 

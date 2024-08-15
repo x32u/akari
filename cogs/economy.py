@@ -84,10 +84,10 @@ class Economy(Cog):
             cash = check["cash"]
 
             if cash < amount:
-                return await ctx.send_error("You do not have enough money to dice")
+                return await ctx.error("You do not have enough money to dice")
 
             if amount < 20:
-                return await ctx.send_error(
+                return await ctx.error(
                     f"You cannot bet less than **20** {self.card}"
                 )
 
@@ -195,7 +195,7 @@ class Economy(Cog):
             card = check["card"]
 
             if card < amount:
-                return await ctx.send_error("You do not have enough money to withdraw")
+                return await ctx.error("You do not have enough money to withdraw")
 
             await self.bot.db.execute(
                 """
@@ -226,7 +226,7 @@ class Economy(Cog):
             cash = check["cash"]
 
             if cash < amount:
-                return await ctx.send_error("You do not have enough money to deposit")
+                return await ctx.error("You do not have enough money to deposit")
 
             await self.bot.db.execute(
                 """
@@ -256,15 +256,15 @@ class Economy(Cog):
             )
 
             if amount < 20:
-                return await ctx.send_error(
+                return await ctx.error(
                     f"You cannot bet less than **20** {self.cash}"
                 )
 
             if cash < amount:
-                return await ctx.send_error("Not enough money to gamble")
+                return await ctx.error("Not enough money to gamble")
 
             if not bet.lower() in ["heads", "tails"]:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "You can only bet on **heads** or **tails**"
                 )
 
@@ -397,7 +397,7 @@ class Economy(Cog):
                 no_callback,
             )
         else:
-            return await ctx.send_error("You do **not** have an economy account opened")
+            return await ctx.error("You do **not** have an economy account opened")
 
     @hybrid_command(aliases=["bal"])
     @create_account()
@@ -411,7 +411,7 @@ class Economy(Cog):
         )
 
         if not check:
-            return await ctx.send_error(
+            return await ctx.error(
                 f"Member doesn't have any **credits** {self.cash}"
             )
 

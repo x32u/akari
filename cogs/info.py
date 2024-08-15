@@ -57,7 +57,7 @@ class Info(Cog):
         """
 
         if not member.bot:
-            return await ctx.send_error("This is **not** a bot")
+            return await ctx.error("This is **not** a bot")
 
         await ctx.reply(ctx.author.mention, view=self.create_bot_invite(member))
 

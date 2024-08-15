@@ -463,15 +463,15 @@ class AkariContext(Context):
    embed = Embed(color=self.ec_color, description=f"{self.ec_emoji} {self.author.mention}: {message}")
    return await self.send(embed=embed) 
 
-  async def send_warning(self, message: str) -> Message: 
+  async def warning(self, message: str) -> Message: 
    """Send a warning message to the channel"""
    return await self.send(embed=Embed(color=self.bot.warning_color, description=f"{self.bot.warning} {self.author.mention}: {message}"))  
   
-  async def send_error(self, message: str) -> Message: 
+  async def error(self, message: str) -> Message: 
    """Send an error message to the channel"""
    return await self.send(embed=Embed(color=self.bot.no_color, description=f"{self.bot.no} {self.author.mention}: {message}"))
  
-  async def send_success(self, message: str) -> Message: 
+  async def success(self, message: str) -> Message: 
    """Send a success message to the channel"""
    return await self.send(embed=Embed(color=self.bot.yes_color, description=f"{self.bot.yes} {self.author.mention}: {message}"))
 
@@ -546,21 +546,21 @@ class Invoking():
     
     if embed == "none": 
      await ctx.bot.db.execute("DELETE FROM invoke WHERE guild_id = $1 AND command = $2", ctx.guild.id, ctx.command.name)
-     return await ctx.send_success( f"Deleted the **{ctx.command.name}** custom response")
+     return await ctx.success( f"Deleted the **{ctx.command.name}** custom response")
     
     elif embed == "view": 
      em = Embed(color=ctx.bot.color, title=f"invoke {ctx.command.name} message", description=f"```{code}```")
      return await ctx.reply(embed=em)
     
     elif embed == code: 
-     return await ctx.send_warning(f"This embed is already **configured** as the {ctx.command.name} custom response")
+     return await ctx.warning(f"This embed is already **configured** as the {ctx.command.name} custom response")
     
     else:
       await ctx.bot.db.execute("UPDATE invoke SET embed = $1 WHERE guild_id = $2 AND command = $3", embed, ctx.guild.id, ctx.command.name)
-      return await ctx.send_success(f"Updated your custom **{ctx.command.name}** message to ```{embed}```")
+      return await ctx.success(f"Updated your custom **{ctx.command.name}** message to ```{embed}```")
    else: 
     await ctx.bot.db.execute("INSERT INTO invoke VALUES ($1,$2,$3)", ctx.guild.id, ctx.command.name, embed)
-    return await ctx.send_success(f"Added your custom **{ctx.command.name}** message as\n```{embed}```")
+    return await ctx.success(f"Added your custom **{ctx.command.name}** message as\n```{embed}```")
 
   def invoke_replacement(self, member: Union[Member, User], params: str=None):
    if params is None: return None

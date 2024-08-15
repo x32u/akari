@@ -129,7 +129,7 @@ class Emoji(Cog):
         ]
 
         if not emojis:
-            return await ctx.send_warning(f"No **emojis** found")
+            return await ctx.warning(f"No **emojis** found")
 
         return await ctx.paginate(emojis, f"Emojis containing {query} ({len(emojis)})")
 
@@ -171,11 +171,11 @@ class Emoji(Cog):
 
         if name:
             if len(name) < 2:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"Emoji names need a minimum of **2 characters**"
                 )
             elif len(name) > 32:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"Emoji names can't be longer than **32 characters**"
                 )
             name = name.replace(" ", "-")
@@ -191,11 +191,11 @@ class Emoji(Cog):
                 e.code == 50035
                 and " String value did not match validation regex" in str(e)
             ):
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"Invalid characters are in the emoji name"
                 )
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Created {emoji_created} as [**{name or emoji_created.name}**]({emoji_created.url})"
         )
 
@@ -261,7 +261,7 @@ class Emoji(Cog):
         """
 
         await emoji.delete(reason=f"Emoji deleted by {ctx.author}")
-        return await ctx.send_success("Deleted the emoji")
+        return await ctx.success("Deleted the emoji")
 
     @command(aliases=["downloademoji", "e", "jumbo"])
     async def enlarge(self, ctx: AkariContext, emoji: Union[PartialEmoji, str]):
@@ -278,7 +278,7 @@ class Emoji(Cog):
 
         elif isinstance(emoji, str):
             if not emoji_lib.is_emoji(emoji):
-                return await ctx.send_warning("This is **not** an emoji")
+                return await ctx.warning("This is **not** an emoji")
 
             try:
                 unic = f"{ord(emoji[0]):x}"
@@ -367,10 +367,10 @@ class Emoji(Cog):
         sticker = await sticker.fetch()
 
         if sticker.guild.id != ctx.guild.id:
-            return await ctx.send_warning("This sticker is not from this server")
+            return await ctx.warning("This sticker is not from this server")
 
         await sticker.delete(reason=f"sticker deleted by {ctx.author}")
-        return await ctx.send_success("Deleted the sticker")
+        return await ctx.success("Deleted the sticker")
 
     @sticker.command(name="zip")
     async def sticker_zip(self, ctx: AkariContext):
@@ -407,7 +407,7 @@ class Emoji(Cog):
         """
 
         if len(ctx.guild.stickers) >= ctx.guild.sticker_limit:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This server cannot have new stickers anymore"
             )
 
@@ -424,7 +424,7 @@ class Emoji(Cog):
             file=file,
             reason=f"sticker created by {ctx.author}",
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added [**sticker**]({stick.url}) with the name **{name}**"
         )
 
@@ -437,7 +437,7 @@ class Emoji(Cog):
         """
 
         if not ctx.guild.vanity_url:
-            return await ctx.send_warning(f"There is no **vanity url** set")
+            return await ctx.warning(f"There is no **vanity url** set")
 
         message = await ctx.Akari_send(
             f"Adding **gg/{ctx.guild.vanity_url_code}** to `{len(ctx.guild.stickers)}` stickers..."
@@ -454,7 +454,7 @@ class Emoji(Cog):
                     pass
 
         await message.delete()
-        await ctx.send_success(
+        await ctx.success(
             f"Added **gg/{ctx.guild.vanity_url_code}** to server stickers"
         )
 

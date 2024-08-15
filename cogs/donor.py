@@ -79,7 +79,7 @@ class Donor(Cog):
     async def lookup(self, ctx: AkariContext):
         """get the most recent handles"""
         if not self.bot.cache.get("pomelo"):
-            return await ctx.send_error("There is nothing to see here")
+            return await ctx.error("There is nothing to see here")
         pomelo = self.bot.cache.get("pomelo")
         return await ctx.paginate(
             [f"{m['username']} - {m['time']}" for m in pomelo[::-1]],
@@ -121,7 +121,7 @@ class Donor(Cog):
                 await member.edit(
                     nick=None, reason="Removed the force nickname from this member"
                 )
-                return await ctx.send_success("Removed the nickname from this member")
+                return await ctx.success("Removed the nickname from this member")
             else:
                 return await ctx.send_help(ctx.command)
         else:
@@ -149,7 +149,7 @@ class Donor(Cog):
                     member.id,
                     nickname,
                 )
-            await ctx.send_success(
+            await ctx.success(
                 f"Force nicknamed {member.mention} to **{nickname}**"
             )
 
@@ -164,12 +164,12 @@ class Donor(Cog):
         if await self.bot.db.fetchrow(
             "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
         ):
-            return await ctx.send_warning("Reskin is **already** enabled")
+            return await ctx.warning("Reskin is **already** enabled")
 
         await self.bot.db.execute(
             "INSERT INTO reskin_enabled VALUES ($1)", ctx.guild.id
         )
-        return await ctx.send_success("Reskin is now enabled")
+        return await ctx.success("Reskin is now enabled")
 
     @reskin.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -178,12 +178,12 @@ class Donor(Cog):
         if not await self.bot.db.fetchrow(
             "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
         ):
-            return await ctx.send_warning("Reskin is **not** enabled")
+            return await ctx.warning("Reskin is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
         )
-        return await ctx.send_success("Reskin is now disabled")
+        return await ctx.success("Reskin is now disabled")
 
     @reskin.command(name="name", brief="donor")
     @has_perks()
@@ -193,7 +193,7 @@ class Donor(Cog):
         await self.bot.db.execute(
             "UPDATE reskin SET username = $1 WHERE user_id = $2", name, ctx.author.id
         )
-        return await ctx.send_success(f"Updated your reskin name to **{name}**")
+        return await ctx.success(f"Updated your reskin name to **{name}**")
 
     @reskin.command(name="avatar", brief="donor", aliases=["icon", "pfp", "av"])
     @has_perks()
@@ -209,12 +209,12 @@ class Donor(Cog):
 
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         if not re.findall(regex, url):
-            return await ctx.send_error("The image provided is not an url")
+            return await ctx.error("The image provided is not an url")
 
         await self.bot.db.execute(
             "UPDATE reskin SET avatar_url = $1 WHERE user_id = $2", url, ctx.author.id
         )
-        return await ctx.send_success(f"Updated your reskin [**avatar**]({url})")
+        return await ctx.success(f"Updated your reskin [**avatar**]({url})")
 
     @reskin.command(name="remove", brief="donor", aliases=["delete", "reset"])
     async def reskin_delete(self, ctx: AkariContext):

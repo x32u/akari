@@ -186,7 +186,7 @@ class Lastfm(Cog):
         )
 
         if detail := x.get("detail"):
-            return await ctx.send_error(detail)
+            return await ctx.error(detail)
 
         image = await self.bot.session.get_bytes(x["image_url"])
         return await ctx.reply(
@@ -492,7 +492,7 @@ class Lastfm(Cog):
             username = check["username"]
 
             if not check:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"{'You don' if user == ctx.author else f'**{user}** doesn'}'t have a **last.fm** account connected"
                 )
 
@@ -713,12 +713,12 @@ class Lastfm(Cog):
                     self.lastfmhandler.get_user_info(user), timeout=15
                 )
             except asyncio.TimeoutError:
-                return await ctx.send_warning("Could not connect to **LastFM servers**")
+                return await ctx.warning("Could not connect to **LastFM servers**")
 
             try:
                 album = a["recenttracks"]["track"][0]["album"]["#text"]
             except IndexError:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     f"There are no **scrobbles** for [`@{user}`](https://last.fm/user/{user})"
                 )
 

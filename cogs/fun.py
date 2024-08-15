@@ -682,7 +682,7 @@ class Fun(Cog):
         )
 
         if not check:
-            return await ctx.send_error("There are no stats recorded for this member")
+            return await ctx.error("There are no stats recorded for this member")
 
         embed = Embed(
             color=self.bot.color,
@@ -990,7 +990,7 @@ class Fun(Cog):
         """
 
         if len(choices := choices.split(", ")) == 1:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Not enough **choices**- seperate your choices with a `,`"
             )
 
@@ -1040,10 +1040,10 @@ class Fun(Cog):
         """
 
         if member.id == ctx.author.id:
-            return await ctx.send_warning("You cannot play against yourself")
+            return await ctx.warning("You cannot play against yourself")
 
         if member.bot:
-            return await ctx.send_warning("You cannot play against a bot")
+            return await ctx.warning("You cannot play against a bot")
 
         view = TicTacToe(ctx.author, member)
         view.message = await ctx.send(
@@ -1096,7 +1096,7 @@ class Fun(Cog):
                 self.bot.session.get_json("https://icanhazdadjoke.com/slack"), timeout=2
             )
         except asyncio.TimeoutError:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Womp Womp! Couldn't get a dad joke at this time."
             )
         return await ctx.Akari_send(f"{joke['attachments'][0]['text']}")
@@ -1111,7 +1111,7 @@ class Fun(Cog):
                 self.bot.session.get_json("https://meme-api.com/gimme"), timeout=4
             )
         except asyncio.TimeoutError:
-            return await ctx.send_warning("Error fetching a meme.")
+            return await ctx.warning("Error fetching a meme.")
         embed = discord.Embed(color=0x2B2D31)
         embed.set_image(url=meme["url"])
         await ctx.send(embed=embed)
@@ -1122,7 +1122,7 @@ class Fun(Cog):
         Lick someone!
         """
         if ctx.author.id == member.id:
-            return await ctx.send_error("You can't lick yourself!")
+            return await ctx.error("You can't lick yourself!")
         res = ["You slurp that mf.", "Lick Lick!", "Slurp!"]
         embed = Embed(
             color=self.bot.color,
@@ -1136,7 +1136,7 @@ class Fun(Cog):
                 timeout=6,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed.set_footer(text=random.choice(res))
         embed.set_image(url=lick["url"])
         await ctx.reply(embed=embed)
@@ -1170,7 +1170,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed = Embed(
             color=self.bot.color,
             description=f"*Aww how cute!* **{ctx.author.name}** kissed **{member.name}**",
@@ -1208,7 +1208,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed = Embed(
             color=self.bot.color,
             description=f"*Aww how cute!* **{ctx.author.name}** cuddles **{member.name}**",
@@ -1228,7 +1228,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed = Embed(
             color=self.bot.color,
             description=f"*Aww how cute!* **{ctx.author.name}** hugged **{member.name}**",
@@ -1248,7 +1248,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed = Embed(
             color=self.bot.color,
             description=f"*Aww how cute!* **{ctx.author.name}** pats **{member.name}**",
@@ -1268,7 +1268,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed = Embed(
             color=self.bot.color,
             description=f"**{ctx.author.name}** slaps **{member.name}***",
@@ -1288,7 +1288,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
         embed = Embed(
             color=self.bot.color, description=f"**{ctx.author.name}** laughs"
         ).set_image(url=lol["url"])
@@ -1307,7 +1307,7 @@ class Fun(Cog):
                 timeout=2,
             )
         except asyncio.TimeoutError:
-            return await ctx.send_error("There was an error with the API.")
+            return await ctx.error("There was an error with the API.")
 
         embed = Embed(
             color=self.bot.color, description=f"**{ctx.author.name}** cries"
@@ -1337,7 +1337,7 @@ class Fun(Cog):
             "SELECT * FROM marry WHERE $1 IN (author, soulmate)", member.id
         )
         if check is None:
-            return await ctx.send_error(
+            return await ctx.error(
                 f"{'You are' if member == ctx.author else f'{member.mention} is'} not **married**"
             )
 
@@ -1357,7 +1357,7 @@ class Fun(Cog):
             "SELECT * FROM marry WHERE $1 IN (author, soulmate)", ctx.author.id
         )
         if check is None:
-            return await ctx.send_error("**You** are not **married**")
+            return await ctx.error("**You** are not **married**")
 
         async def button1_callback(interaction: Interaction) -> None:
             member = await self.bot.fetch_user(
@@ -1414,7 +1414,7 @@ class Fun(Cog):
         )
 
         if not response:
-            return await ctx.send_warning(f"No results found for **{title}**")
+            return await ctx.warning(f"No results found for **{title}**")
 
         info = response["hits"][0]["result"]
 

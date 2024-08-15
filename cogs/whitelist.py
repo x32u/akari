@@ -39,7 +39,7 @@ class Whitelist(Cog):
             """,
             ctx.guild.id,
         ):
-            return await ctx.send_warning(f"The whitelist is **already** enabled")
+            return await ctx.warning(f"The whitelist is **already** enabled")
 
         await self.bot.db.execute(
             """
@@ -49,7 +49,7 @@ class Whitelist(Cog):
             ctx.guild.id,
             "default",
         )
-        await ctx.send_success(f"Enabled the **whitelist**")
+        await ctx.success(f"Enabled the **whitelist**")
 
     @whitelist.command(name="disable", brief="administrator")
     @has_permissions(administrator=True)
@@ -66,7 +66,7 @@ class Whitelist(Cog):
             """,
             ctx.guild.id,
         )
-        await ctx.send_success(f"Disabled the **whitelist**")
+        await ctx.success(f"Disabled the **whitelist**")
 
     @whitelist.command(name="message", aliases=["msg", "dm"], brief="administrator")
     @has_permissions(administrator=True)
@@ -85,7 +85,7 @@ class Whitelist(Cog):
                 "none",
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Removed your **whitelist** message- users will no longer be notified"
             )
         elif code.lower().strip() == "default":
@@ -97,7 +97,7 @@ class Whitelist(Cog):
                 "default",
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Set your **whitelist** message to the default"
             )
         else:
@@ -109,7 +109,7 @@ class Whitelist(Cog):
                 code,
                 ctx.guild.id,
             )
-            await ctx.send_success(f"Set your **custom** whitelist message")
+            await ctx.success(f"Set your **custom** whitelist message")
 
     @whitelist.command(name="add", brief="administrator")
     @has_permissions(administrator=True)
@@ -128,7 +128,7 @@ class Whitelist(Cog):
             ctx.guild.id,
             user.id,
         ):
-            return await ctx.send_warning(f"{user.mention} is already **whitelisted**")
+            return await ctx.warning(f"{user.mention} is already **whitelisted**")
 
         await self.bot.db.execute(
             """
@@ -138,7 +138,7 @@ class Whitelist(Cog):
             ctx.guild.id,
             user.id,
         )
-        await ctx.send_success(f"Added {user.mention} to the **whitelist**")
+        await ctx.success(f"Added {user.mention} to the **whitelist**")
 
     @whitelist.command(name="remove", brief="administrator")
     @has_permissions(administrator=True)
@@ -157,7 +157,7 @@ class Whitelist(Cog):
             ctx.guild.id,
             user.id,
         ):
-            return await ctx.send_warning(f"{user.mention} is not **whitelisted**")
+            return await ctx.warning(f"{user.mention} is not **whitelisted**")
 
         await self.bot.db.execute(
             """
@@ -179,7 +179,7 @@ class Whitelist(Cog):
             except Forbidden:
                 i = False
 
-        await ctx.send_success(
+        await ctx.success(
             f"Removed {user.mention} from the **whitelist**"
             if i is True
             else f"Removed {user.mention} from the **whitelist** - failed to kick the member"
@@ -202,7 +202,7 @@ class Whitelist(Cog):
         )
 
         if not results:
-            return await ctx.send_error(f"No users are **whitelisted**")
+            return await ctx.error(f"No users are **whitelisted**")
 
         await ctx.paginate(
             [f"{self.bot.get_user(result['user_id']).mention}" for result in results],

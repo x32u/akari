@@ -70,11 +70,11 @@ class Giveaway(Cog):
             message.id,
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "This message is not a  giveaway or it ended if it was one"
             )
         await gwend_task(self.bot, check, datetime.datetime.now())
-        return await ctx.send_success(f"Ended giveaway in {message.channel.mention}")
+        return await ctx.success(f"Ended giveaway in {message.channel.mention}")
 
     @giveaway.command(name="reroll", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -86,7 +86,7 @@ class Giveaway(Cog):
             message.id,
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"This message is not a giveaway or it didn't end if it is one. Use `{ctx.clean_prefix}gend` to end the giveaway"
             )
         members = json.loads(check["members"])
@@ -99,7 +99,7 @@ class Giveaway(Cog):
             "SELECT * FROM giveaway WHERE guild_id = $1", ctx.guild.id
         )
         if len(results) == 0:
-            return await ctx.send_error("There are no giveaways")
+            return await ctx.error("There are no giveaways")
         return await ctx.paginate(
             [
                 f"[**{result['title']}**](https://discord.com/channels/{ctx.guild.id}/{result['channel_id']}/{result['message_id']}) ends <t:{int(result['finish'].timestamp())}:R>"

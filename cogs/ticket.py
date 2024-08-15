@@ -72,7 +72,7 @@ class Ticket(Cog):
         await ctx.channel.set_permissions(
             member, overwrite=overwrites, reason="Added to the ticket"
         )
-        return await ctx.send_success(f"Added {member.mention} to the ticket")
+        return await ctx.success(f"Added {member.mention} to the ticket")
 
     @ticket.command(name="remove", brief="ticket support / manage channels")
     @manage_ticket()
@@ -87,7 +87,7 @@ class Ticket(Cog):
         await ctx.channel.set_permissions(
             member, overwrite=overwrites, reason="Removed from the ticket"
         )
-        return await ctx.send_success(f"Removed {member.mention} from the ticket")
+        return await ctx.success(f"Removed {member.mention} from the ticket")
 
     @ticket.command(name="close", brief="ticket support / manage channels")
     @manage_ticket()
@@ -124,7 +124,7 @@ class Ticket(Cog):
                 f"DELETE FROM {i} WHERE guild_id = $1", ctx.guild.id
             )
 
-        await ctx.send_success("Disabled the tickets module")
+        await ctx.success("Disabled the tickets module")
 
     @ticket.command(name="rename", brief="ticket support / manage channels")
     @manage_ticket()
@@ -135,7 +135,7 @@ class Ticket(Cog):
         await ctx.channel.edit(
             name=name, reason=f"Ticket channel renamed by {ctx.author}"
         )
-        await ctx.send_success(f"Renamed ticket channel to **{name}**")
+        await ctx.success(f"Renamed ticket channel to **{name}**")
 
     @ticket.command(name="support", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -148,7 +148,7 @@ class Ticket(Cog):
                 role.id,
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Updated ticket support role to {role.mention}"
             )
         else:
@@ -157,7 +157,7 @@ class Ticket(Cog):
                 None,
                 ctx.guild.id,
             )
-            return await ctx.send_success("Removed the ticket support role")
+            return await ctx.success("Removed the ticket support role")
 
     @ticket.command(name="category", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -172,7 +172,7 @@ class Ticket(Cog):
                 category.id,
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Updated ticket category to {category.mention}"
             )
         else:
@@ -181,7 +181,7 @@ class Ticket(Cog):
                 None,
                 ctx.guild.id,
             )
-            return await ctx.send_success("Removed the category channel")
+            return await ctx.success("Removed the category channel")
 
     @ticket.command(name="logs", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -194,12 +194,12 @@ class Ticket(Cog):
                 channel.id,
                 ctx.guild.id,
             )
-            return await ctx.send_success(f"Updated logs channel to {channel.mention}")
+            return await ctx.success(f"Updated logs channel to {channel.mention}")
         else:
             await self.bot.db.execute(
                 "UPDATE tickets SET logs = $1 WHERE guild_id = $2", None, ctx.guild.id
             )
-            return await ctx.send_success("Removed the logs channel")
+            return await ctx.success("Removed the logs channel")
 
     @ticket.command(name="opened", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -210,11 +210,11 @@ class Ticket(Cog):
             "UPDATE tickets SET open_embed = $1 WHERE guild_id = $2", code, ctx.guild.id
         )
         if code:
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Updated the ticket opening message to\n```{code}```"
             )
         else:
-            return await ctx.send_success("Removed the custom ticket opening message")
+            return await ctx.success("Removed the custom ticket opening message")
 
     @ticket.command(brief="administrator")
     @has_guild_permissions(manage_guild=True)
@@ -281,7 +281,7 @@ class Ticket(Cog):
         )
 
         if not check:
-            return await ctx.send_error(
+            return await ctx.error(
                 "Ticket module is **not** enabled in this server"
             )
 
@@ -325,7 +325,7 @@ class Ticket(Cog):
         view.create_ticket()
         x["view"] = view
         await channel.send(**x)
-        return await ctx.send_success(f"Sent ticket panel in {channel.mention}")
+        return await ctx.success(f"Sent ticket panel in {channel.mention}")
 
 
 async def setup(bot: Akari) -> None:

@@ -61,7 +61,7 @@ class Player(pomice.Player):
     async def kill(self) -> Message:
         with suppress((HTTPException), (KeyError)):
             await self.destroy()
-            return await self.context.send_success("Left the voice channel")
+            return await self.context.success("Left the voice channel")
 
 
 class Music(Cog):
@@ -124,7 +124,7 @@ class Music(Cog):
 
         player: Player = ctx.voice_client
         player.shuffle()
-        await ctx.send_success("Shuffling the whole queue")
+        await ctx.success("Shuffling the whole queue")
 
     @command(aliases=["q"])
     @is_voice()
@@ -167,7 +167,7 @@ class Music(Cog):
 
         player: Player = ctx.voice_client
         await player.set_pause(False)
-        return await ctx.send_success("Resumed the song")
+        return await ctx.success("Resumed the song")
 
     @command()
     @is_voice()
@@ -179,7 +179,7 @@ class Music(Cog):
 
         player: Player = ctx.voice_client
         await player.set_pause(True)
-        return await ctx.send_success("Paused the song")
+        return await ctx.success("Paused the song")
 
     @command(aliases=["next"])
     @is_voice()
@@ -217,7 +217,7 @@ class Music(Cog):
         player: Player = ctx.voice_client
 
         if not player.is_playing:
-            return await ctx.send_error("No track is playing right now")
+            return await ctx.error("No track is playing right now")
 
         if not player.loop:
             player.loop = True
@@ -249,9 +249,9 @@ class Music(Cog):
         try:
             results = await player.get_tracks(query=query, ctx=ctx)
         except Exception as e:
-            return await ctx.send_warning("There was an issue fetching that track.")
+            return await ctx.warning("There was an issue fetching that track.")
         if not results:
-            await ctx.send_warning("No song found")
+            await ctx.warning("No song found")
 
         if isinstance(results, pomice.Playlist):
             for track in results.tracks:

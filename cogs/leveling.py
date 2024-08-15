@@ -199,7 +199,7 @@ class Leveling(Cog):
             member.id,
         )
         if not level:
-            return await ctx.send_warning("This member doesn't have a rank recorded")
+            return await ctx.warning("This member doesn't have a rank recorded")
 
         embed = Embed(color=self.bot.color)
         embed.set_author(name=str(member), icon_url=member.display_avatar.url)
@@ -237,7 +237,7 @@ class Leveling(Cog):
         mes = res["message"]
 
         if mes == "none":
-            return await ctx.send_warning(f"There is no **level message** set")
+            return await ctx.warning(f"There is no **level message** set")
 
         x = await self.bot.embed_build.convert(
             ctx, await self.level_replace(ctx.author, mes)
@@ -254,7 +254,7 @@ class Leveling(Cog):
         if await self.bot.db.fetchrow(
             "SELECT * FROM leveling WHERE guild_id = $1", ctx.guild.id
         ):
-            return await ctx.send_warning("Leveling system is **already** enabled")
+            return await ctx.warning("Leveling system is **already** enabled")
 
         await self.bot.db.execute(
             """
@@ -264,7 +264,7 @@ class Leveling(Cog):
             ctx.guild.id,
             "Good job, {user}! You leveled up to **Level {level}**",
         )
-        return await ctx.send_success("Enabled the leveling system")
+        return await ctx.success("Enabled the leveling system")
 
     @level_cmd.command(name="disable", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -323,7 +323,7 @@ class Leveling(Cog):
             message = f"Level up messages are going to be sent in {channel.mention}"
 
         await self.bot.db.execute(*args)
-        await ctx.send_success(message)
+        await ctx.success(message)
 
     @level_cmd.command(name="variables")
     async def level_variables(self, ctx: AkariContext):
@@ -361,7 +361,7 @@ class Leveling(Cog):
                 "none",
                 ctx.guild.id,
             )
-            return await ctx.send_success(f"Removed the **level up** message")
+            return await ctx.success(f"Removed the **level up** message")
 
         await self.bot.db.execute(
             """
@@ -372,7 +372,7 @@ class Leveling(Cog):
             message,
             ctx.guild.id,
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Level up message configured to:\n```{message}```"
         )
 
@@ -403,7 +403,7 @@ class Leveling(Cog):
             "yes",
             ctx.guild.id,
         )
-        return await ctx.send_success("Enabled multiplier for boosters")
+        return await ctx.success("Enabled multiplier for boosters")
 
     @booster_multiplier.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -423,7 +423,7 @@ class Leveling(Cog):
             ctx.guild.id,
         )
 
-        return await ctx.send_success("Disabled multiplier for boosters")
+        return await ctx.success("Disabled multiplier for boosters")
 
     @level_cmd.command(
         name="config", aliases=["settings", "stats", "statistics", "status"]
@@ -469,7 +469,7 @@ class Leveling(Cog):
         """
 
         if level < 1:
-            return await ctx.send_error("The level cannot be **lower** than 0")
+            return await ctx.error("The level cannot be **lower** than 0")
 
         if await self.bot.db.fetchrow(
             "SELECT * FROM level_user WHERE guild_id = $1 AND user_id = $2",
@@ -504,7 +504,7 @@ class Leveling(Cog):
                 int((100 * level + 1) ** 0.9),
             )
 
-        await ctx.send_success(
+        await ctx.success(
             f"Set the level for {member.mention} to **Level {level}**"
         )
 
@@ -596,21 +596,21 @@ class Leveling(Cog):
     ):
         """assign a reward role to a level"""
         if level < 1:
-            return await ctx.send_error("Level cannot be lower than 1")
+            return await ctx.error("Level cannot be lower than 1")
 
         if check := await self.bot.db.fetchrow(
             "SELECT * FROM level_rewards WHERE guild_id = $1 AND role_id = $2",
             ctx.guild.id,
             role.id,
         ):
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"This role is **already** a reward for **Level {check['level']}**"
             )
 
         await self.bot.db.execute(
             "INSERT INTO level_rewards VALUES ($1,$2,$3)", ctx.guild.id, level, role.id
         )
-        return await ctx.send_success(
+        return await ctx.success(
             f"Added {role.mention} as a reward for reaching **Level {level}**"
         )
 
@@ -631,11 +631,11 @@ class Leveling(Cog):
                 ctx.guild.id,
                 role.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Removed a reward for reaching **Level {check['level']}**"
             )
 
-        return await ctx.send_warning("This role is **not** a reward for any level")
+        return await ctx.warning("This role is **not** a reward for any level")
 
     @level_rewards.command(name="reset", brief="manage server")
     @has_guild_permissions(manage_guild=True)

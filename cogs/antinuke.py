@@ -541,7 +541,7 @@ class Antinuke(Cog):
         )
         if check:
             if check["configured"] == "true":
-                return await ctx.send_warning("Antinuke is **already** configured")
+                return await ctx.warning("Antinuke is **already** configured")
 
             if check["owner_id"]:
                 owner_id = check["owner_id"]
@@ -561,12 +561,12 @@ class Antinuke(Cog):
             ]
 
         if ctx.author.id != owner_id:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 f"Only <@!{owner_id}> can use this command!\nIf the account cannot be used, please join the [**support server**](https://discord.gg/v3px5gQ5Z4)"
             )
 
         await self.bot.db.execute(*args)
-        await ctx.send_success("Antinuke is **enabled**")
+        await ctx.success("Antinuke is **enabled**")
 
     @antinuke.command(name="reset", aliases=["disable"], brief="antinuke owner")
     @antinuke_owner()
@@ -612,7 +612,7 @@ class Antinuke(Cog):
             "SELECT module FROM antinuke_modules WHERE guild_id = $1", ctx.guild.id
         )
         if not results:
-            return await ctx.send_warning("There is **no** module enabled")
+            return await ctx.warning("There is **no** module enabled")
 
         embed = Embed(
             color=self.bot.color,
@@ -684,14 +684,14 @@ class Antinuke(Cog):
             await self.bot.db.execute(
                 "UPDATE antinuke SET logs = $1 WHERE guild_id = $2", None, ctx.guild.id
             )
-            return await ctx.send_success("Removed the logs channel")
+            return await ctx.success("Removed the logs channel")
         else:
             await self.bot.db.execute(
                 "UPDATE antinuke SET logs = $1 WHERE guild_id = $2",
                 channel.id,
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Set the antinuke logs channel to {channel.mention}"
             )
 
@@ -710,7 +710,7 @@ class Antinuke(Cog):
     ):
         """enable the protection deleting channels"""
         if threshold < 0:
-            return await ctx.send_error("Threshold cannot be lower than **0**")
+            return await ctx.error("Threshold cannot be lower than **0**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -735,7 +735,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **channel delete** protection\nPunishment: **{punishment}**\nThreshold: **{threshold}/60s**"
         )
 
@@ -750,7 +750,7 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Channel delete protection is **not** enabled"
             )
 
@@ -759,7 +759,7 @@ class Antinuke(Cog):
             ctx.guild.id,
             "channel de;ete",
         )
-        return await ctx.send_success("Disabled **channel delete** protection")
+        return await ctx.success("Disabled **channel delete** protection")
 
     @antinuke.group(
         name="channelcreate", brief="antinuke admin", invoke_without_command=True
@@ -776,7 +776,7 @@ class Antinuke(Cog):
     ):
         """enable the protection against creating channels"""
         if threshold < 0:
-            return await ctx.send_error("Threshold cannot be lower than **0**")
+            return await ctx.error("Threshold cannot be lower than **0**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -801,7 +801,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **channel create** protection\nPunishment: **{punishment}**\nThreshold: **{threshold}/60s**"
         )
 
@@ -816,7 +816,7 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Channel create protection is **not** enabled"
             )
 
@@ -825,7 +825,7 @@ class Antinuke(Cog):
             ctx.guild.id,
             "channel create",
         )
-        return await ctx.send_success("Disabled **channel create** protection")
+        return await ctx.success("Disabled **channel create** protection")
 
     @antinuke.group(
         name="giverole", brief="antinuke admin", invoke_without_command=True
@@ -867,7 +867,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **role giving** protection\nPunishment: **{punishment}**"
         )
 
@@ -882,14 +882,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Role giving protection is **not** enabled")
+            return await ctx.warning("Role giving protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "role giving",
         )
-        return await ctx.send_success("Disabled **role giving** protection")
+        return await ctx.success("Disabled **role giving** protection")
 
     @antinuke.group(
         name="roledelete", brief="antinuke admin", invoke_without_command=True
@@ -906,7 +906,7 @@ class Antinuke(Cog):
     ):
         """enable the protection against role deletions"""
         if threshold < 0:
-            return await ctx.send_error("Threshold cannot be lower than **0**")
+            return await ctx.error("Threshold cannot be lower than **0**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -931,7 +931,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **role delete** protection\nPunishment: **{punishment}**\nThreshold: **{threshold}/60s**"
         )
 
@@ -946,14 +946,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Role delete protection is **not** enabled")
+            return await ctx.warning("Role delete protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "role delete",
         )
-        return await ctx.send_success("Disabled **role delete** protection")
+        return await ctx.success("Disabled **role delete** protection")
 
     @antinuke.group(
         name="rolecreate", brief="antinuke admin", invoke_without_command=True
@@ -970,7 +970,7 @@ class Antinuke(Cog):
     ):
         """enable the protection against role creations"""
         if threshold < 0:
-            return await ctx.send_error("Threshold cannot be lower than **0**")
+            return await ctx.error("Threshold cannot be lower than **0**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -995,7 +995,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **role create** protection\nPunishment: **{punishment}**\nThreshold: **{threshold}/60s**"
         )
 
@@ -1010,14 +1010,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Role create protection is **not** enabled")
+            return await ctx.warning("Role create protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "role create",
         )
-        return await ctx.send_success("Disabled **role create** protection")
+        return await ctx.success("Disabled **role create** protection")
 
     @antinuke.group(name="kick", brief="antinuke admin", invoke_without_command=True)
     async def an_kick(self, ctx):
@@ -1032,7 +1032,7 @@ class Antinuke(Cog):
     ):
         """enable the protection against kicking members"""
         if threshold < 0:
-            return await ctx.send_error("Threshold cannot be lower than **0**")
+            return await ctx.error("Threshold cannot be lower than **0**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1057,7 +1057,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **kick** protection\nPunishment: **{punishment}**\nThreshold: **{threshold}/60s**"
         )
 
@@ -1072,14 +1072,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Kick protection is **not** enabled")
+            return await ctx.warning("Kick protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "kick",
         )
-        return await ctx.send_success("Disabled **kick** protection")
+        return await ctx.success("Disabled **kick** protection")
 
     @antinuke.group(name="ban", brief="antinuke admin", invoke_without_command=True)
     async def an_ban(self, ctx):
@@ -1094,7 +1094,7 @@ class Antinuke(Cog):
     ):
         """enable the protection against banning members"""
         if threshold < 0:
-            return await ctx.send_error("Threshold cannot be lower than **0**")
+            return await ctx.error("Threshold cannot be lower than **0**")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1119,7 +1119,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **ban** protection\nPunishment: **{punishment}**\nThreshold: **{threshold}/60s**"
         )
 
@@ -1134,14 +1134,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Ban protection is **not** enabled")
+            return await ctx.warning("Ban protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "ban",
         )
-        return await ctx.send_success("Disabled **ban** protection")
+        return await ctx.success("Disabled **ban** protection")
 
     @antinuke.group(
         name="editrole", brief="antinuke admin", invoke_without_command=True
@@ -1177,7 +1177,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **edit role** protection\nPunishment: **{punishment}**"
         )
 
@@ -1192,14 +1192,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Edit role protection is **not** enabled")
+            return await ctx.warning("Edit role protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "edit role",
         )
-        return await ctx.send_success("Disabled **edit role** protection")
+        return await ctx.success("Disabled **edit role** protection")
 
     @antinuke.group(
         name="massmention", brief="antinuke admin", invoke_without_command=True
@@ -1235,7 +1235,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **anti mass mention** protection\nPunishment: **{punishment}**"
         )
 
@@ -1250,14 +1250,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Mass mention protection is **not** enabled")
+            return await ctx.warning("Mass mention protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "mass mention",
         )
-        return await ctx.send_success("Disabled **mass mention** protection")
+        return await ctx.success("Disabled **mass mention** protection")
 
     @antinuke.group(name="spammer", brief="antinuke admin", invoke_without_command=True)
     async def an_spammer(self, ctx: AkariContext):
@@ -1270,7 +1270,7 @@ class Antinuke(Cog):
     async def an_spammer_enable(self, ctx: AkariContext, punishment: Punishment):
         """enable the protection against flagged members"""
         if punishment == "strip":
-            return await ctx.send_error("**Strip** cannot be a punishment in this case")
+            return await ctx.error("**Strip** cannot be a punishment in this case")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1294,7 +1294,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **anti spammer** protection\nPunishment: **{punishment}**"
         )
 
@@ -1309,7 +1309,7 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning(
+            return await ctx.warning(
                 "Spammer accounts protection is **not** enabled"
             )
 
@@ -1318,7 +1318,7 @@ class Antinuke(Cog):
             ctx.guild.id,
             "spammer",
         )
-        return await ctx.send_success("Disabled **spammer accounts** protection")
+        return await ctx.success("Disabled **spammer accounts** protection")
 
     @antinuke.group(
         name="newaccounts",
@@ -1342,7 +1342,7 @@ class Antinuke(Cog):
     ):
         """enable the new account protection"""
         if punishment == "strip":
-            return await ctx.send_error("**Strip** cannot be a punishment in this case")
+            return await ctx.error("**Strip** cannot be a punishment in this case")
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1367,7 +1367,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **new accounts** protection\nPunishment: **{punishment}**\nApplying to: Accounts newer than **{humanfriendly.format_timespan(time)}**"
         )
 
@@ -1382,14 +1382,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("New accounts protection is **not** enabled")
+            return await ctx.warning("New accounts protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "new accounts",
         )
-        return await ctx.send_success("Disabled **new accounts** protection")
+        return await ctx.success("Disabled **new accounts** protection")
 
     @antinuke.group(name="botadd", brief="antinuke admin", invoke_without_command=True)
     async def an_botadd(self, ctx):
@@ -1423,7 +1423,7 @@ class Antinuke(Cog):
             ]
 
         await self.bot.db.execute(*args)
-        return await ctx.send_success(
+        return await ctx.success(
             f"Enabled **bot add** protection\nPunishment: **{punishment}**"
         )
 
@@ -1438,14 +1438,14 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.send_warning("Bot add protection is **not** enabled")
+            return await ctx.warning("Bot add protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
             ctx.guild.id,
             "bot add",
         )
-        return await ctx.send_success("Disabled **bot add** protection")
+        return await ctx.success("Disabled **bot add** protection")
 
     @antinuke.command(
         name="whitelist",
@@ -1466,7 +1466,7 @@ class Antinuke(Cog):
             whitelisted = json.loads(whitelisted)
 
             if member.id in whitelisted:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This member is **already** antinuke whitelisted"
                 )
 
@@ -1481,9 +1481,9 @@ class Antinuke(Cog):
         )
 
         if isinstance(member, Member):
-            return await ctx.send_success(f"Whitelisted {member.mention} from antinuke")
+            return await ctx.success(f"Whitelisted {member.mention} from antinuke")
 
-        return await ctx.send_success(
+        return await ctx.success(
             f"Whitelisted {member.mention}. Now they can join the server"
         )
 
@@ -1502,7 +1502,7 @@ class Antinuke(Cog):
             whitelisted = json.loads(whitelisted)
 
             if not member.id in whitelisted:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This member is **not** antinuke whitelisted"
                 )
 
@@ -1512,11 +1512,11 @@ class Antinuke(Cog):
                 json.dumps(whitelisted),
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Unwhitelisted {member.mention} from antinuke"
             )
 
-        return await ctx.send_warning("There is **no** antinuke whitelisted member")
+        return await ctx.warning("There is **no** antinuke whitelisted member")
 
     @antinuke.group(name="admin", brief="antinuke owner", invoke_without_command=True)
     async def antinuke_admin(self, ctx):
@@ -1544,7 +1544,7 @@ class Antinuke(Cog):
             admins = json.loads(admins)
 
             if member.id in admins:
-                return await ctx.send_warning(
+                return await ctx.warning(
                     "This member is **already** an antinuke admin"
                 )
 
@@ -1557,7 +1557,7 @@ class Antinuke(Cog):
             json.dumps(admins),
             ctx.guild.id,
         )
-        return await ctx.send_success(f"Added {member.mention} as an antinuke admin")
+        return await ctx.success(f"Added {member.mention} as an antinuke admin")
 
     @antinuke_admin.command(name="remove", brief="antinuke owner")
     @antinuke_configured()
@@ -1572,7 +1572,7 @@ class Antinuke(Cog):
             admins = json.loads(admins)
 
             if not member.id in admins:
-                return await ctx.send_warning("This member isn't an antinuke admin")
+                return await ctx.warning("This member isn't an antinuke admin")
 
             admins.remove(member.id)
             await self.bot.db.execute(
@@ -1580,10 +1580,10 @@ class Antinuke(Cog):
                 json.dumps(admins),
                 ctx.guild.id,
             )
-            return await ctx.send_success(
+            return await ctx.success(
                 f"Removed {member.mention} from the antinuke admins"
             )
-        return await ctx.send_warning("There is **no** antinuke admin")
+        return await ctx.warning("There is **no** antinuke admin")
 
 
 async def setup(bot: Akari) -> None:
