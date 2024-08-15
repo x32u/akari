@@ -60,7 +60,7 @@ class LogsView(discord.ui.View):
         self.add_item(
             discord.ui.Button(
                 label="Support Server", 
-                url="https://discord.gg/Akari"
+                url="https://discord.gg/akaribot"
             )
         )
 

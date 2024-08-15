@@ -237,7 +237,7 @@ class Voicemaster(Cog):
             )
             embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon)
             embed.set_thumbnail(url=self.bot.user.display_avatar.url)
-            embed.set_footer(text="Akari")
+            embed.set_footer(text="The Akari Team")
             embed.add_field(
                 name="usage", value="\n".join(f"{x[0]} - {x[1]}" for x in self.values)
             )
@@ -326,7 +326,7 @@ class Voicemaster(Cog):
                 )
                 .set_author(name=ctx.guild.name, icon_url=ctx.guild.icon)
                 .set_thumbnail(url=self.bot.user.display_avatar.url)
-                .set_footer(text="Akari")
+                .set_footer(text="The Akari Team")
                 .add_field(
                     name="usage",
                     value="\n".join(f"{x[0]} - {x[1]}" for x in self.values),
