@@ -7,7 +7,7 @@ from discord.ext import commands
 from collections import defaultdict
 from typing import List, Optional, Union
 
-from tools.helpers import PretendContext as Context 
+from tools.helpers import AkariContext as Context 
 
 class UserID(discord.ui.Button):
     def __init__(self, id_name: str):
@@ -60,7 +60,7 @@ class LogsView(discord.ui.View):
         self.add_item(
             discord.ui.Button(
                 label="Support Server", 
-                url="https://discord.gg/pretend"
+                url="https://discord.gg/Akari"
             )
         )
 

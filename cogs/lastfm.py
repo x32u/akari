@@ -5,8 +5,8 @@ import datetime
 from tools.predicates import has_perks, lastfm_user_exists
 from tools.handlers.lastfmhandler import Spotify, Handler
 from tools.validators import ValidLastFmName
-from tools.helpers import PretendContext
-from tools.bot import Pretend
+from tools.helpers import AkariContext
+from tools.bot import Akari
 
 from io import BytesIO
 from typing import Literal
@@ -15,7 +15,7 @@ from discord.ext.commands import Cog, group, Author, command
 
 
 class Lastfm(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.emoji = "<:lastfm:1188946307704959079>"
         self.description = "Last.Fm Integration commands"
@@ -115,7 +115,7 @@ class Lastfm(Cog):
                     )
 
     @group(invoke_without_command=True, aliases=["lf"])
-    async def lastfm(self, ctx: PretendContext):
+    async def lastfm(self, ctx: AkariContext):
         """
         Use the lastfm api integration with the bot
         """
@@ -123,12 +123,12 @@ class Lastfm(Cog):
         await ctx.create_pages()
 
     @lastfm.command(name="set")
-    async def lf_set(self, ctx: PretendContext, *, user: ValidLastFmName):
+    async def lf_set(self, ctx: AkariContext, *, user: ValidLastFmName):
         """
         Log in with your lastfm account to the bot
         """
 
-        mes = await ctx.pretend_send("Logging in...")
+        mes = await ctx.Akari_send("Logging in...")
         await asyncio.sleep(1)
         embed = Embed(
             color=self.bot.color,
@@ -144,7 +144,7 @@ class Lastfm(Cog):
 
     @lastfm.command(name="remove", aliases=["unset"])
     @lastfm_user_exists()
-    async def lf_remove(self, ctx: PretendContext):
+    async def lf_remove(self, ctx: AkariContext):
         """
         Remove your lastfm account, if you have one registered
         """
@@ -157,7 +157,7 @@ class Lastfm(Cog):
     @lastfm.command(name="chart", aliases=["c"])
     async def lf_chart(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         user: Member = Author,
         size: str = "3x3",
         period: Literal[
@@ -179,10 +179,10 @@ class Lastfm(Cog):
 
         params = {"username": username, "size": size, "period": period}
 
-        headers = {"api-key": self.bot.pretend_api}
+        headers = {"api-key": self.bot.Akari_api}
 
         x = await self.bot.session.get_json(
-            "https://v1.pretend.bot/lastfm/chart", params=params, headers=headers
+            "https://v1.Akari.bot/lastfm/chart", params=params, headers=headers
         )
 
         if detail := x.get("detail"):
@@ -195,7 +195,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="customcommand", aliases=["cc"])
-    async def lf_customcommand(self, ctx: PretendContext, *, cmd: str):
+    async def lf_customcommand(self, ctx: AkariContext, *, cmd: str):
         """
         Set a custom alias for lastfm nowplaying command
         """
@@ -224,7 +224,7 @@ class Lastfm(Cog):
         return await ctx.lastfm_send(f"You **Last.Fm** custom command set to: {cmd}")
 
     @lastfm.command(name="variables")
-    async def lf_variables(self, ctx: PretendContext):
+    async def lf_variables(self, ctx: AkariContext):
         """
         Returns variables for lastfm custom embeds
         """
@@ -254,7 +254,7 @@ class Lastfm(Cog):
         await ctx.paginator(embeds)
 
     @lastfm.group(invoke_without_command=True, name="mode", aliases=["embed"])
-    async def lf_mode(self, ctx: PretendContext):
+    async def lf_mode(self, ctx: AkariContext):
         """
         Design a custom lastfm embed
         """
@@ -264,7 +264,7 @@ class Lastfm(Cog):
     @lf_mode.command(name="set", brief="premium")
     @lastfm_user_exists()
     @has_perks()
-    async def lf_mode_set(self, ctx: PretendContext, *, code: str):
+    async def lf_mode_set(self, ctx: AkariContext, *, code: str):
         """
         Set an embed as the lastfm custom embed
         """
@@ -279,7 +279,7 @@ class Lastfm(Cog):
     @lf_mode.command(name="remove", brief="premium")
     @lastfm_user_exists()
     @has_perks()
-    async def lf_mode_remove(self, ctx: PretendContext):
+    async def lf_mode_remove(self, ctx: AkariContext):
         """
         Remove your custom lastfm embed
         """
@@ -291,7 +291,7 @@ class Lastfm(Cog):
 
     @lf_mode.command(name="view", brief="premium")
     @has_perks()
-    async def lf_mode_view(self, ctx: PretendContext, *, member: User = Author):
+    async def lf_mode_view(self, ctx: AkariContext, *, member: User = Author):
         """
         View your own lastfm embed or someone's lastfm embed
         """
@@ -313,7 +313,7 @@ class Lastfm(Cog):
 
     @lf_mode.command(name="steal", brief="premium")
     @has_perks()
-    async def lf_mode_steal(self, ctx: PretendContext, *, member: Member):
+    async def lf_mode_steal(self, ctx: AkariContext, *, member: Member):
         """
         Steal someone's lastfm embed
         """
@@ -336,7 +336,7 @@ class Lastfm(Cog):
 
     @lastfm.command(name="reactions")
     @lastfm_user_exists()
-    async def lf_reactions(self, ctx: PretendContext, *reactions: str):
+    async def lf_reactions(self, ctx: AkariContext, *reactions: str):
         """
         Set custom reactions for the nowplaying command
         """
@@ -365,7 +365,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="spotify", aliases=["sp"])
-    async def lf_spotify(self, ctx: PretendContext, *, member: Member = Author):
+    async def lf_spotify(self, ctx: AkariContext, *, member: Member = Author):
         """
         Look up for your nowplaying lastfm song on spotify
         """
@@ -414,7 +414,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="toptracks", aliases=["tt"])
-    async def lf_toptracks(self, ctx: PretendContext, *, member: Member = Author):
+    async def lf_toptracks(self, ctx: AkariContext, *, member: Member = Author):
         """
         Returns a member's top 10 tracks
         """
@@ -442,7 +442,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="topalbums", aliases=["tal"])
-    async def lf_topalbums(self, ctx: PretendContext, *, member: Member = Author):
+    async def lf_topalbums(self, ctx: AkariContext, *, member: Member = Author):
         """
         Returns a member's top 10 albums
         """
@@ -470,7 +470,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="howto", help="lastfm")
-    async def lf_howto(self, ctx: PretendContext):
+    async def lf_howto(self, ctx: AkariContext):
         """
         A short guide on how to register your lastfm account
         """
@@ -480,7 +480,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="user", aliases=["ui"])
-    async def lf_user(self, ctx: PretendContext, user: User = Author):
+    async def lf_user(self, ctx: AkariContext, user: User = Author):
         """
         Information about a member's lastfm user
         """
@@ -531,7 +531,7 @@ class Lastfm(Cog):
                 )
 
     @lastfm.command(name="whoknows", aliases=["wk"])
-    async def lf_whoknows(self, ctx: PretendContext, *, artist: str = None):
+    async def lf_whoknows(self, ctx: AkariContext, *, artist: str = None):
         """
         Get the top listeners of a certain artist from the server
         """
@@ -577,7 +577,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="globalwhoknows", aliases=["gwk"])
-    async def lf_globalwhoknows(self, ctx: PretendContext, *, artist: str = None):
+    async def lf_globalwhoknows(self, ctx: AkariContext, *, artist: str = None):
         """
         Get the top listeners of a certain artist
         """
@@ -623,7 +623,7 @@ class Lastfm(Cog):
         )
 
     @lastfm.command(name="cover", aliases=["image"])
-    async def lf_cover(self, ctx: PretendContext, *, member: Member = Author):
+    async def lf_cover(self, ctx: AkariContext, *, member: Member = Author):
         """
         Get the cover image of your lastfm song
         """
@@ -648,7 +648,7 @@ class Lastfm(Cog):
         return await ctx.send(f"**{a['recenttracks']['track'][0]['name']}**", file=file)
 
     @lastfm.command(name="recent")
-    async def lf_recent(self, ctx: PretendContext, *, member: Member = Author):
+    async def lf_recent(self, ctx: AkariContext, *, member: Member = Author):
         """
         Shows the top 10 most recent songs on lastfm
         """
@@ -682,7 +682,7 @@ class Lastfm(Cog):
         )
 
     @command(aliases=["np", "fm"])
-    async def nowplaying(self, ctx: PretendContext, *, member: Member = Author):
+    async def nowplaying(self, ctx: AkariContext, *, member: Member = Author):
         """
         Returns the latest song scrobbled on Last.Fm
         """
@@ -755,5 +755,5 @@ class Lastfm(Cog):
                 await asyncio.sleep(0.5)
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Lastfm(bot))

@@ -25,8 +25,8 @@ class Roblox(BaseModel):
 
 class RobloxUser(commands.Converter):
   async def convert(self, ctx: commands.Context, argument: str) -> Roblox:
-    async with aiohttp.ClientSession(headers={"api-key": ctx.bot.pretend_api}) as session: 
-     async with session.get("https://v1.pretend.bot/roblox", params={"username": argument}) as r: 
+    async with aiohttp.ClientSession(headers={"api-key": ctx.bot.Akari_api}) as session: 
+     async with session.get("https://v1.Akari.bot/roblox", params={"username": argument}) as r: 
        match r.status: 
          case 404: 
            raise commands.BadArgument("Roblox account not found")

@@ -11,11 +11,7 @@ import datetime
 import colorgram
 import json
 import aiohttp
-from posthog import Posthog
 
-posthog = Posthog(
-    "phc_pTxc2ZEgflCq1wBWWtloXS8xqK97FPYjlpWLWseYMt8", "https://hog.semisol.dev"
-)
 from PIL import Image
 from typing import Any, List, Union, Optional, Set
 from copy import copy
@@ -33,9 +29,9 @@ from .persistent.giveaway import GiveawayView
 from .persistent.verification import VerificationView
 
 from .helpers import (
-    PretendContext,
+    AkariContext,
     identify,
-    PretendHelp,
+    AkariHelp,
     guild_perms,
     CustomInteraction,
     AntinukeMeasures,
@@ -102,7 +98,7 @@ class Record(asyncpg.Record):
         return self[name]
 
 
-class Pretend(commands.AutoShardedBot):
+class Akari(commands.AutoShardedBot):
     """
     The discord bot
     """
@@ -111,10 +107,9 @@ class Pretend(commands.AutoShardedBot):
         super().__init__(
             command_prefix=getprefix,
             intents=intents,
-            help_command=PretendHelp(),
+            help_command=AkariHelp(),
             owner_ids=[
                 863914425445908490,  # nick
-                461914901624127489,  # lucky
                 598125772754124823   # sin
             ],
             case_insensitive=True,
@@ -127,7 +122,7 @@ class Pretend(commands.AutoShardedBot):
             ),
             member_cache=discord.MemberCacheFlags(joined=True, voice=True),
             activity=discord.CustomActivity(
-                name="🔗 pretend.bot/discord",
+                name="🔗 akari.bot/discord",
             ),
         )
 
@@ -155,8 +150,8 @@ class Pretend(commands.AutoShardedBot):
         self.cache = Cache()
         self.proxy_url = os.environ.get("proxy_url")
         self.other_bots = {}
-        self.pretend_api = os.environ.get("pretend_key")
-        self.api = API(self.pretend_api)
+        self.Akari_api = os.environ.get("Akari_key")
+        self.api = API(self.Akari_api)
         self.an = AntinukeMeasures(self)
         self.embed_build = EmbedScript()
         self.pfps_send = True
@@ -263,8 +258,8 @@ class Pretend(commands.AutoShardedBot):
         return await asyncpg.create_pool(**self.login_data)
 
     async def get_context(
-        self, message: discord.Message, cls=PretendContext
-    ) -> PretendContext:
+        self, message: discord.Message, cls=AkariContext
+    ) -> AkariContext:
         """
         Get the bot's custom context
         """
@@ -279,7 +274,7 @@ class Pretend(commands.AutoShardedBot):
                 for result in results:
                     if channel := self.get_channel(result.channel_id):
                         await asyncio.sleep(0.001)
-                        directory = f"/root/PretendImages/{kind.capitalize()}"
+                        directory = f"/root/AkariImages/{kind.capitalize()}"
                         category = (
                             result.category
                             if result.category != "random"
@@ -343,9 +338,9 @@ class Pretend(commands.AutoShardedBot):
         return urllib.parse.unquote(urllib.parse.quote_plus(url))
 
     async def setup_hook(self) -> None:
-        from .redis import PretendRedis
+        from .redis import AkariRedis
 
-        self.redis = await PretendRedis.from_url()
+        self.redis = await AkariRedis.from_url()
 
         log.info("Starting bot")
         if not self.db:
@@ -405,7 +400,7 @@ class Pretend(commands.AutoShardedBot):
         await self.start_loops()
 
     async def on_command_error(
-        self, ctx: PretendContext, error: commands.CommandError
+        self, ctx: AkariContext, error: commands.CommandError
     ) -> Any:
         """
         The place where the command errors raise
@@ -487,7 +482,7 @@ class Pretend(commands.AutoShardedBot):
                 )
 
         elif isinstance(error, commands.CommandOnCooldown):
-            return await ctx.pretend_send(
+            return await ctx.Akari_send(
                 f"Wait **{error.retry_after:.2f} seconds** before using **{ctx.command.qualified_name}** again"
             )
 
@@ -526,7 +521,7 @@ class Pretend(commands.AutoShardedBot):
             )
             embed = discord.Embed(
                 description=f"{self.warning} {ctx.author.mention}: An error occurred while running the **{ctx.command.qualified_name}** command."
-                + f"\nPlease report the attached code to a developer in the [pretend server](https://discord.gg/pretend)",
+                + f"\nPlease report the attached code to a developer in the [Akari server](https://discord.gg/Akari)",
                 color=self.warning_color,
             )
 
@@ -632,7 +627,7 @@ class Pretend(commands.AutoShardedBot):
                 return await self.process_commands(after)
 
     async def check_availability(
-        self, message: discord.Message, ctx: PretendContext
+        self, message: discord.Message, ctx: AkariContext
     ) -> bool:
         return True
 
@@ -665,7 +660,7 @@ class Pretend(commands.AutoShardedBot):
                     await self.process_commands(message)
 
 
-async def getprefix(bot: Pretend, message: discord.Message) -> List[str]:
+async def getprefix(bot: Akari, message: discord.Message) -> List[str]:
     """
     Return the actual prefixes for the bot
     """

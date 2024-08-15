@@ -11,14 +11,14 @@ from discord.ext.commands import (
     bot_has_guild_permissions,
 )
 
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 from tools.validators import ValidWebhookCode
 from tools.handlers.embedbuilder import EmbedScript
 
 
 class Webhooks(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Webhook building commands"
         self.headers = {"Content-Type": "application/json"}
@@ -31,14 +31,14 @@ class Webhooks(Cog):
     @has_guild_permissions(manage_webhooks=True)
     @bot_has_guild_permissions(manage_webhooks=True)
     async def webhook_create(
-        self, ctx: PretendContext, channel: discord.TextChannel, *, name: str = None
+        self, ctx: AkariContext, channel: discord.TextChannel, *, name: str = None
     ):
         """
         Create a webhook in a channel
         """
 
         webhook = await channel.create_webhook(
-            name="pretend - webhook", reason=f"Webhook created by {ctx.author}"
+            name="Akari - webhook", reason=f"Webhook created by {ctx.author}"
         )
         source = string.ascii_letters + string.digits
         code = "".join((random.choice(source) for _ in range(8)))
@@ -61,7 +61,7 @@ class Webhooks(Cog):
     @webhook_editor.group(
         invoke_without_command=True, name="edit", brief="manage webhooks"
     )
-    async def webhook_edit(self, ctx: PretendContext):
+    async def webhook_edit(self, ctx: AkariContext):
         """
         Edit the webhook's look
         """
@@ -71,7 +71,7 @@ class Webhooks(Cog):
     @webhook_edit.command(name="name", brief="manage webhooks")
     @has_guild_permissions(manage_webhooks=True)
     async def webhook_edit_name(
-        self, ctx: PretendContext, code: ValidWebhookCode, *, name: str
+        self, ctx: AkariContext, code: ValidWebhookCode, *, name: str
     ):
         """
         Edit a webhook's name
@@ -93,7 +93,7 @@ class Webhooks(Cog):
     @webhook_edit.command(name="avatar", aliases=["icon"], brief="manage webhooks")
     @has_guild_permissions(manage_webhooks=True)
     async def webhook_edit_avatar(
-        self, ctx: PretendContext, code: ValidWebhookCode, url: str = None
+        self, ctx: AkariContext, code: ValidWebhookCode, url: str = None
     ):
         """
         Edit the webhook's avatar
@@ -126,7 +126,7 @@ class Webhooks(Cog):
     @webhook_editor.command(name="send", brief="manage webhooks")
     @has_guild_permissions(manage_webhooks=True)
     async def webhook_send(
-        self, ctx: PretendContext, code: ValidWebhookCode, *, script: EmbedScript = None
+        self, ctx: AkariContext, code: ValidWebhookCode, *, script: EmbedScript = None
     ):
         """
         Send a webhook using a discohook json file / embed code
@@ -157,7 +157,7 @@ class Webhooks(Cog):
             await ctx.send_success(f"Sent webhook -> {mes.jump_url}")
 
     @webhook_editor.command(name="list")
-    async def webhook_list(self, ctx: PretendContext):
+    async def webhook_list(self, ctx: AkariContext):
         """
         Weturns a list of available server webhooks
         """
@@ -178,7 +178,7 @@ class Webhooks(Cog):
     @webhook_editor.command(name="delete", brief="manage webhooks")
     @has_guild_permissions(manage_webhooks=True)
     @bot_has_guild_permissions(manage_webhooks=True)
-    async def webhook_delete(self, ctx: PretendContext, code: ValidWebhookCode):
+    async def webhook_delete(self, ctx: AkariContext, code: ValidWebhookCode):
         """
         Delete a webhook created by the bot
         """
@@ -200,5 +200,5 @@ class Webhooks(Cog):
         return await ctx.send_success("Deleted webhook")
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Webhooks(bot))

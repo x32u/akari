@@ -43,7 +43,7 @@ from discord import (
 
 def guild_perms(**perms: bool) -> Any:
  
- async def predicate(ctx: PretendContext):
+ async def predicate(ctx: AkariContext):
   author_permissions = [p[0] for p in ctx.author.guild_permissions if p[1]]
   if not any(p in author_permissions for p in perms): 
    roles = ', '.join(list(map(lambda r: str(r.id), ctx.author.roles)))
@@ -339,12 +339,12 @@ class CustomInteraction(Interaction):
   async def approve(self, message: str, ephemeral: bool=False) -> None: 
    return await self.response.send_message(embed=Embed(color=self.client.yes_color, description=f"{self.client.yes} {self.user.mention}: {message}"), ephemeral=ephemeral)
 
-class PretendHelp(Help):
+class AkariHelp(Help):
  def __init__(self, **kwargs):
   super().__init__(**kwargs)
 
  async def send_bot_help(self, mapping: Mapping[Cog | None, List[Command[Any, Callable[..., Any], Any]]]) -> Coroutine[Any, Any, None]:
-   await self.context.send(f"{self.context.author.mention} check <https://pretend.bot/commands> for the list of all commands")
+   await self.context.send(f"{self.context.author.mention} check <https://Akari.bot/commands> for the list of all commands")
  
  async def send_group_help(self, group: Group):
    embeds = []
@@ -367,7 +367,7 @@ class PretendHelp(Help):
 
   await self.context.send(embed=embed) 
 
-class PretendContext(Context): 
+class AkariContext(Context): 
   flags: Dict[str, Any] = {}
 
   def __init__(self, **kwargs): 
@@ -377,7 +377,7 @@ class PretendContext(Context):
    super().__init__(**kwargs)
   
   def __str__(self): 
-   return f"pretend bot here in {self.channel.mention}"
+   return f"Akari bot here in {self.channel.mention}"
   
   async def reskin_enabled(self) -> bool:
    return await self.bot.db.fetchrow("SELECT * FROM reskin_enabled WHERE guild_id = $1", self.guild.id) is not None
@@ -397,7 +397,7 @@ class PretendContext(Context):
     if len(webhooks) > 0: 
      webhook = webhooks[0]
     else: 
-     webhook = await self.channel.create_webhook(name="pretend - reskin")
+     webhook = await self.channel.create_webhook(name="Akari - reskin")
     
     kwargs.update(
       {
@@ -475,7 +475,7 @@ class PretendContext(Context):
    """Send a success message to the channel"""
    return await self.send(embed=Embed(color=self.bot.yes_color, description=f"{self.bot.yes} {self.author.mention}: {message}"))
 
-  async def pretend_send(self, message: str, **kwargs) -> Message: 
+  async def Akari_send(self, message: str, **kwargs) -> Message: 
    """Send a regular embed message to the channel"""
    return await self.send(embed=Embed(color=self.bot.color, description=f"{self.author.mention}: {message}"), **kwargs)
 
@@ -517,7 +517,7 @@ class PretendContext(Context):
    return await self.paginator(embeds)
 
 class Invoking():
-  def __init__(self, ctx: PretendContext):
+  def __init__(self, ctx: AkariContext):
    self.ctx = ctx
    self.variables = {
     "{member}": "the full name of the punished member",
@@ -578,7 +578,7 @@ class Invoking():
      params=params.replace('{member.avatar}', member.display_avatar.url)
    return params    
 
-class PretendFlags(
+class AkariFlags(
  FlagConverter,
  prefix="--",
  delimiter=" ",

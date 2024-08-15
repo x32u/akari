@@ -18,15 +18,15 @@ from discord import (
 
 from typing import Union, List
 
-from tools.bot import Pretend
+from tools.bot import Akari
 from tools.validators import ValidTime
 from tools.converters import Punishment
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 from tools.predicates import antinuke_owner, antinuke_configured, admin_antinuke
 
 
 class Antinuke(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Antinuke & antiraid commands"
         self.thresholds = {}
@@ -530,11 +530,11 @@ class Antinuke(Cog):
                             )
 
     @group(invoke_without_command=True, aliases=["an"])
-    async def antinuke(self, ctx: PretendContext):
+    async def antinuke(self, ctx: AkariContext):
         await ctx.send_help(ctx.command)
 
     @antinuke.command(name="setup", brief="antinuke owner")
-    async def antinuke_setup(self, ctx: PretendContext):
+    async def antinuke_setup(self, ctx: AkariContext):
         """setup antinuke"""
         check = await ctx.bot.db.fetchrow(
             "SELECT * FROM antinuke WHERE guild_id = $1", ctx.guild.id
@@ -570,7 +570,7 @@ class Antinuke(Cog):
 
     @antinuke.command(name="reset", aliases=["disable"], brief="antinuke owner")
     @antinuke_owner()
-    async def antinuke_reset(self, ctx: PretendContext):
+    async def antinuke_reset(self, ctx: AkariContext):
         """disable the antinuke system"""
 
         async def yes_callback(interaction: Interaction):
@@ -606,7 +606,7 @@ class Antinuke(Cog):
     @antinuke.command(name="status", aliases=["settings", "config", "stats"])
     @antinuke_configured()
     @admin_antinuke()
-    async def an_status(self, ctx: PretendContext):
+    async def an_status(self, ctx: AkariContext):
         """check what is enabled in your antinuke system"""
         results = await self.bot.db.fetch(
             "SELECT module FROM antinuke_modules WHERE guild_id = $1", ctx.guild.id
@@ -630,7 +630,7 @@ class Antinuke(Cog):
     @antinuke.command(name="whitelisted")
     @antinuke_configured()
     @admin_antinuke()
-    async def antinuke_whitelisted(self, ctx: PretendContext):
+    async def antinuke_whitelisted(self, ctx: AkariContext):
         """check who's antinuke whitelisted"""
         check = await self.bot.db.fetchrow(
             "SELECT owner_id, whitelisted FROM antinuke WHERE guild_id = $1",
@@ -658,7 +658,7 @@ class Antinuke(Cog):
     @antinuke.command(name="admins")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_admins(self, ctx: PretendContext):
+    async def an_admins(self, ctx: AkariContext):
         """list antinuke admins"""
         check = await self.bot.db.fetchrow(
             "SELECT owner_id, admins FROM antinuke WHERE guild_id = $1", ctx.guild.id
@@ -678,7 +678,7 @@ class Antinuke(Cog):
     @antinuke.command(name="logs")
     @antinuke_configured()
     @admin_antinuke()
-    async def antinuke_logs(self, ctx: PretendContext, *, channel: TextChannel = None):
+    async def antinuke_logs(self, ctx: AkariContext, *, channel: TextChannel = None):
         """add an antinuke logs channel"""
         if not channel:
             await self.bot.db.execute(
@@ -706,7 +706,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_channelremove_enable(
-        self, ctx: PretendContext, threshold: int, punishment: Punishment
+        self, ctx: AkariContext, threshold: int, punishment: Punishment
     ):
         """enable the protection deleting channels"""
         if threshold < 0:
@@ -742,7 +742,7 @@ class Antinuke(Cog):
     @an_channelremove.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_channelremove_disable(self, ctx: PretendContext):
+    async def an_channelremove_disable(self, ctx: AkariContext):
         """disable the protection against deleting channels"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -772,7 +772,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_channelcreate_enable(
-        self, ctx: PretendContext, threshold: int, punishment: Punishment
+        self, ctx: AkariContext, threshold: int, punishment: Punishment
     ):
         """enable the protection against creating channels"""
         if threshold < 0:
@@ -808,7 +808,7 @@ class Antinuke(Cog):
     @an_channelcreate.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_channelcreate_disable(self, ctx: PretendContext):
+    async def an_channelcreate_disable(self, ctx: AkariContext):
         """disable protection against creating discord channels"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -839,7 +839,7 @@ class Antinuke(Cog):
     @an_giverole.command(name="enable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_giverole_enable(self, ctx: PretendContext, punishment: Punishment):
+    async def an_giverole_enable(self, ctx: AkariContext, punishment: Punishment):
         """
         enable the protection against giving dangerous roles to other members
         """
@@ -874,7 +874,7 @@ class Antinuke(Cog):
     @an_giverole.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_giverole_disable(self, ctx: PretendContext):
+    async def an_giverole_disable(self, ctx: AkariContext):
         """disable protection against giving dangerous roles"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -902,7 +902,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_roledelete_enable(
-        self, ctx: PretendContext, threshold: int, punishment: Punishment
+        self, ctx: AkariContext, threshold: int, punishment: Punishment
     ):
         """enable the protection against role deletions"""
         if threshold < 0:
@@ -938,7 +938,7 @@ class Antinuke(Cog):
     @an_roledelete.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_roldelete_disable(self, ctx: PretendContext):
+    async def an_roldelete_disable(self, ctx: AkariContext):
         """disable protection against deleting roles"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -966,7 +966,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_rolecreate_enable(
-        self, ctx: PretendContext, threshold: int, punishment: Punishment
+        self, ctx: AkariContext, threshold: int, punishment: Punishment
     ):
         """enable the protection against role creations"""
         if threshold < 0:
@@ -1002,7 +1002,7 @@ class Antinuke(Cog):
     @an_rolecreate.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_rolecreate_disable(self, ctx: PretendContext):
+    async def an_rolecreate_disable(self, ctx: AkariContext):
         """disable protection against creating roles"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1028,7 +1028,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_kick_enable(
-        self, ctx: PretendContext, threshold: int, punishment: Punishment
+        self, ctx: AkariContext, threshold: int, punishment: Punishment
     ):
         """enable the protection against kicking members"""
         if threshold < 0:
@@ -1064,7 +1064,7 @@ class Antinuke(Cog):
     @an_kick.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_kick_disable(self, ctx: PretendContext):
+    async def an_kick_disable(self, ctx: AkariContext):
         """disable protection against banning members"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1090,7 +1090,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_ban_enable(
-        self, ctx: PretendContext, threshold: int, punishment: Punishment
+        self, ctx: AkariContext, threshold: int, punishment: Punishment
     ):
         """enable the protection against banning members"""
         if threshold < 0:
@@ -1126,7 +1126,7 @@ class Antinuke(Cog):
     @an_ban.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_ban_disable(self, ctx: PretendContext):
+    async def an_ban_disable(self, ctx: AkariContext):
         """disable protection against banning members"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1153,7 +1153,7 @@ class Antinuke(Cog):
     @an_editrole.command(name="enable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_editrole_enable(self, ctx: PretendContext, punishment: Punishment):
+    async def an_editrole_enable(self, ctx: AkariContext, punishment: Punishment):
         """enable protection against editing dangerous attributes of a role"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1184,7 +1184,7 @@ class Antinuke(Cog):
     @an_editrole.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_editrole_disable(self, ctx: PretendContext):
+    async def an_editrole_disable(self, ctx: AkariContext):
         """disable protection against editing dangerous attributes of a role"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1211,7 +1211,7 @@ class Antinuke(Cog):
     @an_massmention.command(name="enable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_massmention_enable(self, ctx: PretendContext, punishment: Punishment):
+    async def an_massmention_enable(self, ctx: AkariContext, punishment: Punishment):
         """enable the mass mention protection"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1242,7 +1242,7 @@ class Antinuke(Cog):
     @an_massmention.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_massmention_disable(self, ctx: PretendContext):
+    async def an_massmention_disable(self, ctx: AkariContext):
         """disable the mass mention protection"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1260,14 +1260,14 @@ class Antinuke(Cog):
         return await ctx.send_success("Disabled **mass mention** protection")
 
     @antinuke.group(name="spammer", brief="antinuke admin", invoke_without_command=True)
-    async def an_spammer(self, ctx: PretendContext):
+    async def an_spammer(self, ctx: AkariContext):
         """protect your server against flagged members"""
         await ctx.create_pages()
 
     @an_spammer.command(name="enable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_spammer_enable(self, ctx: PretendContext, punishment: Punishment):
+    async def an_spammer_enable(self, ctx: AkariContext, punishment: Punishment):
         """enable the protection against flagged members"""
         if punishment == "strip":
             return await ctx.send_error("**Strip** cannot be a punishment in this case")
@@ -1301,7 +1301,7 @@ class Antinuke(Cog):
     @an_spammer.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_spammer_disable(self, ctx: PretendContext):
+    async def an_spammer_disable(self, ctx: AkariContext):
         """disable the protection against flagged members"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1338,7 +1338,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def an_newaccs_enable(
-        self, ctx: PretendContext, time: ValidTime, punishment: Punishment
+        self, ctx: AkariContext, time: ValidTime, punishment: Punishment
     ):
         """enable the new account protection"""
         if punishment == "strip":
@@ -1374,7 +1374,7 @@ class Antinuke(Cog):
     @an_newaccs.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_newaccs_disable(self, ctx: PretendContext):
+    async def an_newaccs_disable(self, ctx: AkariContext):
         """disable new accounts protection"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1399,7 +1399,7 @@ class Antinuke(Cog):
     @an_botadd.command(name="enable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_botadd_enable(self, ctx: PretendContext, *, punishment: Punishment):
+    async def an_botadd_enable(self, ctx: AkariContext, *, punishment: Punishment):
         """enable bot add protection"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1430,7 +1430,7 @@ class Antinuke(Cog):
     @an_botadd.command(name="disable", brief="antinuke admin")
     @antinuke_configured()
     @admin_antinuke()
-    async def an_botadd_disable(self, ctx: PretendContext):
+    async def an_botadd_disable(self, ctx: AkariContext):
         """disable bot add protection"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM antinuke_modules WHERE module = $1 AND guild_id = $2",
@@ -1456,7 +1456,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def antinuke_whitelist(
-        self, ctx: PretendContext, *, member: Union[User, Member]
+        self, ctx: AkariContext, *, member: Union[User, Member]
     ):
         """make an user antinuke whitelisted"""
         whitelisted = await self.bot.db.fetchval(
@@ -1491,7 +1491,7 @@ class Antinuke(Cog):
     @antinuke_configured()
     @admin_antinuke()
     async def antinuke_wl_remove(
-        self, ctx: PretendContext, *, member: Union[User, Member]
+        self, ctx: AkariContext, *, member: Union[User, Member]
     ):
         """unwhitelist a member from antinuke"""
         whitelisted = await self.bot.db.fetchval(
@@ -1526,7 +1526,7 @@ class Antinuke(Cog):
     @antinuke_admin.command(name="add", brief="antinuke owner")
     @antinuke_configured()
     @antinuke_owner()
-    async def an_admin_add(self, ctx: PretendContext, *, member: Member):
+    async def an_admin_add(self, ctx: AkariContext, *, member: Member):
         """add a member as an antinuke admin. Please be aware of who you add here"""
         if member == ctx.author:
             return await ctx.send("You are the antinuke owner yourself lol")
@@ -1562,7 +1562,7 @@ class Antinuke(Cog):
     @antinuke_admin.command(name="remove", brief="antinuke owner")
     @antinuke_configured()
     @antinuke_owner()
-    async def an_admin_remove(self, ctx: PretendContext, *, member: Member):
+    async def an_admin_remove(self, ctx: AkariContext, *, member: Member):
         """remove a member from the antinuke admin list"""
         admins = await self.bot.db.fetchval(
             "SELECT admins FROM antinuke WHERE guild_id = $1", ctx.guild.id
@@ -1586,5 +1586,5 @@ class Antinuke(Cog):
         return await ctx.send_warning("There is **no** antinuke admin")
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Antinuke(bot))

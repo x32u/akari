@@ -17,18 +17,18 @@ from io import BytesIO
 from collections import defaultdict
 from typing import Tuple, Union, List
 
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 from tools.misc.views import DownloadAsset
 
 
 class Emoji(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Emoji commands"
         self.locks = defaultdict(asyncio.Lock)
 
-    async def emoji_bucket(self, ctx: PretendContext, emoj: PartialEmoji):
+    async def emoji_bucket(self, ctx: AkariContext, emoj: PartialEmoji):
         """
         avoid emoji adding rate limit
         """
@@ -71,7 +71,7 @@ class Emoji(Cog):
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
     async def emoji_steal(
-        self, ctx: PretendContext, emoji: PartialEmoji, *, name: str = None
+        self, ctx: AkariContext, emoji: PartialEmoji, *, name: str = None
     ):
         """
         Add an emoji to the server
@@ -83,7 +83,7 @@ class Emoji(Cog):
         name="delete", aliases=["remove", "del"], brief="manage expressions"
     )
     @has_guild_permissions(manage_expressions=True)
-    async def emoji_delete(self, ctx: PretendContext, *, emoji: Emoji):
+    async def emoji_delete(self, ctx: AkariContext, *, emoji: Emoji):
         """
         Delete an emoji from the server
         """
@@ -91,7 +91,7 @@ class Emoji(Cog):
         await ctx.invoke(self.bot.get_command("emojidelete"), emoji=emoji)
 
     @emoji_group.command(name="list")
-    async def emoji_list(self, ctx: PretendContext):
+    async def emoji_list(self, ctx: AkariContext):
         """
         Returns a list of emojis in this server
         """
@@ -100,7 +100,7 @@ class Emoji(Cog):
 
     @emoji_group.command(name="info")
     async def emoji_info(
-        self, ctx: PretendContext, *, emoji: Union[Emoji, PartialEmoji]
+        self, ctx: AkariContext, *, emoji: Union[Emoji, PartialEmoji]
     ):
         """
         Information about an emoji
@@ -110,7 +110,7 @@ class Emoji(Cog):
 
     @emoji_group.command(name="enlarge", aliases=["download", "e", "jumbo"])
     async def emoji_enlarge(
-        self, ctx: PretendContext, *, emoji: Union[PartialEmoji, str]
+        self, ctx: AkariContext, *, emoji: Union[PartialEmoji, str]
     ):
         """
         Gets an image version of your emoji
@@ -119,7 +119,7 @@ class Emoji(Cog):
         return await ctx.invoke(self.bot.get_command("enlarge"), emoji=emoji)
 
     @emoji_group.command(name="search")
-    async def emoji_search(self, ctx: PretendContext, *, query: str):
+    async def emoji_search(self, ctx: AkariContext, *, query: str):
         """
         Search emojis based by query
         """
@@ -134,7 +134,7 @@ class Emoji(Cog):
         return await ctx.paginate(emojis, f"Emojis containing {query} ({len(emojis)})")
 
     @emoji_group.command(name="zip")
-    async def emojis_zip(self, ctx: PretendContext):
+    async def emojis_zip(self, ctx: AkariContext):
         """
         Send a zip file of all emojis in the server
         """
@@ -160,7 +160,7 @@ class Emoji(Cog):
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
     async def addemoji(
-        self, ctx: PretendContext, emoji: PartialEmoji, *, name: str = None
+        self, ctx: AkariContext, emoji: PartialEmoji, *, name: str = None
     ):
         """
         Add an emoji to the server
@@ -202,7 +202,7 @@ class Emoji(Cog):
     @command(name="addmultiple", aliases=["am"], brief="manage expressions")
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
-    async def addmultiple(self, ctx: PretendContext, *emojis: PartialEmoji):
+    async def addmultiple(self, ctx: AkariContext, *emojis: PartialEmoji):
         """
         Add multiple emojis at the same time
         """
@@ -255,7 +255,7 @@ class Emoji(Cog):
     )
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
-    async def deleteemoji(self, ctx: PretendContext, *, emoji: Emoji):
+    async def deleteemoji(self, ctx: AkariContext, *, emoji: Emoji):
         """
         Delete an emoji from the server
         """
@@ -264,7 +264,7 @@ class Emoji(Cog):
         return await ctx.send_success("Deleted the emoji")
 
     @command(aliases=["downloademoji", "e", "jumbo"])
-    async def enlarge(self, ctx: PretendContext, emoji: Union[PartialEmoji, str]):
+    async def enlarge(self, ctx: AkariContext, emoji: Union[PartialEmoji, str]):
         """
         Get an image version of an emoji
         """
@@ -295,7 +295,7 @@ class Emoji(Cog):
 
     @command(aliases=["ei"])
     async def emojiinfo(
-        self, ctx: PretendContext, *, emoji: Union[Emoji, PartialEmoji]
+        self, ctx: AkariContext, *, emoji: Union[Emoji, PartialEmoji]
     ):
         """
         Information about an emoji
@@ -314,7 +314,7 @@ class Emoji(Cog):
         view.message = await ctx.reply(embed=embed, view=view)
 
     @command(aliases=["emojilist"])
-    async def emojis(self, ctx: PretendContext):
+    async def emojis(self, ctx: AkariContext):
         """
         Returns a list of emojis in the server
         """
@@ -326,7 +326,7 @@ class Emoji(Cog):
         )
 
     @group(invoke_without_command=True)
-    async def sticker(self, ctx: PretendContext):
+    async def sticker(self, ctx: AkariContext):
         """
         Manage server's stickers
         """
@@ -336,7 +336,7 @@ class Emoji(Cog):
     @sticker.command(name="steal", aliases=["add"], brief="manage expressions")
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
-    async def sticker_steal(self, ctx: PretendContext, name: str = None):
+    async def sticker_steal(self, ctx: AkariContext, name: str = None):
         """
         Add a sticker
         """
@@ -344,7 +344,7 @@ class Emoji(Cog):
         return await ctx.invoke(self.bot.get_command("stealsticker"), name=name)
 
     @sticker.command(name="enlarge", aliases=["e", "jumbo"])
-    async def sticker_enlarge(self, ctx: PretendContext):
+    async def sticker_enlarge(self, ctx: AkariContext):
         """
         Returns a sticker as a file
         """
@@ -358,7 +358,7 @@ class Emoji(Cog):
     @sticker.command(name="delete", brief="manage expressions")
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
-    async def sticker_delete(self, ctx: PretendContext):
+    async def sticker_delete(self, ctx: AkariContext):
         """
         Delete a sticker
         """
@@ -373,7 +373,7 @@ class Emoji(Cog):
         return await ctx.send_success("Deleted the sticker")
 
     @sticker.command(name="zip")
-    async def sticker_zip(self, ctx: PretendContext):
+    async def sticker_zip(self, ctx: AkariContext):
         """
         Send a zip file containing the server's stickers
         """
@@ -389,7 +389,7 @@ class Emoji(Cog):
             await ctx.send(file=File(buff, filename=f"stickers-{ctx.guild.name}.zip"))
 
     @command(name="stickerenlarge", aliases=["stickerjumbo"])
-    async def stickerenlarge(self, ctx: PretendContext):
+    async def stickerenlarge(self, ctx: AkariContext):
         """
         Return a sticker as a file
         """
@@ -401,7 +401,7 @@ class Emoji(Cog):
     )
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
-    async def stealsticker(self, ctx: PretendContext, *, name: str = None):
+    async def stealsticker(self, ctx: AkariContext, *, name: str = None):
         """
         Add a sticker to the server
         """
@@ -431,7 +431,7 @@ class Emoji(Cog):
     @sticker.command(name="tag", brief="manage expressions")
     @has_guild_permissions(manage_expressions=True)
     @bot_has_guild_permissions(manage_expressions=True)
-    async def sticker_tag(self, ctx: PretendContext):
+    async def sticker_tag(self, ctx: AkariContext):
         """
         Add your server's vanity URL to the end of sticker names
         """
@@ -439,7 +439,7 @@ class Emoji(Cog):
         if not ctx.guild.vanity_url:
             return await ctx.send_warning(f"There is no **vanity url** set")
 
-        message = await ctx.pretend_send(
+        message = await ctx.Akari_send(
             f"Adding **gg/{ctx.guild.vanity_url_code}** to `{len(ctx.guild.stickers)}` stickers..."
         )
 
@@ -459,5 +459,5 @@ class Emoji(Cog):
         )
 
 
-async def setup(bot: Pretend):
+async def setup(bot: Akari):
     await bot.add_cog(Emoji(bot))

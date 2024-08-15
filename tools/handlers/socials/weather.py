@@ -5,7 +5,7 @@ import datetime
 from typing import Any
 from pydantic import BaseModel
 from discord.ext import commands
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 
 class Weather(BaseModel):
   """
@@ -25,7 +25,7 @@ class Weather(BaseModel):
   time: Any
 
 class WeatherLocation(commands.Converter): 
-  async def convert(self, ctx: PretendContext, argument: str) -> Weather: 
+  async def convert(self, ctx: AkariContext, argument: str) -> Weather: 
     url = "http://api.weatherapi.com/v1/current.json"
     params = {
       "key": os.environ.get("weather"),

@@ -37,7 +37,7 @@ class VerificationView(discord.ui.View):
                 title="Verification",
                 description="Please enter the match code below on the website to verify your account. You have 5 minutes to verify your account.",
                 color=discord.Color.blurple(),
-                url="https://id.pretend.bot/Verify/" + code,
+                url="https://id.Akari.bot/Verify/" + code,
                 timestamp=datetime.datetime.now(),
             )
         embed.add_field(name="Match Code", value=match_code)

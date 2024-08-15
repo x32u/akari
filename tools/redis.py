@@ -63,7 +63,7 @@ INCREMENT_SCRIPT = b"""
 INCREMENT_SCRIPT_HASH = sha1(INCREMENT_SCRIPT).hexdigest()
 
 
-class PretendLock(Lock):
+class AkariLock(Lock):
     def __init__(
         self,
         redis: Redis,
@@ -110,9 +110,9 @@ class PretendLock(Lock):
         raise LockError("Unable to acquire lock within the time specified")
 
 
-class PretendRedis(Redis):
+class AkariRedis(Redis):
     def __init__(self, *a, **ka):
-        self._locks_created: Dict[Union[str, bytes, memoryview], PretendLock] = {}
+        self._locks_created: Dict[Union[str, bytes, memoryview], AkariLock] = {}
         self._namespace = tuuid.tuuid()
         self.rl_prefix = "rl:"
         self.is_ratelimited = self.ratelimited

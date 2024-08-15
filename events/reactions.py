@@ -1,10 +1,10 @@
 import discord, datetime, io 
 
 from discord.ext.commands import Cog
-from tools.bot import Pretend 
+from tools.bot import Akari 
 
 class Reactions(Cog):
-  def __init__(self, bot: Pretend): 
+  def __init__(self, bot: Akari): 
    self.bot = bot 
   
   # reaction roles
@@ -165,5 +165,5 @@ class Reactions(Cog):
     }]
     await self.bot.cache.set("reaction_snipe", payload)
 
-async def setup(bot: Pretend) -> None: 
+async def setup(bot: Akari) -> None: 
   return await bot.add_cog(Reactions(bot))      

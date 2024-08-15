@@ -5,16 +5,16 @@ import discord
 from discord.ext import commands
 
 from typing import Literal
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 
 
 class Autopfp(commands.Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
 
     @commands.hybrid_group(invoke_without_command=True)
-    async def autopfp(self, ctx: PretendContext):
+    async def autopfp(self, ctx: AkariContext):
         """
         Automatically send pfps to a channel in this server
         """
@@ -26,7 +26,7 @@ class Autopfp(commands.Cog):
     @commands.bot_has_guild_permissions(manage_webhooks=True)
     async def autopfp_add(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channel: discord.TextChannel,
         category: Literal[
             "random", "roadmen", "girl", "egirl", "anime", "ceinory"
@@ -60,7 +60,7 @@ class Autopfp(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def autopfp_remove(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         category: Literal[
             "random", "roadmen", "girl", "egirl", "anime", "ceinory"
         ] = "random",
@@ -82,7 +82,7 @@ class Autopfp(commands.Cog):
         return await ctx.send_success(f"Stopped sending **{category}** pfps")
 
     @commands.hybrid_group()
-    async def autobanner(self, ctx: PretendContext):
+    async def autobanner(self, ctx: AkariContext):
         """
         Automatically send banners to a channel
         """
@@ -94,7 +94,7 @@ class Autopfp(commands.Cog):
     @commands.bot_has_guild_permissions(manage_webhooks=True)
     async def autobanner_add(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channel: discord.TextChannel,
         category: Literal["random", "cute", "mix", "imsg"] = "random",
     ):
@@ -126,7 +126,7 @@ class Autopfp(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def autobanner_remove(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         category: Literal["random", "cute", "mix", "imsg"] = "random",
     ):
         """
@@ -148,7 +148,7 @@ class Autopfp(commands.Cog):
     @commands.hybrid_command(name="report")
     async def report(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         type: Literal["banners", "pfps"],
         category: Literal[
             "cute", "mix", "anime", "girl", "egirl", "roadmen", "ceinory"
@@ -156,10 +156,10 @@ class Autopfp(commands.Cog):
         image_id: str,
     ):
         """
-        Report a picture sent by pretend via autopfp
+        Report a picture sent by Akari via autopfp
         """
 
-        directory = f"/root/PretendImages/{type.capitalize()}/"
+        directory = f"/root/AkariImages/{type.capitalize()}/"
 
         if not category.capitalize() in os.listdir(directory):
             return await ctx.send_warning(f"This is not a **{type}** category")

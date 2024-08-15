@@ -8,17 +8,14 @@ import importlib
 from discord import User, Member, Guild
 from discord.ext.commands import Cog, command, is_owner, group
 from discord.ext import tasks
-from typing import Union
 from jishaku.codeblocks import codeblock_converter
-from posthog import Posthog
 
-posthog = Posthog(os.environ["hogkey"], "https://hog.semisol.dev")
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 
 
 class Owner(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.shard_stats.start()
 
@@ -111,18 +108,18 @@ class Owner(Cog):
 
     @command(aliases=["py"])
     @is_owner()
-    async def eval(self, ctx: PretendContext, *, argument: codeblock_converter):
+    async def eval(self, ctx: AkariContext, *, argument: codeblock_converter):
         return await ctx.invoke(self.bot.get_command("jsk py"), argument=argument)
 
     @command()
     @is_owner()
-    async def restart(self, ctx: PretendContext):
+    async def restart(self, ctx: AkariContext):
         await ctx.send("restarting the bot...")
         os.system("pm2 restart 0")
 
     @command()
     @is_owner()
-    async def anowner(self, ctx: PretendContext, guild: Guild, member: User):
+    async def anowner(self, ctx: AkariContext, guild: Guild, member: User):
         """change the antinuke owner in case the real owner cannot access discord"""
         if await self.bot.db.fetchrow(
             "SELECT * FROM antinuke WHERE guild_id = $1", guild.id
@@ -145,31 +142,14 @@ class Owner(Cog):
 
     @command()
     @is_owner()
-    async def guilds(self, ctx: PretendContext):
+    async def guilds(self, ctx: AkariContext):
         """all guilds the bot is in, sorted from the biggest to the smallest"""
         servers = sorted(self.bot.guilds, key=lambda g: g.member_count, reverse=True)
         return await ctx.paginate(
             [f"{g.name} - {g.member_count:,} members" for g in servers],
-            "pretend's servers",
+            "Akari's servers",
         )
-
-    @command()
-    @is_owner()
-    async def loadhog(self, ctx: PretendContext):
-        """Insert all guilds into posthog"""
-        for guild in self.bot.guilds:
-            subtype = await get_sub_type(self, guild)
-            posthog.group_identify(
-                "guild",
-                str(guild.id),
-                {
-                    "name": guild.name,
-                    "subscription type": await get_sub_type(self, guild),
-                    "member count": guild.member_count,
-                },
-            )
-        return await ctx.send_success("Inserted all guilds into posthog")
-
+    
     @group(invoke_without_command=True)
     @is_owner()
     async def donor(self, ctx):
@@ -177,7 +157,7 @@ class Owner(Cog):
 
     @donor.command(name="add")
     @is_owner()
-    async def donor_add(self, ctx: PretendContext, *, member: User):
+    async def donor_add(self, ctx: AkariContext, *, member: User):
         """add donator perks to a member"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM donor WHERE user_id = $1", member.id
@@ -196,7 +176,7 @@ class Owner(Cog):
 
     @donor.command(name="remove")
     @is_owner()
-    async def donor_remove(self, ctx: PretendContext, *, member: User):
+    async def donor_remove(self, ctx: AkariContext, *, member: User):
         """remove donator perks from a member"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM donor WHERE user_id = $1 AND status = $2",
@@ -212,7 +192,7 @@ class Owner(Cog):
 
     @command()
     @is_owner()
-    async def mutuals(self, ctx: PretendContext, *, user: User):
+    async def mutuals(self, ctx: AkariContext, *, user: User):
         """returns mutual servers between the member and the bot"""
         if len(user.mutual_guilds) == 0:
             return await ctx.send(
@@ -227,7 +207,7 @@ class Owner(Cog):
 
     @command(name="globalenable")
     @is_owner()
-    async def globalenable(self, ctx: PretendContext, cmd: str = ""):
+    async def globalenable(self, ctx: AkariContext, cmd: str = ""):
         """
         Globally enable a command.
         """
@@ -246,7 +226,7 @@ class Owner(Cog):
 
     @command(name="globaldisable")
     @is_owner()
-    async def globaldisable(self, ctx: PretendContext, cmd: str = ""):
+    async def globaldisable(self, ctx: AkariContext, cmd: str = ""):
         """
         Globally disable a command.
         """
@@ -276,7 +256,7 @@ class Owner(Cog):
 
     @command(name="globaldisabledlist", aliases=["gdl"])
     @is_owner()
-    async def globaldisabledlist(self, ctx: PretendContext):
+    async def globaldisabledlist(self, ctx: AkariContext):
         """
         Show all commands that are globally disabled.
         """
@@ -297,7 +277,7 @@ class Owner(Cog):
 
     @command(name="idauthlogs", aliases=["ial"])
     @is_owner()
-    async def idauthlogs(self, ctx: PretendContext, unique_id: str = ""):
+    async def idauthlogs(self, ctx: AkariContext, unique_id: str = ""):
         """
         Unknown
         """
@@ -342,7 +322,7 @@ class Owner(Cog):
         )
 
     @command(aliases=["trace"])
-    async def error(self, ctx: PretendContext, code: str):
+    async def error(self, ctx: AkariContext, code: str):
         """
         View information about an error code
         """
@@ -382,7 +362,7 @@ class Owner(Cog):
     @is_owner()
     async def globalban(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         user: User,
         *,
         reason: str = "Globally banned by a bot owner",
@@ -425,7 +405,7 @@ class Owner(Cog):
 
     @blacklist.command(name="user")
     @is_owner()
-    async def blacklist_user(self, ctx: PretendContext, *, user: User):
+    async def blacklist_user(self, ctx: AkariContext, *, user: User):
         """blacklist or unblacklist a member"""
         if user.id in self.bot.owner_ids:
             return await ctx.send_error("Do not blacklist a bot owner, retard")
@@ -434,14 +414,14 @@ class Owner(Cog):
             await self.bot.db.execute(
                 "INSERT INTO blacklist VALUES ($1,$2)", user.id, "user"
             )
-            return await ctx.send_success(f"Blacklisted {user.mention} from pretend")
+            return await ctx.send_success(f"Blacklisted {user.mention} from Akari")
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", user.id)
-            return await ctx.send_success(f"Unblacklisted {user.mention} from pretend")
+            return await ctx.send_success(f"Unblacklisted {user.mention} from Akari")
 
     @blacklist.command(name="server")
     @is_owner()
-    async def blacklist_server(self, ctx: PretendContext, *, server_id: int):
+    async def blacklist_server(self, ctx: AkariContext, *, server_id: int):
         """blacklist a server"""
         if server_id in [1177424668328726548]:
             return await ctx.send_error("Cannot blacklist this server")
@@ -454,17 +434,17 @@ class Owner(Cog):
             if guild:
                 await guild.leave()
             return await ctx.send_success(
-                f"Blacklisted server {server_id} from pretend"
+                f"Blacklisted server {server_id} from Akari"
             )
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", server_id)
             return await ctx.send_success(
-                f"Unblacklisted server {server_id} from pretend"
+                f"Unblacklisted server {server_id} from Akari"
             )
 
     @command(name="reload", aliases=["rl"])
     @is_owner()
-    async def reload(self, ctx: PretendContext, *, module: str):
+    async def reload(self, ctx: AkariContext, *, module: str):
         """
         Reload a module
         """
@@ -528,5 +508,5 @@ async def get_sub_type(self, guild):
             return "none"
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     await bot.add_cog(Owner(bot))

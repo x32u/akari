@@ -9,10 +9,10 @@ from discord import User, Member
 
 from collections import defaultdict
 
-from tools.bot import Pretend
+from tools.bot import Akari
 
 class Members(Cog): 
-  def __init__(self, bot: Pretend): 
+  def __init__(self, bot: Akari): 
     self.bot = bot 
     self.locks = defaultdict(asyncio.Lock)
   
@@ -33,7 +33,7 @@ class Members(Cog):
         data
       )
   
-      return f"https://pretend.bot/images/{member.id}/{token}.{'gif' if member.display_avatar.is_animated() else 'png'}"
+      return f"https://Akari.bot/images/{member.id}/{token}.{'gif' if member.display_avatar.is_animated() else 'png'}"
 
   @Cog.listener('on_user_update')
   async def username_change(self, before: User, after: User): 
@@ -121,7 +121,7 @@ class Members(Cog):
     }
 
     json = {
-     'username': 'pretend-usernames',
+     'username': 'Akari-usernames',
      'content': f"New username available: **{before}**",
      'avatar_url': self.bot.user.display_avatar.url
     }
@@ -185,5 +185,5 @@ class Members(Cog):
       except Exception as e:
         self.bot.get_channel(1218519366610456629).send(e)
 
-async def setup(bot: Pretend) -> None: 
+async def setup(bot: Akari) -> None: 
   await bot.add_cog(Members(bot))      

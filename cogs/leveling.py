@@ -14,14 +14,14 @@ from discord.ext.commands import (
 from typing import Optional
 from collections import defaultdict
 
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 from tools.predicates import leveling_enabled
 from tools.converters import LevelMember, NewRoleConverter
 
 
 class Leveling(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Leveling commands"
         self.levelcd = CooldownMapping.from_cooldown(3, 3, BucketType.member)
@@ -184,7 +184,7 @@ class Leveling(Cog):
 
     @hybrid_command()
     @leveling_enabled()
-    async def rank(self, ctx: PretendContext, *, member: Member = Author):
+    async def rank(self, ctx: AkariContext, *, member: Member = Author):
         """
         get the rank of a member
         """
@@ -211,7 +211,7 @@ class Leveling(Cog):
         return await ctx.send(embed=embed)
 
     @hybrid_group(name="level", invoke_without_command=True)
-    async def level_cmd(self, ctx: PretendContext, member: Member = Author):
+    async def level_cmd(self, ctx: AkariContext, member: Member = Author):
         """
         view the level of a member
         """
@@ -221,7 +221,7 @@ class Leveling(Cog):
     @level_cmd.command(name="test", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
-    async def level_test(self, ctx: PretendContext):
+    async def level_test(self, ctx: AkariContext):
         """
         test your level up message
         """
@@ -246,7 +246,7 @@ class Leveling(Cog):
 
     @level_cmd.command(name="enable", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def level_enable(self, ctx: PretendContext):
+    async def level_enable(self, ctx: AkariContext):
         """
         enable the leveling system
         """
@@ -269,7 +269,7 @@ class Leveling(Cog):
     @level_cmd.command(name="disable", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
-    async def level_disable(self, ctx: PretendContext):
+    async def level_disable(self, ctx: AkariContext):
         """
         disable the leveling system
         """
@@ -301,7 +301,7 @@ class Leveling(Cog):
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
     async def level_channel(
-        self, ctx: PretendContext, *, channel: Optional[TextChannel] = None
+        self, ctx: AkariContext, *, channel: Optional[TextChannel] = None
     ):
         """
         set the level up message destination
@@ -326,7 +326,7 @@ class Leveling(Cog):
         await ctx.send_success(message)
 
     @level_cmd.command(name="variables")
-    async def level_variables(self, ctx: PretendContext):
+    async def level_variables(self, ctx: AkariContext):
         """
         returns the variables you can use for your custom level message
         """
@@ -343,7 +343,7 @@ class Leveling(Cog):
     @leveling_enabled()
     async def level_message(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         *,
         message: str = "Good job, {user}! You leveled up to **Level {level}**",
     ):
@@ -389,7 +389,7 @@ class Leveling(Cog):
     @booster_multiplier.command(name="enable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
-    async def booster_multiplier_enable(self, ctx: PretendContext):
+    async def booster_multiplier_enable(self, ctx: AkariContext):
         """
         enable the multiplier for boosters
         """
@@ -408,7 +408,7 @@ class Leveling(Cog):
     @booster_multiplier.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
-    async def booster_multiplier_disable(self, ctx: PretendContext):
+    async def booster_multiplier_disable(self, ctx: AkariContext):
         """
         disable the multiplier for boosters
         """
@@ -429,7 +429,7 @@ class Leveling(Cog):
         name="config", aliases=["settings", "stats", "statistics", "status"]
     )
     @leveling_enabled()
-    async def level_config(self, ctx: PretendContext):
+    async def level_config(self, ctx: AkariContext):
         """
         check the settings for the leveling system
         """
@@ -463,7 +463,7 @@ class Leveling(Cog):
     @level_cmd.command(name="set", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
-    async def level_set(self, ctx: PretendContext, member: LevelMember, level: int):
+    async def level_set(self, ctx: AkariContext, member: LevelMember, level: int):
         """
         set a level to a member
         """
@@ -511,7 +511,7 @@ class Leveling(Cog):
     @level_cmd.command(name="reset", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     @leveling_enabled()
-    async def level_reset(self, ctx: PretendContext, *, member: Member = None):
+    async def level_reset(self, ctx: AkariContext, *, member: Member = None):
         """
         reset the level for a member or every member
         """
@@ -558,7 +558,7 @@ class Leveling(Cog):
 
     @level_cmd.command(name="leaderboard", aliases=["lb"])
     @leveling_enabled()
-    async def level_leaderboard(self, ctx: PretendContext):
+    async def level_leaderboard(self, ctx: AkariContext):
         """
         returns a top leaderboard for leveling
         """
@@ -592,7 +592,7 @@ class Leveling(Cog):
     @level_rewards.command(name="add", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     async def level_rewards_add(
-        self, ctx: PretendContext, level: int, *, role: NewRoleConverter
+        self, ctx: AkariContext, level: int, *, role: NewRoleConverter
     ):
         """assign a reward role to a level"""
         if level < 1:
@@ -617,7 +617,7 @@ class Leveling(Cog):
     @level_rewards.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     async def level_rewards_remove(
-        self, ctx: PretendContext, *, role: NewRoleConverter
+        self, ctx: AkariContext, *, role: NewRoleConverter
     ):
         """remove a reward from a level"""
 
@@ -639,7 +639,7 @@ class Leveling(Cog):
 
     @level_rewards.command(name="reset", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def level_rewards_reset(self, ctx: PretendContext):
+    async def level_rewards_reset(self, ctx: AkariContext):
         """delete every reward that was added"""
 
         async def yes_callback(interaction: Interaction):
@@ -667,7 +667,7 @@ class Leveling(Cog):
         )
 
     @level_rewards.command(name="list")
-    async def level_rewards_list(self, ctx: PretendContext):
+    async def level_rewards_list(self, ctx: AkariContext):
         """get a list of every role reward in this server"""
         check = await self.bot.db.fetch(
             "SELECT role_id, level FROM level_rewards WHERE guild_id = $1", ctx.guild.id
@@ -683,5 +683,5 @@ class Leveling(Cog):
         )
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Leveling(bot))

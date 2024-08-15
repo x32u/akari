@@ -3,7 +3,7 @@ import aiohttp
 from typing import Any
 from pydantic import BaseModel
 from discord.ext import commands
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 
 class CashApp(BaseModel):
     """
@@ -14,7 +14,7 @@ class CashApp(BaseModel):
     qr: Any
 
 class CashappUser(commands.Converter):
-  async def convert(self, ctx: PretendContext, argument: str) -> CashApp:
+  async def convert(self, ctx: AkariContext, argument: str) -> CashApp:
    async with aiohttp.ClientSession() as cs: 
      async with cs.get(f"https://cash.app/${argument}") as r: 
        if r.status == 404: 

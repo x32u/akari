@@ -1,7 +1,7 @@
 import discord
 
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 from io import BytesIO
 
 from discord import User, Embed, __version__, utils, Permissions
@@ -12,7 +12,7 @@ from platform import python_version
 
 
 class Info(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Information commands"
 
@@ -31,7 +31,7 @@ class Info(Cog):
         return view
 
     @hybrid_command(name="commands", aliases=["h", "cmds"])
-    async def _help(self, ctx: PretendContext, *, command: str = None):
+    async def _help(self, ctx: AkariContext, *, command: str = None):
         """
         The help command menu
         """
@@ -51,7 +51,7 @@ class Info(Cog):
             return await ctx.send_help(_command)
 
     @command()
-    async def getbotinvite(self, ctx: PretendContext, *, member: User):
+    async def getbotinvite(self, ctx: AkariContext, *, member: User):
         """
         Get the bot invite based on it's id
         """
@@ -62,7 +62,7 @@ class Info(Cog):
         await ctx.reply(ctx.author.mention, view=self.create_bot_invite(member))
 
     @command(name="thegreatest")
-    async def adam(self, ctx: PretendContext):
+    async def adam(self, ctx: AkariContext):
         """
         a custom command made for damonfsfs
         """
@@ -100,7 +100,7 @@ class Info(Cog):
             print(f"Could not find the channel with ID {channel}")
 
     @hybrid_command()
-    async def ping(self, ctx: PretendContext):
+    async def ping(self, ctx: AkariContext):
         """
         Displays the bot's latency
         """
@@ -113,7 +113,7 @@ class Info(Cog):
         )
 
     @hybrid_command(aliases=["up"])
-    async def uptime(self, ctx: PretendContext):
+    async def uptime(self, ctx: AkariContext):
         """
         Displays how long has the bot been online for
         """
@@ -126,7 +126,7 @@ class Info(Cog):
         )
 
     @hybrid_command(aliases=["bi", "bot", "info", "about"])
-    async def botinfo(self, ctx: PretendContext):
+    async def botinfo(self, ctx: AkariContext):
         """
         Displays information about the bot
         """
@@ -134,7 +134,7 @@ class Info(Cog):
         embed = (
             Embed(
                 color=self.bot.color,
-                description=f"Premium multi-purpose discord bot made by [**The Pretend Team**](https://discord.gg/pretend)\nUsed by **{sum(g.member_count for g in self.bot.guilds):,}** members in **{len(self.bot.guilds):,}** servers",
+                description=f"Premium multi-purpose discord bot made by [**The Akari Team**](https://discord.gg/Akari)\nUsed by **{sum(g.member_count for g in self.bot.guilds):,}** members in **{len(self.bot.guilds):,}** servers",
             )
             .set_author(
                 name=self.bot.user.name, icon_url=self.bot.user.display_avatar.url
@@ -148,7 +148,7 @@ class Info(Cog):
         await ctx.send(embed=embed)
 
     @hybrid_command()
-    async def shards(self, ctx: PretendContext):
+    async def shards(self, ctx: AkariContext):
         """
         Check status of each bot shard
         """
@@ -169,7 +169,7 @@ class Info(Cog):
         await ctx.send(embed=embed)
 
     @hybrid_command(aliases=["inv", "link"])
-    async def invite(self, ctx: PretendContext):
+    async def invite(self, ctx: AkariContext):
         """
         Send an invite link of the bot
         """
@@ -177,7 +177,7 @@ class Info(Cog):
         await ctx.reply(ctx.author.mention, view=self.create_bot_invite(ctx.guild.me))
 
     @hybrid_command(name="credits")
-    async def credits(self, ctx: PretendContext):
+    async def credits(self, ctx: AkariContext):
         """
         Get more specific credits for the bot
         """
@@ -191,5 +191,5 @@ class Info(Cog):
         await ctx.send(embed=embed)
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Info(bot))

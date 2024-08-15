@@ -1,20 +1,20 @@
 import discord
-from tools.bot import Pretend 
-from tools.helpers import PretendContext
+from tools.bot import Akari 
+from tools.helpers import AkariContext
 
-bot = Pretend()
+bot = Akari()
 
 @bot.before_invoke
-async def chunk_guild(ctx: PretendContext) -> None:
+async def chunk_guild(ctx: AkariContext) -> None:
     if not ctx.guild.chunked:
         await ctx.guild.chunk(cache=True)
 
 @bot.check 
-async def check_availability(ctx: PretendContext) -> bool:
+async def check_availability(ctx: AkariContext) -> bool:
     return True
 
 @bot.check 
-async def disabled_command(ctx: PretendContext): 
+async def disabled_command(ctx: AkariContext): 
   if await ctx.bot.db.fetchrow(
     """
     SELECT * FROM disablecmd
@@ -38,12 +38,12 @@ async def disabled_command(ctx: PretendContext):
   )
   if global_disabled:
     if global_disabled.get("disabled") and ctx.author.id not in ctx.bot.owner_ids:
-      await ctx.send_warning("This command is currently disabled by the admin team of pretend, for further information please join the [Pretend Server](https://discord.gg/pretend).")   
+      await ctx.send_warning("This command is currently disabled by the admin team of Akari, for further information please join the [Akari Server](https://discord.gg/Akari).")   
       return False 
   return True
 
 @bot.check
-async def disabled_module(ctx: PretendContext):
+async def disabled_module(ctx: AkariContext):
   if ctx.command.cog:
     if await ctx.bot.db.fetchrow(
       """
@@ -65,7 +65,7 @@ async def disabled_module(ctx: PretendContext):
     return True
 
 @bot.check
-async def restricted_command(ctx: PretendContext):
+async def restricted_command(ctx: AkariContext):
   if ctx.author.id == ctx.guild.owner_id:
     return True
 

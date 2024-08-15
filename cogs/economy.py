@@ -16,15 +16,15 @@ from discord.ext.commands import (
     CommandOnCooldown,
 )
 
-from tools.bot import Pretend
+from tools.bot import Akari
 from tools.misc.views import Transfer
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 from tools.converters import CashAmount, CardAmount, EligibleEconomyMember
 from tools.predicates import create_account, daily_taken, dice_cooldown
 
 
 class Economy(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.emoji = "🏦"
         self.description = "Economy commands"
@@ -56,7 +56,7 @@ class Economy(Cog):
     @hybrid_command()
     @create_account()
     async def transfer(
-        self, ctx: PretendContext, amount: CashAmount, *, member: EligibleEconomyMember
+        self, ctx: AkariContext, amount: CashAmount, *, member: EligibleEconomyMember
     ):
         """
         Transfer cash to a member
@@ -72,7 +72,7 @@ class Economy(Cog):
     @command(aliases=["gamble"])
     @create_account()
     @dice_cooldown()
-    async def dice(self, ctx: PretendContext, amount: CashAmount):
+    async def dice(self, ctx: AkariContext, amount: CashAmount):
         """
         Play a dice game
         """
@@ -146,7 +146,7 @@ class Economy(Cog):
     @hybrid_command()
     @create_account()
     @daily_taken()
-    async def daily(self, ctx: PretendContext):
+    async def daily(self, ctx: AkariContext):
         """
         Claim your daily cash
         """
@@ -183,7 +183,7 @@ class Economy(Cog):
 
     @hybrid_command()
     @create_account()
-    async def withdraw(self, ctx: PretendContext, amount: CardAmount):
+    async def withdraw(self, ctx: AkariContext, amount: CardAmount):
         """
         withdraw card money to cash
         """
@@ -214,7 +214,7 @@ class Economy(Cog):
 
     @hybrid_command(aliases=["dep"])
     @create_account()
-    async def deposit(self, ctx: PretendContext, amount: CashAmount):
+    async def deposit(self, ctx: AkariContext, amount: CashAmount):
         """
         Deposit cash to card
         """
@@ -245,7 +245,7 @@ class Economy(Cog):
 
     @hybrid_command()
     @create_account()
-    async def coinflip(self, ctx: PretendContext, amount: CashAmount, bet: str):
+    async def coinflip(self, ctx: AkariContext, amount: CashAmount, bet: str):
         """
         Play a coinflip game
         """
@@ -312,7 +312,7 @@ class Economy(Cog):
     @hybrid_command()
     @create_account()
     @cooldown(1, 20, BucketType.user)
-    async def work(self, ctx: PretendContext):
+    async def work(self, ctx: AkariContext):
         """
         Work a job and earn money
         """
@@ -330,14 +330,14 @@ class Economy(Cog):
         )
 
     @work.error
-    async def on_command_error(self, ctx: PretendContext, error: CommandError):
+    async def on_command_error(self, ctx: AkariContext, error: CommandError):
         if isinstance(error, CommandOnCooldown):
             return await ctx.economy_send(
                 f"You have to wait **{humanize.precisedelta(datetime.timedelta(seconds=error.retry_after), format='%0.0f')}** to work again"
             )
 
     @hybrid_command(aliases=["lb"])
-    async def leaderboard(self, ctx: PretendContext):
+    async def leaderboard(self, ctx: AkariContext):
         """
         Global leaderboard for economy
         """
@@ -364,7 +364,7 @@ class Economy(Cog):
         )
 
     @hybrid_command()
-    async def reset(self, ctx: PretendContext):
+    async def reset(self, ctx: AkariContext):
         """
         Close your economy account
         """
@@ -401,7 +401,7 @@ class Economy(Cog):
 
     @hybrid_command(aliases=["bal"])
     @create_account()
-    async def balance(self, ctx: PretendContext, *, member: discord.Member = Author):
+    async def balance(self, ctx: AkariContext, *, member: discord.Member = Author):
         """
         Check someone's balance
         """
@@ -440,5 +440,5 @@ class Economy(Cog):
         await ctx.send(embed=embed)
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     await bot.add_cog(Economy(bot))

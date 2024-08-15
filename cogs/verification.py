@@ -8,8 +8,8 @@ from discord import (
 )
 
 from tools.persistent.verification import VerificationView
-from tools.bot import Pretend
-from tools.helpers import PretendContext
+from tools.bot import Akari
+from tools.helpers import AkariContext
 
 
 def generate_code():
@@ -17,17 +17,17 @@ def generate_code():
   return ''.join(random.choice(characters) if i not in (3, 6) else '-' for i in range(11))
 
 class Verification(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Verification commands"
         self.thresholds = {}
 
     @group(invoke_without_command=True)
-    async def verification(self, ctx: PretendContext):
+    async def verification(self, ctx: AkariContext):
         await ctx.send_help(ctx.command)
     @has_guild_permissions(administrator=True)
     @verification.command(name="setup", brief="Administrator")
-    async def verification_setup(self, ctx: PretendContext, channel: TextChannel, *, role: Role):
+    async def verification_setup(self, ctx: AkariContext, channel: TextChannel, *, role: Role):
         """setup verification"""
         check = await self.bot.db.fetchrow("SELECT * FROM verify_guilds WHERE guild_id = $1", ctx.guild.id)
         if check:
@@ -44,7 +44,7 @@ class Verification(Cog):
         await ctx.send_success("Verification setup successfully.")
     @has_guild_permissions(administrator=True)
     @verification.command(name="reset", brief="Administrator")    
-    async def verification_reset(self, ctx: PretendContext):
+    async def verification_reset(self, ctx: AkariContext):
         """reset verification"""
         check = await self.bot.db.fetchrow("SELECT * FROM verify_guilds WHERE guild_id = $1", ctx.guild.id)
         if not check:
@@ -53,5 +53,5 @@ class Verification(Cog):
         await ctx.send_success("Verification reset successfully.")
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Verification(bot))

@@ -8,18 +8,18 @@ from discord.ext.commands import (
     BadArgument,
 )
 
-from tools.bot import Pretend
-from tools.converters import PretendContext
+from tools.bot import Akari
+from tools.converters import AkariContext
 from tools.converters import ChannelType, CounterMessage, CounterType
 
 
 class Counters(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Server stats displayed on channels"
 
     async def create_counter_channel(
-        self, ctx: PretendContext, message: str, replace_with: str, channeltype: str
+        self, ctx: AkariContext, message: str, replace_with: str, channeltype: str
     ) -> GuildChannel:
         overwrites = {ctx.guild.default_role: PermissionOverwrite(connect=False)}
         reason = "creating member counter"
@@ -50,7 +50,7 @@ class Counters(Cog):
         await ctx.create_pages()
 
     @counter.command(name="types")
-    async def counter_types(self, ctx: PretendContext):
+    async def counter_types(self, ctx: AkariContext):
         """returns the counter types and channel types"""
         embed1 = Embed(color=self.bot.color, title="counter types")
         embed2 = Embed(color=self.bot.color, title="channel types")
@@ -59,7 +59,7 @@ class Counters(Cog):
         await ctx.paginator([embed1, embed2])
 
     @counter.command(name="list")
-    async def counter_list(self, ctx: PretendContext):
+    async def counter_list(self, ctx: AkariContext):
         """returns a list of the active server counters"""
         results = await self.bot.db.fetch(
             "SELECT * FROM counters WHERE guild_id = $1", ctx.guild.id
@@ -79,7 +79,7 @@ class Counters(Cog):
 
     @counter.command(name="remove", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def counter_remove(self, ctx: PretendContext, countertype: CounterType):
+    async def counter_remove(self, ctx: AkariContext, countertype: CounterType):
         """remove a counter from the server"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM counters WHERE guild_id = $1 AND module = $2",
@@ -112,7 +112,7 @@ class Counters(Cog):
     @bot_has_guild_permissions(manage_channels=True)
     async def counter_add_members(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channeltype: ChannelType,
         *,
         message: CounterMessage = "{target}",
@@ -148,7 +148,7 @@ class Counters(Cog):
     @bot_has_guild_permissions(manage_channels=True)
     async def counter_add_humans(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channeltype: ChannelType,
         *,
         message: CounterMessage = "{target}",
@@ -187,7 +187,7 @@ class Counters(Cog):
     @bot_has_guild_permissions(manage_channels=True)
     async def counter_add_bots(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channeltype: ChannelType,
         *,
         message: CounterMessage = "{target}",
@@ -223,7 +223,7 @@ class Counters(Cog):
     @bot_has_guild_permissions(manage_channels=True)
     async def counter_add_voice(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channeltype: ChannelType,
         *,
         message: CounterMessage = "{target}",
@@ -266,7 +266,7 @@ class Counters(Cog):
     @bot_has_guild_permissions(manage_channels=True)
     async def counter_add_boosters(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         channeltype: ChannelType,
         *,
         message: CounterMessage = "{target}",
@@ -298,5 +298,5 @@ class Counters(Cog):
         await ctx.send_success(f"Created **boosters** counter -> {channel.mention}")
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Counters(bot))

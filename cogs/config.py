@@ -35,9 +35,9 @@ from tools.validators import (
 
 from tools.converters import NewRoleConverter, HexColor
 from tools.predicates import bump_enabled, boosted_to
-from tools.helpers import PretendContext, Invoking
+from tools.helpers import AkariContext, Invoking
 from tools.misc.views import confessModal
-from tools.bot import Pretend
+from tools.bot import Akari
 
 from typing import Union
 
@@ -46,7 +46,7 @@ from tools.handlers.embedschema import EmbedBuilding
 
 
 class Config(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Config commands"
 
@@ -81,9 +81,9 @@ class Config(Cog):
     @command(aliases=["ee"], brief="manage messages")
     @has_guild_permissions(manage_messages=True)
     async def editembed(
-        self, ctx: PretendContext, message: Message, *, code: EmbedScript = None
+        self, ctx: AkariContext, message: Message, *, code: EmbedScript = None
     ):
-        """edit an embed sent by pretend"""
+        """edit an embed sent by Akari"""
         if message.author.id != self.bot.user.id:
             return await ctx.send_warning(
                 f"This is not a message sent by **{self.bot.user}**"
@@ -100,7 +100,7 @@ class Config(Cog):
 
     @command(aliases=["ce"], brief="manage messages")
     @has_guild_permissions(manage_messages=True)
-    async def createembed(self, ctx: PretendContext, *, code: EmbedScript = None):
+    async def createembed(self, ctx: AkariContext, *, code: EmbedScript = None):
         """create an embed using an embed code"""
         if code is None:
             if ctx.message.attachments:
@@ -112,14 +112,14 @@ class Config(Cog):
 
     @command(brief="manage_messages")
     @has_guild_permissions(manage_messages=True)
-    async def embedsetup(self, ctx: PretendContext):
+    async def embedsetup(self, ctx: AkariContext):
         """Create an embed using buttons and return an embed code"""
         embed = Embed(color=self.bot.color, description="Created an embed")
         view = EmbedBuilding(ctx)
         return await ctx.send(embed=embed, view=view)
 
     @command()
-    async def copyembed(self, ctx: PretendContext, message: ValidMessage):
+    async def copyembed(self, ctx: AkariContext, message: ValidMessage):
         """copy the embed code of a certain embed"""
         await ctx.send(f"```{EmbedBuilder().copy_embed(message)}```")
 
@@ -129,7 +129,7 @@ class Config(Cog):
 
     @usertrack.command(name="add", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def usernames_add(self, ctx: PretendContext, *, channel: TextChannel):
+    async def usernames_add(self, ctx: AkariContext, *, channel: TextChannel):
         """add a channel for username tracking"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM username_track WHERE guild_id = $1", ctx.guild.id
@@ -141,7 +141,7 @@ class Config(Cog):
 
         webhooks = [w for w in await channel.webhooks() if w.token]
         if len(webhooks) == 0:
-            webhook = await channel.create_webhook(name="pretend-usernames")
+            webhook = await channel.create_webhook(name="Akari-usernames")
         else:
             webhook = webhooks[0]
 
@@ -154,7 +154,7 @@ class Config(Cog):
 
     @usertrack.command(name="remove", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def usernames_remove(self, ctx: PretendContext):
+    async def usernames_remove(self, ctx: AkariContext):
         """remove the username tracking from your server"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM username_track WHERE guild_id = $1", ctx.guild.id
@@ -171,7 +171,7 @@ class Config(Cog):
 
     @command(brief="manage server", aliases=["disablecommand"])
     @has_guild_permissions(manage_guild=True)
-    async def disablecmd(self, ctx: PretendContext, *, command: ValidCommand):
+    async def disablecmd(self, ctx: AkariContext, *, command: ValidCommand):
         """
         disable a command in the server
         """
@@ -192,7 +192,7 @@ class Config(Cog):
 
     @command(brief="manage server", aliases=["enablecommand"])
     @has_guild_permissions(manage_guild=True)
-    async def enablecmd(self, ctx: PretendContext, *, command: ValidCommand):
+    async def enablecmd(self, ctx: AkariContext, *, command: ValidCommand):
         """enable a command in the server"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM disablecmd WHERE guild_id = $1 AND cmd = $2",
@@ -216,7 +216,7 @@ class Config(Cog):
         await ctx.create_pages()
 
     @invoke.command(name="variables")
-    async def invoke_variables(self, ctx: PretendContext):
+    async def invoke_variables(self, ctx: AkariContext):
         """returns invoke variables"""
         vars = "\n".join(
             [f"{m} - {Invoking(ctx).variables.get(m)}" for m in Invoking(ctx).variables]
@@ -228,43 +228,43 @@ class Config(Cog):
 
     @invoke.command(name="unban", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_unban(self, ctx: PretendContext, *, code: str):
+    async def invoke_unban(self, ctx: AkariContext, *, code: str):
         """add a custom unban message"""
         await Invoking(ctx).cmd(code)
 
     @invoke.command(name="ban", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_ban(self, ctx: PretendContext, *, code: str):
+    async def invoke_ban(self, ctx: AkariContext, *, code: str):
         """add a custom ban message"""
         await Invoking(ctx).cmd(code)
 
     @invoke.command(name="kick", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_kick(self, ctx: PretendContext, *, code: str):
+    async def invoke_kick(self, ctx: AkariContext, *, code: str):
         """add a custom kick message"""
         await Invoking(ctx).cmd(code)
 
     @invoke.command(name="mute", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_mute(self, ctx: PretendContext, *, code: str):
+    async def invoke_mute(self, ctx: AkariContext, *, code: str):
         """add a custom mute message"""
         await Invoking(ctx).cmd(code)
 
     @invoke.command(name="unmute", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_unmute(self, ctx: PretendContext, *, code: str):
+    async def invoke_unmute(self, ctx: AkariContext, *, code: str):
         """add a custom unmute message"""
         await Invoking(ctx).cmd(code)
 
     @invoke.command(name="jail", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_jail(self, ctx: PretendContext, *, code: str):
+    async def invoke_jail(self, ctx: AkariContext, *, code: str):
         """add a custom jail message"""
         await Invoking(ctx).cmd(code)
 
     @invoke.command(name="unjail", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def invoke_unjail(self, ctx: PretendContext, *, code: str):
+    async def invoke_unjail(self, ctx: AkariContext, *, code: str):
         """add a custom unjail message"""
         await Invoking(ctx).cmd(code)
 
@@ -275,7 +275,7 @@ class Config(Cog):
 
     @autorole.command(name="add", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def autorole_add(self, ctx: PretendContext, *, role: NewRoleConverter):
+    async def autorole_add(self, ctx: AkariContext, *, role: NewRoleConverter):
         """assign a role to the autorole module"""
         try:
             await self.bot.db.execute(
@@ -287,7 +287,7 @@ class Config(Cog):
 
     @autorole.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def autorole_remove(self, ctx: PretendContext, *, role: Role):
+    async def autorole_remove(self, ctx: AkariContext, *, role: Role):
         """remove a role from the autorole"""
         if not await self.bot.db.fetchrow(
             "SELECT * FROM autorole WHERE guild_id = $1 AND role_id = $2",
@@ -306,7 +306,7 @@ class Config(Cog):
         return await ctx.send_success(f"{role.mention} removed from autorole list")
 
     @autorole.command(name="list")
-    async def autorole_list(self, ctx: PretendContext):
+    async def autorole_list(self, ctx: AkariContext):
         """returns a list of autoroles"""
         results = await self.bot.db.fetch(
             "SELECT * FROM autorole WHERE guild_id = $1", ctx.guild.id
@@ -324,7 +324,7 @@ class Config(Cog):
         name="clear", description="clear the autorole list", brief="manage server"
     )
     @has_guild_permissions(manage_guild=True)
-    async def autorole_clear(self, ctx: PretendContext):
+    async def autorole_clear(self, ctx: AkariContext):
         """delete all the roles from the autorole"""
 
         async def yes_callback(interaction: Interaction):
@@ -359,7 +359,7 @@ class Config(Cog):
 
     @starboard.command(name="emoji", aliases=["reaction"], brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def starboard_emoji(self, ctx: PretendContext, emoj: ValidEmoji):
+    async def starboard_emoji(self, ctx: AkariContext, emoj: ValidEmoji):
         """set the starboard emoji"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM starboard WHERE guild_id = $1", ctx.guild.id
@@ -384,7 +384,7 @@ class Config(Cog):
 
     @starboard.command(name="count", aliases=["reactions"], brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def starboard_count(self, ctx: PretendContext, count: int):
+    async def starboard_count(self, ctx: AkariContext, count: int):
         """set the minimum number of reactions a message has to have to be on the starboard"""
 
         if count < 1:
@@ -411,7 +411,7 @@ class Config(Cog):
 
     @starboard.command(name="channel", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def starboard_channel(self, ctx: PretendContext, *, channel: TextChannel):
+    async def starboard_channel(self, ctx: AkariContext, *, channel: TextChannel):
         """set the channel where all the starboard messages go"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM starboard WHERE guild_id = $1", ctx.guild.id
@@ -436,7 +436,7 @@ class Config(Cog):
         name="settings",
         aliases=["config", "stats"],
     )
-    async def starboard_settings(self, ctx: PretendContext):
+    async def starboard_settings(self, ctx: AkariContext):
         """check the settings for starboard"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM starboard WHERE guild_id = $1", ctx.guild.id
@@ -460,7 +460,7 @@ class Config(Cog):
         brief="manage server",
     )
     @has_guild_permissions(manage_guild=True)
-    async def starboard_disable(self, ctx: PretendContext):
+    async def starboard_disable(self, ctx: AkariContext):
         """disable the starboard module"""
 
         async def yes_callback(interaction: Interaction) -> None:
@@ -518,7 +518,7 @@ class Config(Cog):
 
     @confessions.command(name="mute", brief="manage messages")
     @has_guild_permissions(manage_messages=True)
-    async def confessions_mute(self, ctx: PretendContext, *, confession: int):
+    async def confessions_mute(self, ctx: AkariContext, *, confession: int):
         """mute a member that sent a specific confession"""
         check = await self.bot.db.fetchrow(
             "SELECT channel_id FROM confess WHERE guild_id = $1", ctx.guild.id
@@ -559,7 +559,7 @@ class Config(Cog):
 
     @confessions.command(name="unmute", brief="manage messages")
     @has_guild_permissions(manage_messages=True)
-    async def connfessions_unmute(self, ctx: PretendContext, *, confession: str):
+    async def connfessions_unmute(self, ctx: AkariContext, *, confession: str):
         check = await self.bot.db.fetchrow(
             "SELECT channel_id FROM confess WHERE guild_id = $1", ctx.guild.id
         )
@@ -604,7 +604,7 @@ class Config(Cog):
 
     @confessions.command(name="add", brief="manage_guild")
     @has_guild_permissions(manage_guild=True)
-    async def confessions_add(self, ctx: PretendContext, *, channel: TextChannel):
+    async def confessions_add(self, ctx: AkariContext, *, channel: TextChannel):
         """set the confessions channel"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM confess WHERE guild_id = $1", ctx.guild.id
@@ -626,7 +626,7 @@ class Config(Cog):
 
     @confessions.command(name="remove", aliases=["disable"], brief="manage_guild")
     @has_guild_permissions(manage_guild=True)
-    async def confessions_remove(self, ctx: PretendContext):
+    async def confessions_remove(self, ctx: AkariContext):
         """disable the confessions module"""
         check = await self.bot.db.fetchrow(
             "SELECT channel_id FROM confess WHERE guild_id = $1", ctx.guild.id
@@ -649,7 +649,7 @@ class Config(Cog):
         return await ctx.send_success("Confessions disabled")
 
     @confessions.command(name="channel")
-    async def confessions_channel(self, ctx: PretendContext):
+    async def confessions_channel(self, ctx: AkariContext):
         """get the confessions channel"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM confess WHERE guild_id = $1", ctx.guild.id
@@ -665,7 +665,7 @@ class Config(Cog):
         return await ctx.send_warning("Confessions aren't **enabled** in this server")
 
     @hybrid_command()
-    async def selfprefix(self, ctx: PretendContext, prefix: str):
+    async def selfprefix(self, ctx: AkariContext, prefix: str):
         """set a personal prefix"""
         if prefix in ["none", "remove"]:
             check = await self.bot.db.fetchrow(
@@ -702,7 +702,7 @@ class Config(Cog):
 
     @hybrid_command(brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def prefix(self, ctx: PretendContext, prefix: str):
+    async def prefix(self, ctx: AkariContext, prefix: str):
         """set a guild prefix"""
 
         if prefix in ["none", "remove"]:
@@ -738,7 +738,7 @@ class Config(Cog):
         return await ctx.send_success(f"Guild prefix now **configured** as `{prefix}`")
 
     @command()
-    async def variables(self, ctx: PretendContext):
+    async def variables(self, ctx: AkariContext):
         """returns the variables for embed building"""
         user_variables = ">>> {user} - shows user full name with discriminator\n{user.name} - shows user's username\n{user.discriminator} - shows user's discriminator\n{user.id} - shows user's id\n{user.mention} - mentions the user\n{user.avatar} - shows user's avatar\n{user.created_at} - shows the user's account creation date\n{user.joined_at} - shows the user's join date"
         guild_variables = ">>> {guild.name} - shows guild's name\n{guild.icon} - shows guild's icon\n{guild.created_at} - shows the date when the server was created\n{guild.count} - shows the member count\n{guild.boost_count} - shows the number of boosts in the server\n{guild.booster_count} - shows the number of boosters in the server\n{guild.vanity} - shows the server's vanity code if any\n{guild.boost_tier} - shows the guild's boost level\n{guild.count.format} - shows the member count in the ordinal format\n{guild.boost_count.format} - shows the boosts count in ordinal format\n{guild.booster_count.format} - shows the boosters count in ordinal format"
@@ -753,7 +753,7 @@ class Config(Cog):
         return await ctx.create_pages()
 
     @fakepermissions.command(name="perms")
-    async def fp_perms(self, ctx: PretendContext):
+    async def fp_perms(self, ctx: AkariContext):
         """get every valid permission that can be used for fake permissions"""
         return await ctx.paginate(
             list(map(lambda p: p[0], ctx.author.guild_permissions)), "Valid permissions"
@@ -762,7 +762,7 @@ class Config(Cog):
     @fakepermissions.command(name="add", aliases=["append"], brief="administrator")
     @has_guild_permissions(administrator=True)
     async def fp_add(
-        self, ctx: PretendContext, role: NewRoleConverter, permission: ValidPermission
+        self, ctx: AkariContext, role: NewRoleConverter, permission: ValidPermission
     ):
         """add a fake permission to a role"""
         check = await self.bot.db.fetchrow(
@@ -793,7 +793,7 @@ class Config(Cog):
     @fakepermissions.command(name="remove", brief="administrator")
     @has_guild_permissions(administrator=True)
     async def fp_remove(
-        self, ctx: PretendContext, role: NewRoleConverter, permission: ValidPermission
+        self, ctx: AkariContext, role: NewRoleConverter, permission: ValidPermission
     ):
         """remove a permission from the role's fake permissions"""
         check = await self.bot.db.fetchrow(
@@ -829,7 +829,7 @@ class Config(Cog):
         )
 
     @fakepermissions.command(name="list")
-    async def fp_list(self, ctx: PretendContext, *, role: Role):
+    async def fp_list(self, ctx: AkariContext, *, role: Role):
         """returns a list of the fake permissions associated with a specific role"""
         result = await self.bot.db.fetchrow(
             "SELECT perms FROM fake_perms WHERE guild_id = $1 AND role_id = $2",
@@ -854,7 +854,7 @@ class Config(Cog):
 
     @bumpreminder.command(name="enable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def bumpreminder_enable(self, ctx: PretendContext):
+    async def bumpreminder_enable(self, ctx: AkariContext):
         """enable the disboard bump reminder feature in your server"""
         check = await self.bot.db.fetchrow(
             "SELECT guild_id FROM bumpreminder WHERE guild_id = $1", ctx.guild.id
@@ -874,7 +874,7 @@ class Config(Cog):
     @bumpreminder.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     @bump_enabled()
-    async def bumpreminder_disable(self, ctx: PretendContext):
+    async def bumpreminder_disable(self, ctx: AkariContext):
         """disable the disboard bump reminder feature"""
         await self.bot.db.execute(
             "DELETE FROM bumpreminder WHERE guild_id = $1", ctx.guild.id
@@ -886,7 +886,7 @@ class Config(Cog):
     @bump_enabled()
     async def bumpreminder_thankyou(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         *,
         code: str = "{embed}{color: #181a14}$v{description: <:heheboithumb_up:1188962953014300703> Thank you for bumping the server! I will remind you **in 2 hours** to do it again}$v{content: {user.mention}}",
     ):
@@ -905,7 +905,7 @@ class Config(Cog):
     @bump_enabled()
     async def bumpreminder_reminder(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         *,
         code: str = "{embed}{color: #181a14}$v{description: 🕰️ Bump the server using `/bump`}$v{content: {user.mention}}",
     ):
@@ -920,7 +920,7 @@ class Config(Cog):
         )
 
     @group(name="reactionrole", invoke_without_command=True, aliases=["rr"])
-    async def reactionrole(self, ctx: PretendContext):
+    async def reactionrole(self, ctx: AkariContext):
         await ctx.create_pages()
 
     @reactionrole.command(
@@ -929,7 +929,7 @@ class Config(Cog):
         brief="manage server",
     )
     @has_guild_permissions(manage_guild=True)
-    async def rr_clear(self, ctx: PretendContext):
+    async def rr_clear(self, ctx: AkariContext):
         """delete every reaction role in the server"""
 
         async def yes_callback(interaction: Interaction) -> None:
@@ -957,7 +957,7 @@ class Config(Cog):
         )
 
     @reactionrole.command(name="list")
-    async def rr_list(self, ctx: PretendContext):
+    async def rr_list(self, ctx: AkariContext):
         """returns a list of reaction roles in the server"""
         results = await self.bot.db.fetch(
             "SELECT * FROM reactionrole WHERE guild_id = $1", ctx.guild.id
@@ -981,7 +981,7 @@ class Config(Cog):
     )
     @has_guild_permissions(manage_roles=True)
     async def rr_remove(
-        self, ctx: PretendContext, message: ValidMessage, emoji: Union[Emoji, str]
+        self, ctx: AkariContext, message: ValidMessage, emoji: Union[Emoji, str]
     ):
         """remove a certain reaction role emoji"""
         check = await self.bot.db.fetchrow(
@@ -1016,7 +1016,7 @@ class Config(Cog):
     @has_guild_permissions(manage_roles=True)
     async def rr_add(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         message: ValidMessage,
         emoji: Union[Emoji, str],
         *,
@@ -1057,7 +1057,7 @@ class Config(Cog):
     @has_guild_permissions(manage_roles=True)
     @bot_has_guild_permissions(manage_roles=True)
     async def editrole_name(
-        self, ctx: PretendContext, role: NewRoleConverter, *, name: str
+        self, ctx: AkariContext, role: NewRoleConverter, *, name: str
     ):
         """edit a role's name"""
         await role.edit(name=name, reason=f"Role name edited by {ctx.author}")
@@ -1069,7 +1069,7 @@ class Config(Cog):
     @boosted_to(2)
     async def editrole_icon(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         role: NewRoleConverter,
         *,
         emoji: Union[PartialEmoji, str],
@@ -1088,7 +1088,7 @@ class Config(Cog):
     @editrole.command(name="hoist", brief="manage roles")
     @has_guild_permissions(manage_roles=True)
     @bot_has_guild_permissions(manage_roles=True)
-    async def editrole_hoist(self, ctx: PretendContext, *, role: NewRoleConverter):
+    async def editrole_hoist(self, ctx: AkariContext, *, role: NewRoleConverter):
         """make a role hoisted or not"""
         await role.edit(
             hoist=not role.hoist, reason=f"Role hoist edited by {ctx.author}"
@@ -1101,7 +1101,7 @@ class Config(Cog):
     @has_guild_permissions(manage_roles=True)
     @bot_has_guild_permissions(manage_roles=True)
     async def editrole_color(
-        self, ctx: PretendContext, role: NewRoleConverter, color: HexColor
+        self, ctx: AkariContext, role: NewRoleConverter, color: HexColor
     ):
         """edit a role's color"""
         await role.edit(color=color.value, reason=f"Color changed by {ctx.author}")
@@ -1114,7 +1114,7 @@ class Config(Cog):
 
     @group(name="alias", brief="manage server", invoke_without_command=True)
     @has_guild_permissions(manage_guild=True)
-    async def alias(self, ctx: PretendContext):
+    async def alias(self, ctx: AkariContext):
         """
         Manage shortcuts for commands
         """
@@ -1123,7 +1123,7 @@ class Config(Cog):
 
     @alias.command(name="add", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def alias_add(self, ctx: PretendContext, alias: str, *, command: str):
+    async def alias_add(self, ctx: AkariContext, alias: str, *, command: str):
         """
         Create a shortcut for a command
         """
@@ -1160,7 +1160,7 @@ class Config(Cog):
 
     @alias.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def alias_remove(self, ctx: PretendContext, *, alias: str):
+    async def alias_remove(self, ctx: AkariContext, *, alias: str):
         """
         Remove an alias for a command
         """
@@ -1188,7 +1188,7 @@ class Config(Cog):
 
     @alias.command(name="list", brief="manage server")
     @has_guild_permissions(manage_guild=True)  # WHY IS GIT LIKE THIS
-    async def alias_list(self, ctx: PretendContext):
+    async def alias_list(self, ctx: AkariContext):
         """
         Returns all the aliases in the server
         """
@@ -1219,7 +1219,7 @@ class Config(Cog):
         invoke_without_command=True,
     )
     @has_guild_permissions(manage_guild=True)
-    async def restrictcommand(self, ctx: PretendContext):
+    async def restrictcommand(self, ctx: AkariContext):
         """
         Restrict people without roles from using commands
         """
@@ -1229,7 +1229,7 @@ class Config(Cog):
     @restrictcommand.command(name="add", aliases=["make"], brief="manage sever")
     @has_guild_permissions(manage_guild=True)
     async def restrictcommand_add(
-        self, ctx: PretendContext, command: str, *, role: Role
+        self, ctx: AkariContext, command: str, *, role: Role
     ):
         """
         Restrict a command to the given role
@@ -1272,7 +1272,7 @@ class Config(Cog):
     )
     @has_guild_permissions(manage_guild=True)
     async def restrictcommand_remove(
-        self, ctx: PretendContext, command: str, *, role: Role
+        self, ctx: AkariContext, command: str, *, role: Role
     ):
         """
         Stop allowing a role to use a command
@@ -1311,7 +1311,7 @@ class Config(Cog):
 
     @restrictcommand.command(name="list", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def restrictcommand_list(self, ctx: PretendContext):
+    async def restrictcommand_list(self, ctx: AkariContext):
         """
         Get a list of all restricted commands
         """
@@ -1341,16 +1341,16 @@ class Config(Cog):
 
     @group(name="set", brief="manage server", invoke_without_command=True)
     @has_guild_permissions(manage_guild=True)
-    async def set(self, ctx: PretendContext):
+    async def set(self, ctx: AkariContext):
         """
-        Modify your server with pretend
+        Modify your server with Akari
         """
 
         await ctx.create_pages()
 
     @set.command(name="name", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def set_name(self, ctx: PretendContext, *, name: str):
+    async def set_name(self, ctx: AkariContext, *, name: str):
         """
         Change your server's name
         """
@@ -1366,7 +1366,7 @@ class Config(Cog):
 
     @set.command(name="icon", aliases=["picture", "pic"], brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def set_icon(self, ctx: PretendContext, url: str = None):
+    async def set_icon(self, ctx: AkariContext, url: str = None):
         """
         Change your server's icon
         """
@@ -1393,7 +1393,7 @@ class Config(Cog):
 
     @set.command(name="banner", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def set_banner(self, ctx: PretendContext, url: str = None):
+    async def set_banner(self, ctx: AkariContext, url: str = None):
         """
         Change your server's banner
         """
@@ -1422,7 +1422,7 @@ class Config(Cog):
 
     @set.command(name="splash", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def set_splash(self, ctx: PretendContext, url: str = None):
+    async def set_splash(self, ctx: AkariContext, url: str = None):
         """
         Change your server's splash
         """
@@ -1458,7 +1458,7 @@ class Config(Cog):
     )
     @has_guild_permissions(manage_channels=True)
     @bot_has_guild_permissions(manage_messages=True)
-    async def imageonly(self, ctx: PretendContext):
+    async def imageonly(self, ctx: AkariContext):
         """
         let members only send images in channels
         """
@@ -1468,7 +1468,7 @@ class Config(Cog):
     @imageonly.command(name="add", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
     @bot_has_guild_permissions(manage_messages=True)
-    async def imageonly_add(self, ctx: PretendContext, *, channel: TextChannel):
+    async def imageonly_add(self, ctx: AkariContext, *, channel: TextChannel):
         """
         add an image only channel
         """
@@ -1498,7 +1498,7 @@ class Config(Cog):
 
     @imageonly.command(name="remove", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
-    async def imageonly_remove(self, ctx: PretendContext, *, channel: TextChannel):
+    async def imageonly_remove(self, ctx: AkariContext, *, channel: TextChannel):
         """
         remove an image only channel
         """
@@ -1531,7 +1531,7 @@ class Config(Cog):
 
     @imageonly.command(name="list", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
-    async def imageonly_list(self, ctx: PretendContext):
+    async def imageonly_list(self, ctx: AkariContext):
         """
         returns a list of all image only channels
         """
@@ -1565,7 +1565,7 @@ class Config(Cog):
         invoke_without_command=True,
     )
     @has_guild_permissions(manage_guild=True)
-    async def disablemodule(self, ctx: PretendContext):
+    async def disablemodule(self, ctx: AkariContext):
         """
         disable modules of the bot
         """
@@ -1574,7 +1574,7 @@ class Config(Cog):
 
     @disablemodule.command(name="add", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def disablemodule_add(self, ctx: PretendContext, *, module: ValidCog):
+    async def disablemodule_add(self, ctx: AkariContext, *, module: ValidCog):
         """
         add a disabled module
         """
@@ -1604,7 +1604,7 @@ class Config(Cog):
 
     @disablemodule.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def disablemodule_remove(self, ctx: PretendContext, *, module: ValidCog):
+    async def disablemodule_remove(self, ctx: AkariContext, *, module: ValidCog):
         """
         remove a disabled module
         """
@@ -1633,7 +1633,7 @@ class Config(Cog):
 
     @disablemodule.command(name="list", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def disablemodule_list(self, ctx: PretendContext):
+    async def disablemodule_list(self, ctx: AkariContext):
         """
         returns a list of all disabled modules
         """
@@ -1656,5 +1656,5 @@ class Config(Cog):
         )
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Config(bot))

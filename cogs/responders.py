@@ -3,17 +3,17 @@ import json
 
 from discord.ext.commands import Cog, group, has_guild_permissions, Flag
 
-from tools.bot import Pretend
-from tools.helpers import PretendContext
-from tools.helpers import PretendFlags
+from tools.bot import Akari
+from tools.helpers import AkariContext
+from tools.helpers import AkariFlags
 
 
-class AutoresponderFlags(PretendFlags):
+class AutoresponderFlags(AkariFlags):
     not_strict: bool = Flag(default=False)
 
 
 class Responders(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Message triggered response commands"
 
@@ -25,7 +25,7 @@ class Responders(Cog):
         name="add", brief="manage server", usage="example: ;autoreact add skull, 💀"
     )
     @has_guild_permissions(manage_guild=True)
-    async def autoreact_add(self, ctx: PretendContext, *, content: str):
+    async def autoreact_add(self, ctx: AkariContext, *, content: str):
         """create an autoreact using a trigger for this server"""
         con = content.split(", ")
         if len(con) == 1:
@@ -90,7 +90,7 @@ class Responders(Cog):
 
     @autoreact.command(name="remove", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
-    async def autoreact_remove(self, ctx: PretendContext, *, trigger: str):
+    async def autoreact_remove(self, ctx: AkariContext, *, trigger: str):
         """remove an autoreact"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM autoreact WHERE guild_id = $1 AND trigger = $2",
@@ -109,7 +109,7 @@ class Responders(Cog):
         return await ctx.send_success(f"Removed **{trigger}** from autoreact")
 
     @autoreact.command(name="list")
-    async def autoreact_list(self, ctx: PretendContext):
+    async def autoreact_list(self, ctx: AkariContext):
         """returns all the autoreactions in the server"""
         check = await self.bot.db.fetch(
             "SELECT * FROM autoreact WHERE guild_id = $1", ctx.guild.id
@@ -126,7 +126,7 @@ class Responders(Cog):
         )
 
     @group(name="autoresponder", aliases=["ar"], invoke_without_command=True)
-    async def autoresponder(self, ctx: PretendContext):
+    async def autoresponder(self, ctx: AkariContext):
         await ctx.create_pages()
 
     @autoresponder.command(
@@ -135,7 +135,7 @@ class Responders(Cog):
         usage="example: ;autoresponder add hello, hello world",
     )
     @has_guild_permissions(manage_guild=True)
-    async def ar_add(self, ctx: PretendContext, *, response: str):
+    async def ar_add(self, ctx: AkariContext, *, response: str):
         """add an autoresponder to the server"""
         responses = response.split(", ", maxsplit=1)
         if len(responses) == 1:
@@ -185,7 +185,7 @@ class Responders(Cog):
 
     @autoresponder.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def ar_remove(self, ctx: PretendContext, *, trigger: str):
+    async def ar_remove(self, ctx: AkariContext, *, trigger: str):
         """remove an autoresponder from the server"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM autoresponder WHERE guild_id = $1 AND trigger = $2",
@@ -206,7 +206,7 @@ class Responders(Cog):
         return await ctx.send_success(f"Deleted the autoresponder for **{trigger}**")
 
     @autoresponder.command(name="list")
-    async def ar_list(self, ctx: PretendContext):
+    async def ar_list(self, ctx: AkariContext):
         """returns a list of all autoresponders in the server"""
         results = await self.bot.db.fetch(
             "SELECT * FROM autoresponder WHERE guild_id = $1", ctx.guild.id
@@ -222,5 +222,5 @@ class Responders(Cog):
         )
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     return await bot.add_cog(Responders(bot))

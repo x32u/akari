@@ -4,10 +4,10 @@ import asyncio
 import datetime
 import humanfriendly
 
-from tools.bot import Pretend as AB
+from tools.bot import Akari as AB
 from tools.predicates import max_gws
 from tools.misc.tasks import gwend_task
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 from tools.validators import ValidMessage
 from tools.persistent.giveaway import GiveawayView
 
@@ -30,7 +30,7 @@ class Giveaway(Cog):
     @command(brief="manage server")
     @has_guild_permissions(manage_guild=True)
     async def gcreate(
-        self, ctx: PretendContext, *, channel: TextChannel = CurrentChannel
+        self, ctx: AkariContext, *, channel: TextChannel = CurrentChannel
     ):
         """create a giveaway in this server"""
         return await ctx.invoke(
@@ -38,19 +38,19 @@ class Giveaway(Cog):
         )
 
     @command()
-    async def glist(self, ctx: PretendContext):
+    async def glist(self, ctx: AkariContext):
         """returns a list of active giveaways in the server"""
         return await ctx.invoke(self.bot.get_command("giveaway list"))
 
     @command(brief="manage_server")
     @has_guild_permissions(manage_guild=True)
-    async def gend(self, ctx: PretendContext, message: ValidMessage):
+    async def gend(self, ctx: AkariContext, message: ValidMessage):
         """end a giveaway"""
         await ctx.invoke(self.bot.get_command("giveaway end"), message=message)
 
     @command(brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def greroll(self, ctx: PretendContext, message: ValidMessage):
+    async def greroll(self, ctx: AkariContext, message: ValidMessage):
         """reroll a giveaway"""
         await ctx.invoke(self.bot.get_command("giveaway reroll"), message=message)
 
@@ -61,7 +61,7 @@ class Giveaway(Cog):
 
     @giveaway.command(name="end", brief="manage_server")
     @has_guild_permissions(manage_guild=True)
-    async def gw_end(self, ctx: PretendContext, message: ValidMessage):
+    async def gw_end(self, ctx: AkariContext, message: ValidMessage):
         """end a giveaway"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM giveaway WHERE guild_id = $1 AND channel_id = $2 AND message_id = $3",
@@ -78,7 +78,7 @@ class Giveaway(Cog):
 
     @giveaway.command(name="reroll", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def gw_reroll(self, ctx: PretendContext, message: ValidMessage):
+    async def gw_reroll(self, ctx: AkariContext, message: ValidMessage):
         """reroll a giveaway"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM gw_ended WHERE channel_id = $1 AND message_id = $2",
@@ -93,7 +93,7 @@ class Giveaway(Cog):
         await ctx.reply(f"**New winner:** <@!{random.choice(members)}>")
 
     @giveaway.command(name="list")
-    async def gw_list(self, ctx: PretendContext):
+    async def gw_list(self, ctx: AkariContext):
         """returns a list of active giveaways in the server"""
         results = await self.bot.db.fetch(
             "SELECT * FROM giveaway WHERE guild_id = $1", ctx.guild.id
@@ -112,7 +112,7 @@ class Giveaway(Cog):
     @has_guild_permissions(manage_guild=True)
     @max_gws()
     async def gw_create(
-        self, ctx: PretendContext, *, channel: TextChannel = CurrentChannel
+        self, ctx: AkariContext, *, channel: TextChannel = CurrentChannel
     ):
         """create a giveaway in this server"""
         await ctx.reply(f"Starting giveaway in {channel.mention}...")

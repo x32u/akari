@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from typing import Union
 
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 from tools.predicates import auth_perms
 
 
@@ -58,7 +58,7 @@ class Auth(commands.Cog):
 
     @auth.group(invoke_without_command=True, name="add")
     @auth_perms()
-    async def auth_add(self, ctx: PretendContext):
+    async def auth_add(self, ctx: AkariContext):
         """
         Authorize a server
         """
@@ -69,7 +69,7 @@ class Auth(commands.Cog):
     @auth_perms()
     async def auth_add_onetime(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         user: discord.User,
         invite: Union[discord.Invite, int],
     ):
@@ -112,7 +112,7 @@ class Auth(commands.Cog):
         )
 
         await channel.send(embed=embed)
-        return await ctx.pretend_send(
+        return await ctx.Akari_send(
             f"Authorized **{invite}**, requested by **{user}** (onetime)"
         )
 
@@ -120,7 +120,7 @@ class Auth(commands.Cog):
     @auth_perms()
     async def auth_add_monthly(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         user: discord.User,
         invite: Union[discord.Invite, int],
     ):
@@ -159,14 +159,14 @@ class Auth(commands.Cog):
         )
 
         await channel.send(embed=embed)
-        return await ctx.pretend_send(
+        return await ctx.Akari_send(
             f"Authorized **{invite}**, requested by **{user}** (monthly)"
         )
 
     @auth.command(name="update")
     @auth_perms()
     async def auth_update(
-        self, ctx: PretendContext, invite: Union[discord.Invite, int]
+        self, ctx: AkariContext, invite: Union[discord.Invite, int]
     ):
         """
         Update the monthly authorization for a server
@@ -201,7 +201,7 @@ class Auth(commands.Cog):
     @auth.command(name="inspect")
     @auth_perms()
     async def auth_inspect(
-        self, ctx: PretendContext, invite: Union[discord.Invite, int]
+        self, ctx: AkariContext, invite: Union[discord.Invite, int]
     ):
         """
         check a guild authorization status
@@ -241,7 +241,7 @@ class Auth(commands.Cog):
 
     @auth.command(name="getinvite")
     @auth_perms()
-    async def auth_getinvite(self, ctx: PretendContext, guild: discord.Guild):
+    async def auth_getinvite(self, ctx: AkariContext, guild: discord.Guild):
         """
         gets the invite of a authorised server
         """
@@ -268,7 +268,7 @@ class Auth(commands.Cog):
     @auth_perms()
     async def auth_transfer(
         self,
-        ctx: PretendContext,
+        ctx: AkariContext,
         old_inv: Union[discord.Invite, int],
         new_inv: Union[discord.Invite, int],
     ):
@@ -320,13 +320,13 @@ class Auth(commands.Cog):
         if g := self.bot.get_guild(old_inv):
             await g.leave()
 
-        return await ctx.pretend_send(
+        return await ctx.Akari_send(
             f"Transfered from **{old_inv}** to **{new_inv}**. **{transfers-1}** transfers left!"
         )
 
     @auth.command(name="remove")
     @auth_perms()
-    async def auth_remove(self, ctx: PretendContext, inv: Union[discord.Invite, int]):
+    async def auth_remove(self, ctx: AkariContext, inv: Union[discord.Invite, int]):
         """
         Remove the authorization from a guild
         """
@@ -355,11 +355,11 @@ class Auth(commands.Cog):
                     if role := support.get_role(1183427233801584723):
                         await member.remove_roles(role)
 
-        return await ctx.pretend_send(f"Unauthorized **{inv}**")
+        return await ctx.Akari_send(f"Unauthorized **{inv}**")
 
     @auth.command(name="list")
     @auth_perms()
-    async def auth_list(self, ctx: PretendContext, *, user: discord.User):
+    async def auth_list(self, ctx: AkariContext, *, user: discord.User):
         """
         returns a list of authorized servers by a certain user
         """

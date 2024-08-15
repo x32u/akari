@@ -2,9 +2,9 @@ import re
 import datetime
 import google.generativeai as genai
 
-from tools.bot import Pretend
+from tools.bot import Akari
 from tools.converters import NoStaff
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 from tools.validators import ValidReskinName
 from tools.predicates import has_perks, create_reskin
 
@@ -22,7 +22,7 @@ from discord.ext.commands import (
 
 
 class Donor(Cog):
-    def __init__(self, bot: Pretend):
+    def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Premium commands"
         
@@ -76,7 +76,7 @@ class Donor(Cog):
 
     @command(aliases=["pomelo", "handles"], brief="donor")
     @has_perks()
-    async def lookup(self, ctx: PretendContext):
+    async def lookup(self, ctx: AkariContext):
         """get the most recent handles"""
         if not self.bot.cache.get("pomelo"):
             return await ctx.send_error("There is nothing to see here")
@@ -88,7 +88,7 @@ class Donor(Cog):
 
     @command(aliases=["sp"], brief="donor")
     @has_perks()
-    async def selfpurge(self, ctx: PretendContext, amount: int = 100):
+    async def selfpurge(self, ctx: AkariContext, amount: int = 100):
         """delete your own messages"""
         await ctx.channel.purge(
             limit=amount,
@@ -104,7 +104,7 @@ class Donor(Cog):
     @has_guild_permissions(manage_nicknames=True)
     @bot_has_guild_permissions(manage_nicknames=True)
     async def forcenickname(
-        self, ctx: PretendContext, member: NoStaff, *, nickname: str = None
+        self, ctx: AkariContext, member: NoStaff, *, nickname: str = None
     ):
         """lock a nickname to a member"""
         if not nickname:
@@ -154,12 +154,12 @@ class Donor(Cog):
             )
 
     @group(invoke_without_command=True)
-    async def reskin(self, ctx: PretendContext):
+    async def reskin(self, ctx: AkariContext):
         await ctx.create_pages()
 
     @reskin.command(name="enable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def reskin_enable(self, ctx: PretendContext):
+    async def reskin_enable(self, ctx: AkariContext):
         """enable reskin feature in your server"""
         if await self.bot.db.fetchrow(
             "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
@@ -173,7 +173,7 @@ class Donor(Cog):
 
     @reskin.command(name="disable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def reskin_disable(self, ctx: PretendContext):
+    async def reskin_disable(self, ctx: AkariContext):
         """disable the reskin feature in your server"""
         if not await self.bot.db.fetchrow(
             "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
@@ -188,7 +188,7 @@ class Donor(Cog):
     @reskin.command(name="name", brief="donor")
     @has_perks()
     @create_reskin()
-    async def reskin_name(self, ctx: PretendContext, *, name: ValidReskinName):
+    async def reskin_name(self, ctx: AkariContext, *, name: ValidReskinName):
         """edit your reskin name"""
         await self.bot.db.execute(
             "UPDATE reskin SET username = $1 WHERE user_id = $2", name, ctx.author.id
@@ -198,7 +198,7 @@ class Donor(Cog):
     @reskin.command(name="avatar", brief="donor", aliases=["icon", "pfp", "av"])
     @has_perks()
     @create_reskin()
-    async def reskin_avatar(self, ctx: PretendContext, url: str = None):
+    async def reskin_avatar(self, ctx: AkariContext, url: str = None):
         """change your reskin's avatar"""
         if url is None:
             url = await ctx.get_attachment()
@@ -217,7 +217,7 @@ class Donor(Cog):
         return await ctx.send_success(f"Updated your reskin [**avatar**]({url})")
 
     @reskin.command(name="remove", brief="donor", aliases=["delete", "reset"])
-    async def reskin_delete(self, ctx: PretendContext):
+    async def reskin_delete(self, ctx: AkariContext):
         """delete your reskin"""
 
         async def yes_callback(interaction: Interaction):
@@ -250,7 +250,7 @@ class Donor(Cog):
     @hybrid_command(name="chatgpt", aliases=["chat", "gpt", "ask"], brief="donor")
     @has_perks()
     @max_concurrency(1, commands.BucketType.user, wait=True)
-    async def chatgpt(self, ctx: PretendContext, *, query: str):
+    async def chatgpt(self, ctx: AkariContext, *, query: str):
         """
         Talk to AI
         """
@@ -260,5 +260,5 @@ class Donor(Cog):
             await ctx.send(response.text, allowed_mentions=AllowedMentions.none())
 
 
-async def setup(bot: Pretend) -> None:
+async def setup(bot: Akari) -> None:
     await bot.add_cog(Donor(bot))

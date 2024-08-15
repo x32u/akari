@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from pydantic import BaseModel
 from typing import Optional, Any
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 
 class Github(BaseModel):
   """
@@ -24,7 +24,7 @@ class Github(BaseModel):
   created_at: Any
 
 class GithubUser(commands.Converter):
-  async def convert(self, ctx: PretendContext, argument: str) -> Github: 
+  async def convert(self, ctx: AkariContext, argument: str) -> Github: 
 
     headers = {
        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",

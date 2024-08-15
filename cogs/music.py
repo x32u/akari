@@ -7,7 +7,7 @@ from contextlib import suppress
 from discord import Embed, Message, HTTPException, Member, VoiceState, utils
 from discord.ext.commands import Cog, command
 
-from tools.helpers import PretendContext
+from tools.helpers import AkariContext
 from tools.converters import EligibleVolume
 from tools.predicates import is_voice, bot_is_voice
 
@@ -16,7 +16,7 @@ class Player(pomice.Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.queue = pomice.Queue()
-        self.ctx: PretendContext = None
+        self.ctx: AkariContext = None
         self.loop: bool = False
         self.current_track: pomice.Track = None
         self.awaiting = False
@@ -55,7 +55,7 @@ class Player(pomice.Player):
         if self.awaiting:
             self.awaiting = False
 
-    def set_context(self, ctx: PretendContext):
+    def set_context(self, ctx: AkariContext):
         self.context = ctx
 
     async def kill(self) -> Message:
@@ -71,7 +71,7 @@ class Music(Cog):
         self.pomice = pomice.NodePool()
         self.description = "Music commands"
 
-    async def music_send(self, ctx: PretendContext, message: str) -> Message:
+    async def music_send(self, ctx: AkariContext, message: str) -> Message:
         """
         send a music themed message
         """
@@ -110,14 +110,14 @@ class Music(Cog):
     @command()
     @is_voice()
     @bot_is_voice()
-    async def stop(self, ctx: PretendContext):
+    async def stop(self, ctx: AkariContext):
         """leave the voice channel"""
         await ctx.voice_client.kill()
 
     @command()
     @is_voice()
     @bot_is_voice()
-    async def shuffle(self, ctx: PretendContext):
+    async def shuffle(self, ctx: AkariContext):
         """
         shuffle the whole queue
         """
@@ -129,7 +129,7 @@ class Music(Cog):
     @command(aliases=["q"])
     @is_voice()
     @bot_is_voice()
-    async def queue(self, ctx: PretendContext):
+    async def queue(self, ctx: AkariContext):
         """
         get a list of the upcoming songs
         """
@@ -160,7 +160,7 @@ class Music(Cog):
     @command()
     @is_voice()
     @bot_is_voice()
-    async def resume(self, ctx: PretendContext):
+    async def resume(self, ctx: AkariContext):
         """
         resume the current song
         """
@@ -172,7 +172,7 @@ class Music(Cog):
     @command()
     @is_voice()
     @bot_is_voice()
-    async def pause(self, ctx: PretendContext):
+    async def pause(self, ctx: AkariContext):
         """
         Pause the current song
         """
@@ -184,7 +184,7 @@ class Music(Cog):
     @command(aliases=["next"])
     @is_voice()
     @bot_is_voice()
-    async def skip(self, ctx: PretendContext):
+    async def skip(self, ctx: AkariContext):
         """
         skip to the next song
         """
@@ -197,7 +197,7 @@ class Music(Cog):
     @command(aliases=["vol"])
     @is_voice()
     @bot_is_voice()
-    async def volume(self, ctx: PretendContext, volume: EligibleVolume):
+    async def volume(self, ctx: AkariContext, volume: EligibleVolume):
         """
         set the volume to the current playing song
         """
@@ -209,7 +209,7 @@ class Music(Cog):
     @command()
     @is_voice()
     @bot_is_voice()
-    async def loop(self, ctx: PretendContext):
+    async def loop(self, ctx: AkariContext):
         """
         Loop the current playing song
         """
@@ -234,7 +234,7 @@ class Music(Cog):
 
     @command(aliases=["p"])
     @is_voice()
-    async def play(self, ctx: PretendContext, *, query: str):
+    async def play(self, ctx: AkariContext, *, query: str):
         """
         play a song in the voice channel
         """
