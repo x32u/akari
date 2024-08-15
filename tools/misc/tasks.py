@@ -46,21 +46,7 @@ async def pomelo_task(bot: AB):
 async def snipe_delete(bot: AB): 
   for m in ["snipe", "edit_snipe", "reaction_snipe"]: 
     bot.cache.delete(m)
-@tasks.loop(seconds=5)
-async def verify_task(bot: AB): 
-  results = await bot.db.fetch("SELECT * FROM verify_codes_discord")
-  for result in results: 
-    if result['confirmed'] == True:
-      guild = bot.get_guild(result['guild_id'])
-      if guild: 
-        member = guild.get_member(result['user_id'])
-        if member: 
-          role = guild.get_role(await bot.db.fetchval("SELECT role_id FROM verify_guilds WHERE guild_id = $1", guild.id))
-          if role: 
-            await member.add_roles(role, reason="Verified")
-    if datetime.datetime.now().timestamp() > result['valid_until'].timestamp() and not result['confirmed']: 
-      await bot.db.execute("DELETE FROM verify_codes_discord WHERE user_id = $1", result['user_id'])
-      await bot.db.execute("DELETE FROM verify_logs WHERE user_id = $1", result['user_id'])
+
 @tasks.loop(seconds=5)
 async def reminder_task(bot: AB): 
   results = await bot.db.fetch("SELECT * FROM reminder")
