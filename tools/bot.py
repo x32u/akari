@@ -326,7 +326,7 @@ class Akari(commands.AutoShardedBot):
         check_monthly_guilds.start(self)
         reminder_task.start(self)
         counter_update.start(self)
-        
+
     def url_encode(self, url: str):
         """
         Encode an url
@@ -410,16 +410,36 @@ class Akari(commands.AutoShardedBot):
 
         if type(error) in ignored:
             return
+        
         if isinstance(error, commands.MemberNotFound):
             return await ctx.send_warning(f"Member not found")
+        
         elif isinstance(error, commands.UserNotFound):
             return await ctx.send_warning(f"User not found")
+        
+        elif isinstance(error, commands.ThreadNotFound): 
+            return await ctx.send_warning(f"I was unable to find the thread **{error.argument}**")
+        
+        elif isinstance(error, commands.EmojiNotFound): 
+            return await ctx.send_warning(f"Unable to convert {error.argument} into an **emoji**")
+        
         elif isinstance(error, commands.RoleNotFound):
             return await ctx.send_warning(f"Role not found")
+        
         elif isinstance(error, commands.ChannelNotFound):
             return await ctx.send_warning(f"Channel not found")
+        
         elif isinstance(error, commands.GuildNotFound):
             return await ctx.send_warning(f"Guild not found")
+        
+        elif isinstance(error, commands.UserConverter): 
+            return await ctx.send_warning(f"Couldn't convert that into an **user** ")
+        
+        elif isinstance(error, commands.MemberConverter): 
+            return await ctx.send_warning("Couldn't convert that into a **member**")
+        
+        elif isinstance(error, commands.BotMissingPermissions): 
+            return await ctx.send_warning(f"I do not have enough **permissions** to execute this command")
 
         elif isinstance(error, commands.MissingPermissions):
             return await ctx.send_warning(
@@ -459,6 +479,12 @@ class Akari(commands.AutoShardedBot):
                 return await self.process_commands(message)
             else:
                 return
+            
+        elif isinstance(error, commands.BadInviteArgument): 
+            return await ctx.send_warning(f"Invalid **invite code** given")
+        
+        elif isinstance(error, discord.NotFound): 
+            return await ctx.send_warning(f"**Not found** - the **ID** is invalid")
 
         elif isinstance(error, discord.HTTPException):
             if error.code == 50035:
@@ -487,7 +513,9 @@ class Akari(commands.AutoShardedBot):
         ):  # this should never be used anywhere besides ValidCog
             return await ctx.send(error)
 
-        elif isinstance(error, commands.CommandError) and not "Command raised an exception: " in str(error):
+        elif isinstance(
+            error, commands.CommandError
+        ) and not "Command raised an exception: " in str(error):
             return await ctx.send_warning(error)
 
         else:
@@ -517,8 +545,8 @@ class Akari(commands.AutoShardedBot):
             )
             embed = discord.Embed(
                 description=f"{self.warning} {ctx.author.mention}: An error occurred while running the **{ctx.command.qualified_name}** command."
-                + f"\nPlease report the attached code to a developer in the [Akari server](https://discord.gg/Akari)",
-                color=self.warning_color,
+                + f"\nPlease report the attached code to a developer in the [Akari server](https://discord.gg/akaribot)",
+                color=self.w_color,
             )
 
             return await ctx.send(embed=embed, content=f"`{code}`")

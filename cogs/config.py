@@ -679,11 +679,9 @@ class Config(Cog):
                 "DELETE FROM selfprefix WHERE user_id = $1", ctx.author.id
             )
             return await ctx.send_success("Self prefix removed")
+        
         if len(prefix) > 7:
             raise BadArgument("Prefix is too long!")
-
-        if not prefix:
-            return await ctx.send_warning(f"Self prefix is **too short**")
 
         try:
             await self.bot.db.execute(

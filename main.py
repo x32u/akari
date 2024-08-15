@@ -38,7 +38,7 @@ async def disabled_command(ctx: AkariContext):
   )
   if global_disabled:
     if global_disabled.get("disabled") and ctx.author.id not in ctx.bot.owner_ids:
-      await ctx.send_warning("This command is currently disabled by the admin team of Akari, for further information please join the [Akari Server](https://discord.gg/Akari).")   
+      await ctx.send_warning("This command is currently disabled by the admin team of Akari, for further information please join the [Akari Server](https://discord.gg/akaribot).")   
       return False 
   return True
 
