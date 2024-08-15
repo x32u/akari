@@ -326,8 +326,7 @@ class Akari(commands.AutoShardedBot):
         check_monthly_guilds.start(self)
         reminder_task.start(self)
         counter_update.start(self)
-        verify_task.start(self)
-
+        
     def url_encode(self, url: str):
         """
         Encode an url

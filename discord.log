@@ -1,2 +1,12 @@
-[2024-08-15 03:12:20] [INFO    ] discord.client: logging in using static token
-[2024-08-15 03:12:25] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: be4430a761d7dd006c653fa8bf6d7cce).
+[2024-08-15 03:12:31] [INFO    ] discord.client: logging in using static token
+[2024-08-15 03:12:35] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 60b705ec131a6c68c752467c71d8e705).
+[2024-08-15 03:12:38] [ERROR   ] discord.client: Ignoring exception in on_ready
+Traceback (most recent call last):
+  File "/root/miniconda3/lib/python3.12/site-packages/discord/client.py", line 450, in _run_event
+    await coro(*args, **kwargs)
+  File "/root/AkariBot/tools/bot.py", line 397, in on_ready
+    await self.start_loops()
+  File "/root/AkariBot/tools/bot.py", line 329, in start_loops
+    verify_task.start(self)
+    ^^^^^^^^^^^
+NameError: name 'verify_task' is not defined
