@@ -47,6 +47,7 @@ from .misc.tasks import (
     gw_loop,
     reminder_task,
     counter_update,
+    shard_stats
 )
 
 from .handlers.embedbuilder import EmbedScript
@@ -148,8 +149,8 @@ class Akari(commands.AutoShardedBot):
         self.cache = Cache()
         self.proxy_url = os.environ.get("proxy_url")
         self.other_bots = {}
-        self.Akari_api = os.environ.get("Akari_key")
-        self.api = API(self.Akari_api)
+        self.akari_api = os.environ.get("akari_key")
+        self.api = API(self.akari_api)
         self.an = AntinukeMeasures(self)
         self.embed_build = EmbedScript()
         self.pfps_send = True
@@ -326,6 +327,7 @@ class Akari(commands.AutoShardedBot):
         check_monthly_guilds.start(self)
         reminder_task.start(self)
         counter_update.start(self)
+        shard_stats.start(self)
 
     def url_encode(self, url: str):
         """

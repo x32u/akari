@@ -274,6 +274,22 @@ class Owner(Cog):
             f"Globally Disabled Commands:",
             {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
         )
+    
+    @command()
+    @is_owner()
+    async def apikey(self, ctx: AkariContext, user: discord.User, key: str, role: str):
+        
+        url = "https://api.akari.bot"
+        
+        check = await self.bot.db.fetchrow("SELECT * FROM api_key WHERE user_id = {}".format(user.id))
+        
+        if check is not None: return await ctx.warning(f"The user **{user.name}** already has a **valid** API key.")
+        
+        embed=discord.Embed(description=f"Your API key for {url} is listed above.", color=self.bot.color)
+        
+        await self.bot.db.execute("INSERT INTO api_key VALUES ($1,$2,$3)", key, user.id, role)
+        await ctx.success(f"I have **successfully** added the API key **{key}** to {user.mention}.")
+        await user.send(f"{key}", embed=embed)
 
     @command(aliases=["trace"])
     async def error(self, ctx: AkariContext, code: str):

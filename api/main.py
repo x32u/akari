@@ -130,7 +130,7 @@ class CustomApp(FastAPI):
         super().__init__(
             redoc_url=None,
             docs_url=None, 
-            title="Kure API",
+            title="Akari API",
             on_shutdown=[self.shutdown],
             on_startup=[self.startup],
             openapi_tags=[
@@ -327,10 +327,10 @@ class CustomApp(FastAPI):
             return self.openapi_schema
 
         openapi_schema = get_openapi(
-            title="Kure API",
+            title="Akari API",
             version="1.0.0",
             routes=self.routes,
-            summary="A private API for Evict."
+            summary="A private API for Akari."
         )
         openapi_schema["info"]["x-logo"] = {
             "url": "https://cdn.discordapp.com/banners/1177424668328726548/a_107bac482c5a64d493a87f989b84f202.gif?size=1024"
@@ -431,7 +431,7 @@ def generate_api_sig(params: dict, secret: str) -> str:
 
 @app.get("/lastfm/authorize")
 async def authorize(discord_user_id: str):
-    redirect_uri = f"https://kure.pl/lastfm/callback?discord_user_id={discord_user_id}"
+    redirect_uri = f"https://api.akari.bot/lastfm/callback?discord_user_id={discord_user_id}"
     return RedirectResponse(f"http://www.last.fm/api/auth/?api_key={LastFM_API_KEY}&cb={redirect_uri}")
 
 @app.get("/lastfm/callback", tags=['auth'], include_in_schema=False)
@@ -1321,7 +1321,7 @@ async def pictures(
     """Get a random picture from a category"""
 
     path = os.path.join(
-        "/root/akari/api/images/Pfps/", 
+        "./PretendImages", 
         type.capitalize(), 
         category.capitalize()
     )
@@ -1348,7 +1348,7 @@ async def pictures(
     
         await app.cache.set(
             key,
-            f"/root/akari/api/images/Pfps/{type.capitalize()}/{category.capitalize()}/{img[:-4]}"
+            f"./PretendImages/{type.capitalize()}/{category.capitalize()}/{img[:-4]}"
         )
 
     return {

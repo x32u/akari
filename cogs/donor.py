@@ -259,6 +259,5 @@ class Donor(Cog):
             response = await self.bot.loop.run_in_executor(self.bot.executor, self.model.generate_content, query)
             await ctx.send(response.text, allowed_mentions=AllowedMentions.none())
 
-
 async def setup(bot: Akari) -> None:
     await bot.add_cog(Donor(bot))
