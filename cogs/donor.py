@@ -160,7 +160,7 @@ class Donor(Cog):
     @reskin.command(name="enable", brief="manage server")
     @has_guild_permissions(manage_guild=True)
     async def reskin_enable(self, ctx: AkariContext):
-        """enable reskin feature in your server"""
+        """Enable reskin feature in your server"""
         if await self.bot.db.fetchrow(
             "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
         ):

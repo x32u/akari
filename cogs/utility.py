@@ -365,33 +365,6 @@ class Utility(commands.Cog):
             f"the first message sent in {channel.mention} - [**jump**]({message.jump_url})"
         )
 
-    @commands.command()
-    async def prices(self, ctx: AkariContext):
-        """
-        Check the bot's prices
-        """
-
-        await ctx.send(
-            "**Akari Prices**\n> $5 / month\n> $10 / onetime\n\n**Donator perks**\n> 3$ / onetime"
-        )
-
-    @commands.command()
-    async def donate(self, ctx: AkariContext):
-        """
-        Our available payment methods listed
-        """
-
-        embed = discord.Embed(
-            color=self.bot.color,
-            title="donate",
-            description="Every payment method is listed **below**\nMake sure to include your **guild id** or **user id** and the reason you are paying in the payment note!",
-        ).set_footer(
-            text="most of the payments go for the bot hosting and other investments for it",
-            icon_url="https://cdn.discordapp.com/attachments/1099716882052960259/1123196245524103300/Money.gif",
-        )
-
-        await ctx.send(embed=embed, view=Donate())
-
     @commands.hybrid_command(aliases=["av"])
     async def avatar(
         self,
@@ -403,6 +376,9 @@ class Utility(commands.Cog):
         Return someone's avatar
         """
 
+        if member.avatar is None:
+            return await ctx.warning(f"{member.mention} **doesn't** have a avatar set.")
+
         embed = discord.Embed(
             color=await self.bot.dominant_color(member.display_avatar.url),
             title=f"{member.name}'s avatar",
@@ -410,6 +386,29 @@ class Utility(commands.Cog):
         )
 
         embed.set_image(url=member.display_avatar.url)
+        return await ctx.send(embed=embed)
+
+    @commands.hybrid_command(aliases=["sav"])
+    async def serveravatar(
+        self,
+        ctx: AkariContext,
+        *,
+        member: discord.Member = commands.Author,
+    ):
+        """
+        Return someone's avatar
+        """
+
+        if member.guild_avatar is None:
+            return await ctx.warning(f"{member.mention} **doesn't** have a guild avatar set.")
+
+        embed = discord.Embed(
+            color=await self.bot.dominant_color(member.guild_avatar.url),
+            title=f"{member.name}'s avatar",
+            url=member.guild_avatar.url,
+        )
+
+        embed.set_image(url=member.guild_avatar.url)
         return await ctx.send(embed=embed)
 
     @commands.group(
@@ -542,14 +541,14 @@ class Utility(commands.Cog):
             banner = cache["banner"]
 
             if banner is None:
-                return await ctx.error(f"{member.mention} doesn't have a banner")
+                return await ctx.warning(f"{member.mention} **doesn't** have a banner")
 
         else:
             user = await self.bot.fetch_user(member.id)
 
             if not user.banner:
                 await self.cache_profile(user)
-                return await ctx.error(f"{member.mention} doesn't have a banner")
+                return await ctx.warning(f"{member.mention} **doesn't** have a banner")
 
             banner = user.banner.url
 
@@ -895,7 +894,7 @@ class Utility(commands.Cog):
 
         return await ctx.send(embed=embed)
 
-    @commands.hybrid_command(aliases=["si"])
+    @commands.hybrid_command(aliases=["si", "ii", "inviteinfo"])
     async def serverinfo(self, ctx: AkariContext, invite: discord.Invite = None):
         """
         Get the information about a server
@@ -1255,7 +1254,7 @@ class Utility(commands.Cog):
             guild = ctx.guild
 
         if not guild.splash:
-            return await ctx.error("This server has no splash image")
+            return await ctx.warning("This server has no splash image")
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(guild.splash.url),
@@ -1279,7 +1278,7 @@ class Utility(commands.Cog):
             guild = ctx.guild
 
         if not guild.banner:
-            return await ctx.error("This server has no banner")
+            return await ctx.warning("This server has no banner")
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(guild.banner.url),
@@ -1303,7 +1302,7 @@ class Utility(commands.Cog):
             guild = ctx.guild
 
         if not guild.icon:
-            return await ctx.error("This server has no icon")
+            return await ctx.warning("This server has no icon")
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(guild.icon.url),
@@ -1656,6 +1655,9 @@ class Utility(commands.Cog):
         members = sorted(
             ctx.guild.premium_subscribers, key=lambda m: m.premium_since, reverse=True
         )
+
+        if members is None:
+            return await ctx.warning("This server has **no** boosters.")
 
         return await ctx.paginate(
             [
@@ -2313,40 +2315,5 @@ class Utility(commands.Cog):
 
         await ctx.paginator(entries)
         
-    
-    # @commands.command(name="inviteinfo", aliases=("ii", "iinfo"))
-    # async def inviteinfo(self, ctx: AkariContext, invite: discord.Invite):
-        
-    #     # Channel & Invite
-    #     ci_data = Munch(
-    #         name = f"{invite.channel.name} ({invite.channel.type})",
-    #         id=invite.channel.id,
-    #         created_at = f"{discord.utils.format_dt(invite.created_at, style='f')} ({discord.utils.format_dt(invite.created_at, style='R')})",
-    #         expiration = invite.expires_at and f"{discord.utils.format_dt(invite.expires_at, style='f')} ({discord.utils.format_dt(invite.expires_at, style='R')})" or "Never",
-    #         inviter = invite.inviter and f"{invite.inviter} ({invite.inviter.id})" or "Unknown",
-    #         temporary = "N/A", # fuck is this
-    #         usage = invite.uses or "N/A"
-    #     )
-        
-    #     # Guild
-    #     g_data = Munch(
-    #         name=invite.guild.name,
-    #         id=invite.guild.id,
-    #         created_at=f"{discord.utils.format_dt(invite.guild.created_at, style='f')} ({discord.utils.format_dt(invite.guild.created_at, style='R')})",
-    #         members=invite.approximate_member_count,
-    #         members_online=invite.approximate_presence_count,
-    #         verification_level=str(invite.guild.verification_level)
-    #     )
-        
-    #     return await ctx.reply(embed=(
-    #         discord.Embed(
-    #             color=self.bot.color,
-    #             title=f"Invite code: {invite.code}"
-    #         )
-    #         .set_thumbnail(url=invite.guild.icon)
-    #         .add_field(name="")
-    #     )
-        
-
 async def setup(bot: Akari) -> None:
     return await bot.add_cog(Utility(bot))

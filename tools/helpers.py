@@ -382,9 +382,6 @@ class AkariContext(Context):
   async def reskin_enabled(self) -> bool:
    return await self.bot.db.fetchrow("SELECT * FROM reskin_enabled WHERE guild_id = $1", self.guild.id) is not None
 
-  async def reply(self, *args, **kwargs) -> Union[Message, WebhookMessage]:
-   return await self.send(*args, **kwargs)
-
   async def send(self, *args, **kwargs) -> Union[Message, WebhookMessage]: 
    check = await self.bot.db.fetchrow("SELECT * FROM reskin WHERE user_id = $1", self.author.id)
    
