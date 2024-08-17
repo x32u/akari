@@ -762,7 +762,7 @@ class Moderation(Cog):
 
         async with self.locks[ctx.guild.id]:
             bans = [m.user async for m in ctx.guild.bans()]
-            await ctx.Akari_send(f"Unbanning **{len(bans)}** members..")
+            await ctx.akari_send(f"Unbanning **{len(bans)}** members..")
             await asyncio.gather(*[ctx.guild.unban(Object(m.id)) for m in bans])
 
     @command(brief="ban members")
@@ -1000,7 +1000,7 @@ class Moderation(Cog):
             if len(tasks) == 0:
                 return await ctx.warning("Everyone has this role")
 
-            mes = await ctx.Akari_send(
+            mes = await ctx.akari_send(
                 f"Giving {role.mention} to **{len(tasks)}** members. This operation might take around **{format_timespan(0.3*len(tasks))}**"
             )
 
@@ -1507,7 +1507,7 @@ class Moderation(Cog):
         )
 
         async def no_func(interaction: Interaction):
-            return await ctx.Akari_send(f"Cancelling action...")
+            return await ctx.akari_send(f"Cancelling action...")
 
     @command(name="reactionmute", aliases=["rmute"], brief="manage messages")
     @has_guild_permissions(manage_messages=True)

@@ -208,7 +208,7 @@ class Leveling(Cog):
             name="Statistics",
             value=f"Level: `{level['level']}`\nXP: `{level['xp']}`/`{level['target_xp']}`",
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @hybrid_group(name="level", invoke_without_command=True)
     async def level_cmd(self, ctx: AkariContext, member: Member = Author):
@@ -336,7 +336,7 @@ class Leveling(Cog):
             title="Level Variables",
             description="{level} - The level you reached to\n{target_xp} - The new target xp amount you have to reach",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @level_cmd.command(name="message", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -458,7 +458,7 @@ class Leveling(Cog):
 
         embed.add_field(name="Message", value=check["message"], inline=False)
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @level_cmd.command(name="set", brief="manage guild")
     @has_guild_permissions(manage_guild=True)

@@ -157,31 +157,34 @@ class Donor(Cog):
     async def reskin(self, ctx: AkariContext):
         await ctx.create_pages()
 
-    @reskin.command(name="enable", brief="manage server")
-    @has_guild_permissions(manage_guild=True)
+    @reskin.command(name="enable", brief="donor")
     async def reskin_enable(self, ctx: AkariContext):
-        """Enable reskin feature in your server"""
-        if await self.bot.db.fetchrow(
-            "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
-        ):
-            return await ctx.warning("Reskin is **already** enabled")
+        """Enable reskin"""
+    
+        reskin = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2", ctx.author.id, False)
+    
+        if reskin == None or reskin['toggled'] == False:   
+      
+            if not await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1", ctx.author.id):
+                await self.bot.db.execute("INSERT INTO reskin_user (user_id, toggled, name, avatar) VALUES ($1, $2, $3, $4)", ctx.author.id, True, ctx.author.name, ctx.author.avatar.url)
+      
+            else:   
+                await self.bot.db.execute("UPDATE reskin_user SET toggled = $1 WHERE user_id = $2", True, ctx.author.id)
+      
+            return await ctx.success("**Reskin** has been **enabled**.")
+      
+        return await ctx.warning("**Reskin** is already **enabled**.")
 
-        await self.bot.db.execute(
-            "INSERT INTO reskin_enabled VALUES ($1)", ctx.guild.id
-        )
-        return await ctx.success("Reskin is now enabled")
-
-    @reskin.command(name="disable", brief="manage server")
-    @has_guild_permissions(manage_guild=True)
+    @reskin.command(name="disable", brief="donor")
     async def reskin_disable(self, ctx: AkariContext):
-        """disable the reskin feature in your server"""
+        """Disable the reskin feature for yourself"""
         if not await self.bot.db.fetchrow(
-            "SELECT * FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
+            "SELECT * FROM reskin_user WHERE user_id = $1", ctx.author.id
         ):
             return await ctx.warning("Reskin is **not** enabled")
 
         await self.bot.db.execute(
-            "DELETE FROM reskin_enabled WHERE guild_id = $1", ctx.guild.id
+            "DELETE FROM reskin_user WHERE user_id = $1", ctx.user.id
         )
         return await ctx.success("Reskin is now disabled")
 
@@ -189,9 +192,9 @@ class Donor(Cog):
     @has_perks()
     @create_reskin()
     async def reskin_name(self, ctx: AkariContext, *, name: ValidReskinName):
-        """edit your reskin name"""
+        """Edit your reskin name"""
         await self.bot.db.execute(
-            "UPDATE reskin SET username = $1 WHERE user_id = $2", name, ctx.author.id
+            "UPDATE reskin_user SET user = $1 WHERE user_id = $2", name, ctx.author.id
         )
         return await ctx.success(f"Updated your reskin name to **{name}**")
 
@@ -212,17 +215,17 @@ class Donor(Cog):
             return await ctx.error("The image provided is not an url")
 
         await self.bot.db.execute(
-            "UPDATE reskin SET avatar_url = $1 WHERE user_id = $2", url, ctx.author.id
+            "UPDATE reskin_user SET avatar = $1 WHERE user_id = $2", url, ctx.author.id
         )
         return await ctx.success(f"Updated your reskin [**avatar**]({url})")
 
     @reskin.command(name="remove", brief="donor", aliases=["delete", "reset"])
     async def reskin_delete(self, ctx: AkariContext):
-        """delete your reskin"""
+        """Delete your reskin"""
 
         async def yes_callback(interaction: Interaction):
             await self.bot.db.execute(
-                "DELETE FROM reskin WHERE user_id = $1", ctx.author.id
+                "DELETE FROM reskin_user WHERE user_id = $1", ctx.author.id
             )
             await interaction.response.edit_message(
                 embed=Embed(
@@ -257,7 +260,7 @@ class Donor(Cog):
 
         async with ctx.channel.typing():
             response = await self.bot.loop.run_in_executor(self.bot.executor, self.model.generate_content, query)
-            await ctx.send(response.text, allowed_mentions=AllowedMentions.none())
+            await ctx.reply(response.text, allowed_mentions=AllowedMentions.none())
 
 async def setup(bot: Akari) -> None:
     await bot.add_cog(Donor(bot))

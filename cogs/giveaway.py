@@ -123,7 +123,7 @@ class Giveaway(Cog):
             "How long should the Giveaway last?",
             "How many winners should this Giveaway have?",
         ]:
-            await ctx.send(me)
+            await ctx.reply(me)
 
             try:
                 message = await self.bot.wait_for(
@@ -135,18 +135,18 @@ class Giveaway(Cog):
                 responses.append(message.content)
                 await message.add_reaction("👍")
             except asyncio.TimeoutError:
-                return await ctx.send(content="You didn't reply in time")
+                return await ctx.reply(content="You didn't reply in time")
         description = responses[0]
 
         try:
             seconds = humanfriendly.parse_timespan(responses[1])
         except humanfriendly.InvalidTimespan:
-            return await ctx.send(content="Invalid time parsed")
+            return await ctx.reply(content="Invalid time parsed")
 
         try:
             winners = int(responses[2])
         except ValueError:
-            return await ctx.send(content="Invalid number of winners")
+            return await ctx.reply(content="Invalid number of winners")
 
         embed = Embed(
             color=self.bot.color,
@@ -155,7 +155,7 @@ class Giveaway(Cog):
         )
         embed.add_field(name="Entries", value="0")
         view = GiveawayView()
-        await ctx.send(content=f"Giveaway setup completed! Check {channel.mention}")
+        await ctx.reply(content=f"Giveaway setup completed! Check {channel.mention}")
         mes = await channel.send(embed=embed, view=view)
         await self.bot.db.execute(
             "INSERT INTO giveaway VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",

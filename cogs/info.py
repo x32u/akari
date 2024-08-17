@@ -45,7 +45,7 @@ class Info(Cog):
                 and cog.lower() in ["jishaku", "owner", "auth"]
                 or _command.hidden
             ):
-                return await ctx.send(f'No command called "{command}" found.')
+                return await ctx.reply(f'No command called "{command}" found.')
 
             return await ctx.send_help(_command)
 

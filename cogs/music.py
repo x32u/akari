@@ -79,7 +79,7 @@ class Music(Cog):
         embed = Embed(
             color=self.bot.color, description=f"🎵 {ctx.author.mention}: {message}"
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     async def disconnect_nodes(self) -> None:
         return await self.pomice.disconnect()
@@ -155,7 +155,7 @@ class Music(Cog):
         else:
             embed = Embed(color=self.bot.color, description=playing)
 
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
 
     @command()
     @is_voice()

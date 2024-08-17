@@ -150,7 +150,7 @@ class Emoji(Cog):
                         )
 
             buff.seek(0)
-            await ctx.send(file=File(buff, filename=f"emojis-{ctx.guild.name}.zip"))
+            await ctx.reply(file=File(buff, filename=f"emojis-{ctx.guild.name}.zip"))
 
     @command(
         name="addemoji",
@@ -291,7 +291,7 @@ class Emoji(Cog):
                     )
                 )
             except:
-                await ctx.send(emoji)
+                await ctx.reply(emoji)
 
     @command(aliases=["ei"])
     async def emojiinfo(
@@ -386,7 +386,7 @@ class Emoji(Cog):
                         zip.writestr(f"{sticker.name}.png", data=await sticker.read())
 
             buff.seek(0)
-            await ctx.send(file=File(buff, filename=f"stickers-{ctx.guild.name}.zip"))
+            await ctx.reply(file=File(buff, filename=f"stickers-{ctx.guild.name}.zip"))
 
     @command(name="stickerenlarge", aliases=["stickerjumbo"])
     async def stickerenlarge(self, ctx: AkariContext):
@@ -439,7 +439,7 @@ class Emoji(Cog):
         if not ctx.guild.vanity_url:
             return await ctx.warning(f"There is no **vanity url** set")
 
-        message = await ctx.Akari_send(
+        message = await ctx.akari_send(
             f"Adding **gg/{ctx.guild.vanity_url_code}** to `{len(ctx.guild.stickers)}` stickers..."
         )
 

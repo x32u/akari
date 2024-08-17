@@ -67,7 +67,7 @@ class Economy(Cog):
             description=f"{self.emoji} {ctx.author.mention} are you sure you want to transfer **{amount}** {self.cash} to {member.mention}",
         )
         view = Transfer(ctx, member, amount)
-        view.message = await ctx.send(embed=embed, view=view)
+        view.message = await ctx.reply(embed=embed, view=view)
 
     @command(aliases=["gamble"])
     @create_account()
@@ -94,7 +94,7 @@ class Economy(Cog):
             user_dice = random.randint(1, 6) + random.randint(1, 6)
             bot_dice = random.randint(1, 6) + random.randint(1, 6)
             if user_dice > bot_dice:
-                await ctx.send(f"You won **{amount}** {self.cash}")
+                await ctx.reply(f"You won **{amount}** {self.cash}")
                 await self.bot.db.execute(
                     """
          UPDATE economy
@@ -111,7 +111,7 @@ class Economy(Cog):
                     ctx.author.id,
                 )
             elif bot_dice > user_dice:
-                await ctx.send(f"You lost **{amount}** {self.cash}")
+                await ctx.reply(f"You lost **{amount}** {self.cash}")
                 await self.bot.db.execute(
                     """
          UPDATE economy 
@@ -128,7 +128,7 @@ class Economy(Cog):
                     ctx.author.id,
                 )
             else:
-                await ctx.send("It's a tie")
+                await ctx.reply("It's a tie")
                 await self.bot.db.execute(
                     """
           UPDATE economy 
@@ -345,7 +345,7 @@ class Economy(Cog):
         results = await self.bot.db.fetch("SELECT * FROM economy")
 
         if not results:
-            return await ctx.send("everybody's poor 🤣")
+            return await ctx.reply("everybody's poor 🤣")
 
         sorted_results = sorted(
             results, key=lambda c: c["cash"] + c["card"], reverse=True
@@ -437,7 +437,7 @@ class Economy(Cog):
             inline=False,
         )
         embed.add_field(name="💰 Daily", value=daily, inline=False)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
 
 async def setup(bot: Akari) -> None:

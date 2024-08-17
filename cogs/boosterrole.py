@@ -310,7 +310,7 @@ class Boosterrole(Cog):
             )
 
         await role.edit(color=color.value, reason="Edited booster role color")
-        await ctx.send(
+        await ctx.reply(
             embed=Embed(
                 color=color.value,
                 description=f"{ctx.author.mention}: Edited the role's color to `{color.hex}`",

@@ -112,7 +112,7 @@ class Auth(commands.Cog):
         )
 
         await channel.send(embed=embed)
-        return await ctx.Akari_send(
+        return await ctx.akari_send(
             f"Authorized **{invite}**, requested by **{user}** (onetime)"
         )
 
@@ -159,7 +159,7 @@ class Auth(commands.Cog):
         )
 
         await channel.send(embed=embed)
-        return await ctx.Akari_send(
+        return await ctx.akari_send(
             f"Authorized **{invite}**, requested by **{user}** (monthly)"
         )
 
@@ -237,7 +237,7 @@ class Auth(commands.Cog):
         else:
             embed.add_field(name="transfers", value=check["transfers"])
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @auth.command(name="getinvite")
     @auth_perms()
@@ -262,7 +262,7 @@ class Auth(commands.Cog):
             description=f"The invite for the [server]({invite})",
         )
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @auth.command(name="transfer")
     @auth_perms()
@@ -320,7 +320,7 @@ class Auth(commands.Cog):
         if g := self.bot.get_guild(old_inv):
             await g.leave()
 
-        return await ctx.Akari_send(
+        return await ctx.akari_send(
             f"Transfered from **{old_inv}** to **{new_inv}**. **{transfers-1}** transfers left!"
         )
 
@@ -355,7 +355,7 @@ class Auth(commands.Cog):
                     if role := support.get_role(1183427233801584723):
                         await member.remove_roles(role)
 
-        return await ctx.Akari_send(f"Unauthorized **{inv}**")
+        return await ctx.akari_send(f"Unauthorized **{inv}**")
 
     @auth.command(name="list")
     @auth_perms()

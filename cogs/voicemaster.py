@@ -205,7 +205,7 @@ class Voicemaster(Cog):
         """
 
         async with self.locks[ctx.guild.id]:
-            mes = await ctx.send(
+            mes = await ctx.reply(
                 embed=Embed(
                     color=self.bot.color,
                     description=f"{ctx.author.mention}: Creating the VoiceMaster interface",
@@ -275,7 +275,7 @@ class Voicemaster(Cog):
             if not check:
                 return await ctx.warning("VoiceMaster is **not** configured")
 
-            mes = await ctx.send(
+            mes = await ctx.reply(
                 embed=Embed(
                     color=self.bot.color,
                     description=f"{ctx.author.mention}: Disabling the VoiceMaster interface",
@@ -333,7 +333,7 @@ class Voicemaster(Cog):
                 )
             )
             await view.add_default_buttons(ctx.guild)
-            return await ctx.send(embed=embed, view=view)
+            return await ctx.reply(embed=embed, view=view)
 
         items = ButtonScript.script(EmbedBuilder().embed_replacement(ctx.author, code))
 
@@ -345,7 +345,7 @@ class Voicemaster(Cog):
                     ctx.guild, item[0], label=item[1], emoji=item[2], style=item[3]
                 )
 
-        await ctx.send(content=items[0], embed=items[1], view=view)
+        await ctx.reply(content=items[0], embed=items[1], view=view)
 
     @hybrid_group(aliases=["vc"], invoke_without_command=True)
     async def voice(self, ctx):

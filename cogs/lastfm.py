@@ -128,7 +128,7 @@ class Lastfm(Cog):
         Log in with your lastfm account to the bot
         """
 
-        mes = await ctx.Akari_send("Logging in...")
+        mes = await ctx.akari_send("Logging in...")
         await asyncio.sleep(1)
         embed = Embed(
             color=self.bot.color,
@@ -309,7 +309,7 @@ class Lastfm(Cog):
             title=f"{member.name}'s custom lastfm embed",
             description=f"```\n{check[0]}```",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @lf_mode.command(name="steal", brief="premium")
     @has_perks()
@@ -319,7 +319,7 @@ class Lastfm(Cog):
         """
 
         if member is ctx.author:
-            return await ctx.send("Stealing from yourself doesn't make sense")
+            return await ctx.reply("Stealing from yourself doesn't make sense")
 
         check = await self.bot.db.fetchrow(
             "SELECT embed FROM lastfm WHERE user_id = $1", member.id
@@ -381,7 +381,7 @@ class Lastfm(Cog):
 
         user = check["username"]
         a = await self.lastfmhandler.get_tracks_recent(user, 1)
-        await ctx.send(
+        await ctx.reply(
             await self.spotify.search(
                 f"{a['recenttracks']['track'][0]['name']} {a['recenttracks']['track'][0]['artist']['#text']}"
             )
@@ -408,7 +408,7 @@ class Lastfm(Cog):
             embed.set_author(
                 name=f"{user}'s overall top artists", icon_url=member.display_avatar
             )
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         return await ctx.lastfm_send(
             "There is no **last.fm** account linked for this member"
         )
@@ -436,7 +436,7 @@ class Lastfm(Cog):
             embed.set_author(
                 name=f"{user}'s overall top tracks", icon_url=ctx.message.author.avatar
             )
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         return await ctx.lastfm_send(
             "There is no **last.fm** account linked for this member"
         )
@@ -464,7 +464,7 @@ class Lastfm(Cog):
             embed.set_author(
                 name=f"{user}'s overall top albums", icon_url=ctx.message.author.avatar
             )
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         return await ctx.lastfm_send(
             "There is no **last.fm** account linked for this member"
         )
@@ -475,7 +475,7 @@ class Lastfm(Cog):
         A short guide on how to register your lastfm account
         """
 
-        await ctx.send(
+        await ctx.reply(
             f"1) create an account at https://last.fm\n2) link your **spotify** account to your **last.fm** account\n3) use the command `{ctx.clean_prefix}lf set [your lastfm username]`\n4) while you listen to your songs, you can use the `{ctx.clean_prefix}nowplaying` command"
         )
 
@@ -524,7 +524,7 @@ class Lastfm(Cog):
                         inline=False,
                     )
                 )
-                await ctx.send(embed=embed)
+                await ctx.reply(embed=embed)
             except TypeError:
                 return await ctx.lastfm_send(
                     "This user doesn't have a **last.fm** account connected"
@@ -645,7 +645,7 @@ class Lastfm(Cog):
             ),
             filename="cover.png",
         )
-        return await ctx.send(f"**{a['recenttracks']['track'][0]['name']}**", file=file)
+        return await ctx.reply(f"**{a['recenttracks']['track'][0]['name']}**", file=file)
 
     @lastfm.command(name="recent")
     async def lf_recent(self, ctx: AkariContext, *, member: Member = Author):
@@ -702,7 +702,7 @@ class Lastfm(Cog):
             x = await self.bot.embed_build.convert(
                 ctx, await self.lastfm_replacement(user, check[2])
             )
-            mes = await ctx.send(**x)
+            mes = await ctx.reply(**x)
 
         else:
             try:
@@ -745,7 +745,7 @@ class Lastfm(Cog):
                     icon_url="https://www.last.fm/static/images/lastfm_avatar_twitter.52a5d69a85ac.png",
                 )
             )
-            mes = await ctx.send(embed=embed)
+            mes = await ctx.reply(embed=embed)
 
         if check[1] and ctx.guild.me.guild_permissions.add_reactions:
             reactions = json.loads(check[1])

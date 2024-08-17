@@ -716,7 +716,7 @@ class Fun(Cog):
             color=self.bot.color, description=f"**{number}:{numberInSurah}** {text}"
         ).set_author(name=name)
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @hybrid_command()
     async def bible(self, ctx: AkariContext):
@@ -733,7 +733,7 @@ class Fun(Cog):
             color=self.bot.color, description=result["verse"]["details"]["text"]
         )
         embed.set_author(name=result["verse"]["details"]["reference"])
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @hybrid_command()
     async def blacktea(self, ctx: AkariContext):
@@ -750,14 +750,14 @@ class Fun(Cog):
             name="guide",
             value=f"- React with {BlackTea(self.bot).emoji} to join the round\n- You have 20 seconds to join\n- The game starts only if there are at least 2 joined players\n- Everyone has 3 lifes\n- Think about a word that starts with the specific letters given",
         )
-        mes = await ctx.send(embed=embed)
+        mes = await ctx.reply(embed=embed)
         await mes.add_reaction(BlackTea(self.bot).emoji)
         await asyncio.sleep(20)
         try:
             newmes = await ctx.channel.fetch_message(mes.id)
         except:
             BlackTea(self.bot).MatchStart.remove(ctx.guild.id)
-            return await ctx.send("The blacktea message was deleted")
+            return await ctx.reply("The blacktea message was deleted")
 
         users = [
             u.id async for u in newmes.reactions[0].users() if u.id != self.bot.user.id
@@ -765,7 +765,7 @@ class Fun(Cog):
 
         if len(users) < 2:
             BlackTea(self.bot).MatchStart.remove(ctx.guild.id)
-            return await ctx.send(
+            return await ctx.reply(
                 "not enough players to start the blacktea match... 😓"
             )
 
@@ -885,7 +885,7 @@ class Fun(Cog):
         result = await self.bot.session.get_json(
             "https://evilinsult.com/generate_insult.php?lang=en&type=json"
         )
-        await ctx.send(
+        await ctx.reply(
             f"{member.mention} {result['insult']}",
             allowed_mentions=AllowedMentions.none(),
         )
@@ -995,7 +995,7 @@ class Fun(Cog):
             )
 
         final = random.choice(choices).strip()
-        return await ctx.Akari_send(f"I chose `{final}`")
+        return await ctx.akari_send(f"I chose `{final}`")
 
     @command(name="quickpoll", aliases=["poll"])
     async def quickpoll_cmd(self, ctx: AkariContext, *, question: str):
@@ -1046,7 +1046,7 @@ class Fun(Cog):
             return await ctx.warning("You cannot play against a bot")
 
         view = TicTacToe(ctx.author, member)
-        view.message = await ctx.send(
+        view.message = await ctx.reply(
             content=f"{ctx.author} ⚔️ {member}\n\nIt's {ctx.author.name}'s turn",
             view=view,
         )
@@ -1072,7 +1072,7 @@ class Fun(Cog):
             color=self.bot.color,
             description=f"{member.mention} is **{random.randint(a, 100)}%** gay 🏳️‍🌈",
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @command()
     async def furry(self, ctx: AkariContext, *, member: Member = Author):
@@ -1084,7 +1084,7 @@ class Fun(Cog):
             color=self.bot.color,
             description=f"{member.mention} is **{random.randint(a, 100)}%** a furry 🦊",
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @command(name="dadjoke", aliases=["cringejoke"])
     async def dadjoke(self, ctx: AkariContext):
@@ -1099,7 +1099,7 @@ class Fun(Cog):
             return await ctx.warning(
                 "Womp Womp! Couldn't get a dad joke at this time."
             )
-        return await ctx.Akari_send(f"{joke['attachments'][0]['text']}")
+        return await ctx.akari_send(f"{joke['attachments'][0]['text']}")
 
     @command(name="meme")
     async def meme(self, ctx: AkariContext):
@@ -1114,7 +1114,7 @@ class Fun(Cog):
             return await ctx.warning("Error fetching a meme.")
         embed = discord.Embed(color=0x2B2D31)
         embed.set_image(url=meme["url"])
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @command(name="lick", aliases=["slurp"])
     async def lick(self, ctx: AkariContext, *, member: Member = Author):
@@ -1458,7 +1458,7 @@ class Fun(Cog):
 
             embed.add_field(name="More Artists", value=", ".join(artists))
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
 
 async def setup(bot) -> None:

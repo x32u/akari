@@ -198,7 +198,7 @@ class Utility(commands.Cog):
                 color=self.bot.color,
                 description=f"👋 {ctx.author.mention}: Welcome back! You were gone for **{humanize.precisedelta(datetime.datetime.fromtimestamp(time.timestamp()), format='%0.0f')}**",
             )
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
 
         for mention in message.mentions:
             check = await self.bot.db.fetchrow(
@@ -216,7 +216,7 @@ class Utility(commands.Cog):
                     color=self.bot.color,
                     description=f"👋 {ctx.author.mention}: **{mention.name}** is **AFK** for **{humanize.precisedelta(datetime.datetime.fromtimestamp(time.timestamp()), format='%0.0f')}** - {check['reason']}",
                 )
-                return await ctx.send(embed=embed)
+                return await ctx.reply(embed=embed)
 
     @commands.Cog.listener()
     async def on_user_update(self, before: discord.User, after: discord.User):
@@ -263,7 +263,7 @@ class Utility(commands.Cog):
         embed = discord.Embed(
             color=self.bot.color, description=uwuify.uwu(message, flags=flags)
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.command(aliases=["foryou", "foryoupage"])
     async def fyp(self, ctx: AkariContext):
@@ -361,7 +361,7 @@ class Utility(commands.Cog):
         """
 
         message = [mes async for mes in channel.history(limit=1, oldest_first=True)][0]
-        await ctx.Akari_send(
+        await ctx.akari_send(
             f"the first message sent in {channel.mention} - [**jump**]({message.jump_url})"
         )
 
@@ -386,7 +386,7 @@ class Utility(commands.Cog):
         )
 
         embed.set_image(url=member.display_avatar.url)
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["sav"])
     async def serveravatar(
@@ -409,7 +409,7 @@ class Utility(commands.Cog):
         )
 
         embed.set_image(url=member.guild_avatar.url)
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.group(
         name="stickymessage",
@@ -558,7 +558,7 @@ class Utility(commands.Cog):
             url=banner,
         )
         embed.set_image(url=banner)
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["ri"])
     async def roleinfo(
@@ -608,7 +608,7 @@ class Utility(commands.Cog):
                 inline=False,
             )
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(name="channelinfo", aliases=["ci"])
     async def channelinfo(
@@ -643,7 +643,7 @@ class Utility(commands.Cog):
             )
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def donators(self, ctx: AkariContext):
@@ -670,7 +670,7 @@ class Utility(commands.Cog):
         """
 
         invites = await ctx.guild.invites()
-        await ctx.Akari_send(
+        await ctx.akari_send(
             f"{f'{member.mention} has' if member.id != ctx.author.id else 'You have'} **{sum(invite.uses for invite in invites if invite.inviter == member)} invites**"
         )
 
@@ -717,11 +717,11 @@ class Utility(commands.Cog):
         result = snipes[::-1][index - 1]
         try:
             message = await ctx.channel.fetch_message(result["message"])
-            return await ctx.Akari_send(
+            return await ctx.akari_send(
                 f"**{result['user']}** reacted with {result['reaction']} **{self.bot.humanize_date(datetime.datetime.fromtimestamp(int(result['created_at'])))}** [**here**]({message.jump_url})"
             )
         except:
-            return await ctx.Akari_send(
+            return await ctx.akari_send(
                 f"**{result['user']}** reacted with {result['reaction']} **{self.bot.humanize_date(datetime.datetime.fromtimestamp(int(result['created_at'])))}**"
             )
 
@@ -778,7 +778,7 @@ class Utility(commands.Cog):
             # Send the screenshot back to Discord
             with open(screenshot_file, "rb") as file:
                 screenshot = discord.File(file)
-                await ctx.send(file=screenshot)
+                await ctx.reply(file=screenshot)
 
             # Close Playwright browser
             await browser.close()
@@ -819,7 +819,7 @@ class Utility(commands.Cog):
         for m in ["before", "after"]:
             embed.add_field(name=m, value=result[m])
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.command(aliases=["s"])
     async def snipe(self, ctx: AkariContext, index: int = 1):
@@ -862,11 +862,11 @@ class Utility(commands.Cog):
                             BytesIO(await attachment.read()),
                             filename=attachment.filename,
                         )
-                        return await ctx.send(embed=embed, file=file)
+                        return await ctx.reply(embed=embed, file=file)
                     else:
                         embed.set_image(url=attachment.url)
 
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         except Exception as e:
             return await ctx.warning("There was an error getting snipes.")
 
@@ -892,7 +892,7 @@ class Utility(commands.Cog):
                 name=f"{ctx.guild.name}'s statistics (+{len([m for m in ctx.guild.members if (datetime.datetime.now() - m.joined_at.replace(tzinfo=None)).total_seconds() < 3600*24])})",
             )
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["si", "ii", "inviteinfo"])
     async def serverinfo(self, ctx: AkariContext, invite: discord.Invite = None):
@@ -957,7 +957,7 @@ class Utility(commands.Cog):
                 text=f"Guild ID: {ctx.guild.id} • Shard: {ctx.guild.shard_id}/{len(self.bot.shards)}"
             )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["user", "ui", "whois"])
     async def userinfo(
@@ -1047,7 +1047,7 @@ class Utility(commands.Cog):
                     inline=False,
                 )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command()
     async def weather(self, ctx: AkariContext, *, location: WeatherLocation):
@@ -1076,7 +1076,7 @@ class Utility(commands.Cog):
             )
         )
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.hybrid_command()
     async def roblox(self, ctx: AkariContext, user: RobloxUser):
@@ -1101,7 +1101,7 @@ class Utility(commands.Cog):
         if user.banned:
             embed.set_author(name="This user is banned")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["snap"])
     async def snapchat(self, ctx: AkariContext, user: SnapUser):
@@ -1133,7 +1133,7 @@ class Utility(commands.Cog):
         view = discord.ui.View()
         view.add_item(button)
 
-        await ctx.send(embed=embed, view=view)
+        await ctx.reply(embed=embed, view=view)
 
     @commands.hybrid_command(aliases=["snapstory"])
     async def snapchatstory(self, ctx: AkariContext, *, username: str):
@@ -1199,7 +1199,7 @@ class Utility(commands.Cog):
             .add_field(name="Followers", value=f"{user.followers:,}")
             .add_field(name="Hearts", value=f"{user.hearts:,}")
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["git"])
     async def github(self, ctx: AkariContext, *, user: GithubUser):
@@ -1222,7 +1222,7 @@ class Utility(commands.Cog):
             .add_field(name="Repos", value=user.repos)
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["fnshop"])
     async def fortniteshop(self, ctx: AkariContext):
@@ -1238,7 +1238,7 @@ class Utility(commands.Cog):
             filename="fortnite.png",
         )
 
-        await ctx.send(file=file)
+        await ctx.reply(file=file)
 
     @commands.command(aliases=["splash"])
     async def serversplash(
@@ -1262,7 +1262,7 @@ class Utility(commands.Cog):
             url=guild.splash.url,
         ).set_image(url=guild.splash.url)
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=["sbanner"])
     async def serverbanner(
@@ -1286,7 +1286,7 @@ class Utility(commands.Cog):
             url=guild.banner.url,
         ).set_image(url=guild.banner.url)
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=["sicon"])
     async def servericon(
@@ -1310,7 +1310,7 @@ class Utility(commands.Cog):
             url=guild.icon.url,
         ).set_image(url=guild.icon.url)
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["define"])
     async def urban(self, ctx: AkariContext, *, word: str):
@@ -1362,7 +1362,7 @@ class Utility(commands.Cog):
                 description=f"```{translated}```",
             )
 
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
         except LanguageNotSupportedException:
             return await ctx.error("This language is **not** supported")
 
@@ -1387,7 +1387,7 @@ class Utility(commands.Cog):
         if not time:
             return await ctx.error("This member doesn't have any last seen record")
 
-        await ctx.Akari_send(
+        await ctx.akari_send(
             f"**{member}** was last seen **{self.bot.humanize_date(datetime.datetime.fromtimestamp(time.timestamp()))}**"
         )
 
@@ -1413,7 +1413,7 @@ class Utility(commands.Cog):
             color=self.bot.color,
             description=f"😴 {ctx.author.mention}: You are now AFK with the reason: **{reason}**",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=["hex"])
     async def dominant(self, ctx: AkariContext):
@@ -1439,7 +1439,7 @@ class Utility(commands.Cog):
             .add_field(name="HEX", value=hex_info["hex"]["value"])
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def perks(self, ctx: AkariContext):
@@ -1459,7 +1459,7 @@ class Utility(commands.Cog):
             description="\n".join(commands) + "\n\n + 20% more daily income",
         ).set_footer(text="use ;donate to check payment methods")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def youngest(self, ctx: AkariContext):
@@ -1487,7 +1487,7 @@ class Utility(commands.Cog):
                 value=self.bot.humanize_date(member.created_at.replace(tzinfo=None)),
             )
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def oldest(self, ctx: AkariContext):
@@ -1513,7 +1513,7 @@ class Utility(commands.Cog):
             )
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.hybrid_command(brief="manage messages", aliases=["pic"])
     @commands.has_guild_permissions(manage_messages=True)
@@ -1706,7 +1706,7 @@ class Utility(commands.Cog):
             description=f"<:shazam:1106874229451931689> {ctx.author.mention}: Searching for track...",
         )
 
-        mes = await ctx.send(embed=embed)
+        mes = await ctx.reply(embed=embed)
         try:
             out = await Shazam().recognize_song(await attachment.read())
             track = out["track"]["share"]["text"]
@@ -1732,7 +1732,7 @@ class Utility(commands.Cog):
         get someone's cashapp url and qr
         """
 
-        await ctx.send(user.url, file=discord.File(user.qr, filename="cashapp_qr.png"))
+        await ctx.reply(user.url, file=discord.File(user.qr, filename="cashapp_qr.png"))
 
     @commands.group(aliases=["tz"], invoke_without_command=True)
     async def timezone(
@@ -1749,7 +1749,7 @@ class Utility(commands.Cog):
             color=self.bot.color,
             description=f"🕑 {ctx.author.mention}: **{member[0].name}'s** current date is **{member[1]}**",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @timezone.command(name="set")
     async def timezone_set(self, ctx: AkariContext, *, timezone: TimezoneLocation):
@@ -1761,7 +1761,7 @@ class Utility(commands.Cog):
             color=self.bot.color,
             description=f"Saved your timezone as **{timezone.timezone}**\n🕑 Current date: **{timezone.date}**",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @timezone.command(name="unset")
     async def timezone_unset(self, ctx: AkariContext):
@@ -1814,7 +1814,7 @@ class Utility(commands.Cog):
             description=f"🎂 {ctx.author.mention}: **{member.name}'s** birthday is **{member.date}**. That's **{member.birthday}**",
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @birthday.command(name="set")
     async def bday_set(self, ctx: AkariContext, *, date: BdayDate):
@@ -1826,7 +1826,7 @@ class Utility(commands.Cog):
             color=0xDEA5A4,
             description=f"🎂 Your birthday is **{date[0]}**. That's **{date[1]}**",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @birthday.command(name="unset")
     async def bday_unset(self, ctx: AkariContext):
@@ -1891,7 +1891,7 @@ class Utility(commands.Cog):
                     task,
                 )
 
-                await ctx.send(
+                await ctx.reply(
                     f"🕰️ {ctx.author.mention}: I'm going to remind you in {humanfriendly.format_timespan(time)} about **{task}**"
                 )
             except:
@@ -1940,7 +1940,7 @@ class Utility(commands.Cog):
                     (datetime.datetime.now() + datetime.timedelta(seconds=time)),
                     task,
                 )
-                await ctx.send(
+                await ctx.reply(
                     f"🕰️ {ctx.author.mention}: I'm going to remind you in {humanfriendly.format_timespan(time)} about **{task}**"
                 )
             except:
@@ -1968,7 +1968,7 @@ class Utility(commands.Cog):
             return await ctx.warning(f"No tag found for **{tag}**")
 
         x = await self.bot.embed_build.convert(ctx, check["response"])
-        await ctx.send(**x)
+        await ctx.reply(**x)
 
     @tag.command(name="create", aliases=["make"], brief="manage server")
     @commands.has_guild_permissions(manage_guild=True)
@@ -2129,7 +2129,7 @@ class Utility(commands.Cog):
 
         x = await self.bot.embed_build.convert(ctx, result["response"])
         x["content"] = f"({result['name']}) {x['content'] or ''}"
-        await ctx.send(**x)
+        await ctx.reply(**x)
 
     @tag.command(name="edit", brief="tag owner")
     async def tag_edit(self, ctx: AkariContext, *, args: str):
@@ -2196,7 +2196,7 @@ class Utility(commands.Cog):
             return await ctx.warning(f"No tag found for **{tag}**")
 
         user = self.bot.get_user(check["author_id"])
-        return await ctx.Akari_send(f"The author of this tag is **{user}**")
+        return await ctx.akari_send(f"The author of this tag is **{user}**")
 
     @tag.command(name="search")
     async def tag_search(self, ctx: AkariContext, *, query: str):
@@ -2244,7 +2244,7 @@ class Utility(commands.Cog):
             )
         )
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.command(name="transparent", aliases=["tp"])
     @commands.max_concurrency(1, commands.BucketType.channel, wait=True)

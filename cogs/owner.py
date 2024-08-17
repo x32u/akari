@@ -114,7 +114,7 @@ class Owner(Cog):
     @command()
     @is_owner()
     async def restart(self, ctx: AkariContext):
-        await ctx.send("restarting the bot...")
+        await ctx.reply("restarting the bot...")
         os.system("pm2 restart 0")
 
     @command()
@@ -195,7 +195,7 @@ class Owner(Cog):
     async def mutuals(self, ctx: AkariContext, *, user: User):
         """returns mutual servers between the member and the bot"""
         if len(user.mutual_guilds) == 0:
-            return await ctx.send(
+            return await ctx.reply(
                 f"This member doesn't share any server with {self.bot.user.name}"
             )
 
@@ -326,7 +326,7 @@ class Owner(Cog):
             .set_author(name=f"Error Code: {code}")
         )
 
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @command(aliases=["gban"])
     @is_owner()
@@ -338,7 +338,7 @@ class Owner(Cog):
         reason: str = "Globally banned by a bot owner",
     ):
         """ban an user globally"""
-        if user.id in [930383131863842816, 863914425445908490]:
+        if user.id in [598125772754124823, 863914425445908490]:
             return await ctx.error("Do not global ban a bot owner, retard")
 
         check = await self.bot.db.fetchrow(

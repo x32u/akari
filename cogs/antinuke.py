@@ -625,7 +625,7 @@ class Antinuke(Cog):
             name=f"{ctx.guild.name}'s antinuke configuration", icon_url=ctx.guild.icon
         )
         embed.set_thumbnail(url=ctx.guild.icon)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @antinuke.command(name="whitelisted")
     @antinuke_configured()
@@ -1529,10 +1529,10 @@ class Antinuke(Cog):
     async def an_admin_add(self, ctx: AkariContext, *, member: Member):
         """add a member as an antinuke admin. Please be aware of who you add here"""
         if member == ctx.author:
-            return await ctx.send("You are the antinuke owner yourself lol")
+            return await ctx.reply("You are the antinuke owner yourself lol")
 
         if member.bot:
-            return await ctx.send(
+            return await ctx.reply(
                 "Why would a bot be an antinuke admin? They cannot manage the settings anyways -_-"
             )
 

@@ -110,7 +110,7 @@ class Ticket(Cog):
                 )
                 await channel.send(embed=e)
 
-        await ctx.send(content="Deleting this channel in 5 seconds")
+        await ctx.reply(content="Deleting this channel in 5 seconds")
         await asyncio.sleep(5)
         await ctx.channel.delete(reason="ticket closed")
 

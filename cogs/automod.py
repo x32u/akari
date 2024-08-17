@@ -402,7 +402,7 @@ class Automod(Cog):
             name="Whitelisted channels", value=whitelisted_channels, inline=False
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @chat_filter_spam.command(
         name="unwhitelist",

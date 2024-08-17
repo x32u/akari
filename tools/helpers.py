@@ -3,14 +3,18 @@ import json
 import asyncio
 import datetime 
 import humanize
+import discord
 
 from discord.ext.commands.cog import Cog
 from discord.interactions import Interaction
 
 from typing import Mapping, Coroutine, List, Any, Callable, Optional, Union, Dict
+from typing import Any, Union, Dict, Optional, List, Sequence
 from discord_paginator import Paginator
 
 from .misc.views import ConfirmView
+
+from discord.ui import View
 
 from discord.ext.commands import (
   Context, 
@@ -365,7 +369,7 @@ class AkariHelp(Help):
   if command.aliases: 
    embed.add_field(name="aliases", value=', '.join(command.aliases), inline=False)
 
-  await self.context.send(embed=embed) 
+  await self.context.reply(embed=embed) 
 
 class AkariContext(Context): 
   flags: Dict[str, Any] = {}
@@ -380,13 +384,23 @@ class AkariContext(Context):
    return f"Akari bot here in {self.channel.mention}"
   
   async def reskin_enabled(self) -> bool:
-   return await self.bot.db.fetchrow("SELECT * FROM reskin_enabled WHERE guild_id = $1", self.guild.id) is not None
+   return await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2", self.author.id, True)
 
-  async def reply(self, *args, **kwargs) -> Union[Message, WebhookMessage]:
-   return await self.send(*args, **kwargs)
+  async def reply(self, content: Optional[str] = None, *, embed: Optional[discord.Embed] = None, view: Optional[View] = None, mention_author: Optional[bool] = False, file: Optional[discord.File] = discord.utils.MISSING,
+        files: Optional[Sequence[discord.File]] = discord.utils.MISSING) -> discord.Message:
+   
+   reskin = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2", self.author.id, True)
+   if reskin != None and reskin['toggled']:
+     
+     hook = await self.webhook(self.message.channel)
+     
+     if view == None: return await hook.send(content=content, embed=embed, username=reskin['name'], avatar_url=reskin['avatar'], file=file)
+     
+     return await hook.send(content=content, embed=embed, username=reskin['name'], avatar_url=reskin['avatar'], view=view, file=file)
+   return await self.send(content=content, embed=embed, reference=self.message, view=view, mention_author=mention_author, file=file)
 
   async def send(self, *args, **kwargs) -> Union[Message, WebhookMessage]: 
-   check = await self.bot.db.fetchrow("SELECT * FROM reskin WHERE user_id = $1", self.author.id)
+   check = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1", self.author.id)
    
    if check and self.guild.me.guild_permissions.manage_webhooks and await self.reskin_enabled(): 
     if isinstance(self.channel, Thread):
@@ -401,8 +415,8 @@ class AkariContext(Context):
     
     kwargs.update(
       {
-        'avatar_url': check['avatar_url'], 
-        'username': check['username'], 
+        'avatar_url': check['avatar'], 
+        'username': check['name'], 
         'wait': True
       }
     )
@@ -413,6 +427,15 @@ class AkariContext(Context):
     return await webhook.send(*args, **kwargs)  
    else:
     return await super().send(*args, **kwargs)
+
+  async def webhook(self, channel) -> discord.Webhook:
+   
+   for webhook in await channel.webhooks():
+     
+     if webhook.user == self.me:
+       return webhook
+   
+   return await channel.create_webhook(name='akari')
 
   async def get_attachment(self) -> Optional[Attachment]: 
     """get a discord attachment from the channel"""
@@ -450,46 +473,46 @@ class AkariContext(Context):
   
   async def has_reskin(self) -> bool:
    """check if the author has a reskin or not"""
-   return await self.bot.db.fetchrow("SELECT * FROM reskin WHERE user_id = $1", self.author.id) is not None  
+   return await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1", self.author.id) is not None  
 
   async def confirmation_send(self, embed_msg: str, yes_func, no_func) -> Message: 
    """Send an embed with confirmation buttons"""
    embed = Embed(color=self.bot.color, description=embed_msg)
    view = ConfirmView(self.author.id, yes_func, no_func) 
-   return await self.send(embed=embed, view=view)
+   return await self.reply(embed=embed, view=view)
   
   async def economy_send(self, message: str) -> Message:
    """economy cog sending message function""" 
    embed = Embed(color=self.ec_color, description=f"{self.ec_emoji} {self.author.mention}: {message}")
-   return await self.send(embed=embed) 
+   return await self.reply(embed=embed) 
 
   async def warning(self, message: str) -> Message: 
    """Send a warning message to the channel"""
-   return await self.send(embed=Embed(color=self.bot.warning_color, description=f"{self.bot.warning} {self.author.mention}: {message}"))  
+   return await self.reply(embed=Embed(color=self.bot.warning_color, description=f"{self.bot.warning} {self.author.mention}: {message}"))  
   
   async def error(self, message: str) -> Message: 
    """Send an error message to the channel"""
-   return await self.send(embed=Embed(color=self.bot.no_color, description=f"{self.bot.no} {self.author.mention}: {message}"))
+   return await self.reply(embed=Embed(color=self.bot.no_color, description=f"{self.bot.no} {self.author.mention}: {message}"))
  
   async def success(self, message: str) -> Message: 
    """Send a success message to the channel"""
-   return await self.send(embed=Embed(color=self.bot.yes_color, description=f"{self.bot.yes} {self.author.mention}: {message}"))
+   return await self.reply(embed=Embed(color=self.bot.yes_color, description=f"{self.bot.yes} {self.author.mention}: {message}"))
 
-  async def Akari_send(self, message: str, **kwargs) -> Message: 
+  async def akari_send(self, message: str, **kwargs) -> Message: 
    """Send a regular embed message to the channel"""
-   return await self.send(embed=Embed(color=self.bot.color, description=f"{self.author.mention}: {message}"), **kwargs)
+   return await self.reply(embed=Embed(color=self.bot.color, description=f"{self.author.mention}: {message}"), **kwargs)
 
   async def lastfm_send(self, message: str, reference: Message=None) -> Message: 
    """Send a lastfm type message to the channel"""
-   return await self.send(embed=Embed(color=0xff0000, description=f"<:lastfm:1234298951125958706> {self.author.mention}: {message}"))
+   return await self.reply(embed=Embed(color=0xff0000, description=f"<:lastfm:1234298951125958706> {self.author.mention}: {message}"))
    
   async def paginator(self, embeds: List[Union[Embed, str]]) -> Message: 
    """Sends some paginated embeds to the channel"""
    if len(embeds) == 1: 
     if isinstance(embeds[0], Embed): 
-      return await self.send(embed=embeds[0]) 
+      return await self.reply(embed=embeds[0]) 
     elif isinstance(embeds[0], str):
-      return await self.send(embeds[0])
+      return await self.reply(embeds[0])
     
    paginator = Paginator(self, embeds, self.author.id)
    style=ButtonStyle.blurple 

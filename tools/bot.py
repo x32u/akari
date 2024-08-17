@@ -506,14 +506,14 @@ class Akari(commands.AutoShardedBot):
                 )
 
         elif isinstance(error, commands.CommandOnCooldown):
-            return await ctx.Akari_send(
+            return await ctx.akari_send(
                 f"Wait **{error.retry_after:.2f} seconds** before using **{ctx.command.qualified_name}** again"
             )
 
         elif isinstance(
             error, commands.CommandRegistrationError
         ):  # this should never be used anywhere besides ValidCog
-            return await ctx.send(error)
+            return await ctx.warning(error)
 
         elif isinstance(
             error, commands.CommandError

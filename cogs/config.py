@@ -108,7 +108,7 @@ class Config(Cog):
             else:
                 return await ctx.send_help(ctx.command)
 
-        await ctx.send(**code)
+        await ctx.reply(**code)
 
     @command(brief="manage_messages")
     @has_guild_permissions(manage_messages=True)
@@ -116,12 +116,12 @@ class Config(Cog):
         """Create an embed using buttons and return an embed code"""
         embed = Embed(color=self.bot.color, description="Created an embed")
         view = EmbedBuilding(ctx)
-        return await ctx.send(embed=embed, view=view)
+        return await ctx.reply(embed=embed, view=view)
 
     @command()
     async def copyembed(self, ctx: AkariContext, message: ValidMessage):
         """copy the embed code of a certain embed"""
-        await ctx.send(f"```{EmbedBuilder().copy_embed(message)}```")
+        await ctx.reply(f"```{EmbedBuilder().copy_embed(message)}```")
 
     @group(invoke_without_command=True)
     async def usertrack(self, ctx):
@@ -451,7 +451,7 @@ class Config(Cog):
             embed.add_field(name=i.capitalize(), value=check[i])
         embed.add_field(name="Channel", value=f"<#{check['channel_id']}>")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @starboard.command(
         name="disable",
@@ -1103,7 +1103,7 @@ class Config(Cog):
     ):
         """edit a role's color"""
         await role.edit(color=color.value, reason=f"Color changed by {ctx.author}")
-        await ctx.send(
+        await ctx.reply(
             embed=Embed(
                 color=color.value,
                 description=f"{ctx.author.mention}: Changed the role's color to `{color.hex}`",
@@ -1239,7 +1239,7 @@ class Config(Cog):
             return await ctx.warning(f"Command `{command}` does not exist")
 
         if _command.name in ("help", "restrictcommand", "disablecmd", "enablecmd"):
-            return await ctx.send("no lol")
+            return await ctx.reply("no lol")
 
         if not await self.bot.db.fetchrow(
             "SELECT * FROM restrictcommand WHERE guild_id = $1 AND command = $2 AND role_id = $3",
