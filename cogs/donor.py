@@ -184,7 +184,7 @@ class Donor(Cog):
             return await ctx.warning("Reskin is **not** enabled")
 
         await self.bot.db.execute(
-            "DELETE FROM reskin_user WHERE user_id = $1", ctx.user.id
+            "DELETE FROM reskin_user WHERE user_id = $1", ctx.author.id
         )
         return await ctx.success("Reskin is now disabled")
 

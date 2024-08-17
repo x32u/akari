@@ -292,7 +292,7 @@ class Akari(commands.AutoShardedBot):
                                     discord.Embed(color=self.color)
                                     .set_image(url=f"attachment://{file.filename}")
                                     .set_footer(
-                                        text=f"{result.type} module: {category} • id: {file.filename[:-4]} • /report"
+                                        text=f"{result.type} module: {category} • id: {file.filename[:-4]}"
                                     )
                                 )
 

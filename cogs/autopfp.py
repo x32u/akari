@@ -145,54 +145,5 @@ class Autopfp(commands.Cog):
 
         return await ctx.success(f"Stopped sending **{category}** banners")
 
-    @commands.hybrid_command(name="report")
-    async def report(
-        self,
-        ctx: AkariContext,
-        type: Literal["banners", "pfps"],
-        category: Literal[
-            "cute", "mix", "anime", "girl", "egirl", "roadmen", "ceinory"
-        ],
-        image_id: str,
-    ):
-        """
-        Report a picture sent by Akari via autopfp
-        """
-
-        directory = f"/root/AkariImages/{type.capitalize()}/"
-
-        if not category.capitalize() in os.listdir(directory):
-            return await ctx.warning(f"This is not a **{type}** category")
-
-        directory += f"{category.capitalize()}/"
-
-        if not image_id in [i[:-4] for i in os.listdir(directory)]:
-            return await ctx.warning("This is not a valid image id")
-
-        file_path = os.path.join(
-            directory, next(e for e in os.listdir(directory) if image_id == e[:-4])
-        )
-        file = discord.File(file_path)
-        embed = discord.Embed(color=self.bot.color)
-
-        embed.set_image(url=f"attachment://{file.filename}")
-        embed.set_footer(text=f"{type} module: {category} • id: {image_id} • /report")
-
-        channel = self.bot.get_channel(1224395162172784670)
-        try:
-            await channel.send(
-                f"**{ctx.author}** reported a picture in **{ctx.guild}** (`{ctx.guild.id}`)",
-                embed=embed,
-                file=file,
-            )
-        except discord.Forbidden:
-            print(
-                "Avatar reports channel not found/can't be accessed."
-                + f"\n{ctx.author} ({ctx.author.id}) reported the image with ID {image_id} in the {category} category."
-            )
-
-        return await ctx.success(f"Reported picture with ID **{image_id}**")
-
-
 async def setup(bot):
     await bot.add_cog(Autopfp(bot))

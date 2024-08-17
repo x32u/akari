@@ -386,18 +386,34 @@ class AkariContext(Context):
   async def reskin_enabled(self) -> bool:
    return await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2", self.author.id, True)
 
-  async def reply(self, content: Optional[str] = None, *, embed: Optional[discord.Embed] = None, view: Optional[View] = None, mention_author: Optional[bool] = False, file: Optional[discord.File] = discord.utils.MISSING,
-        files: Optional[Sequence[discord.File]] = discord.utils.MISSING) -> discord.Message:
+  async def reply(self, *args, **kwargs) -> WebhookMessage: 
+   check = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1", self.author.id)
    
-   reskin = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2", self.author.id, True)
-   if reskin != None and reskin['toggled']:
-     
-     hook = await self.webhook(self.message.channel)
-     
-     if view == None: return await hook.send(content=content, embed=embed, username=reskin['name'], avatar_url=reskin['avatar'], file=file)
-     
-     return await hook.send(content=content, embed=embed, username=reskin['name'], avatar_url=reskin['avatar'], view=view, file=file)
-   return await self.send(content=content, embed=embed, reference=self.message, view=view, mention_author=mention_author, file=file)
+   if check and self.guild.me.guild_permissions.manage_webhooks and await self.reskin_enabled(): 
+    if isinstance(self.channel, Thread):
+      return await super().send(*args, **kwargs)
+
+    webhooks = [w for w in await self.channel.webhooks() if w.user.id == self.bot.user.id]
+    
+    if len(webhooks) > 0: 
+     webhook = webhooks[0]
+    else: 
+     webhook = await self.channel.create_webhook(name="Akari - reskin")
+    
+    kwargs.update(
+      {
+        'avatar_url': check['avatar'], 
+        'username': check['name'], 
+        'wait': True
+      }
+    )
+    
+    if kwargs.get('delete_after'):
+     kwargs.pop('delete_after')
+    
+    return await webhook.send(*args, **kwargs)  
+   else:
+    return await super().reply(*args, **kwargs)
 
   async def send(self, *args, **kwargs) -> Union[Message, WebhookMessage]: 
    check = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1", self.author.id)
