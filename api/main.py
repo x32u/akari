@@ -866,7 +866,7 @@ async def discord_user_avatar_post(body: DiscordAvatarPost, token = Depends(auth
         }
     
         async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.post("https://images.evict.cc/upload", json=body.dict()) as r: 
+            async with session.post("https://images.akari.bot/upload", json=body.dict()) as r: 
                 return await r.text()
 
 @app.get("/avatars/{user_id}", tags=['Socials'])
@@ -879,13 +879,13 @@ async def discord_user_avatars(request: Request, user_id: int, token = Depends(a
         return user_avatars
 
     async with aiohttp.ClientSession() as cs: 
-        async with cs.get(f"https://evict.cc/avatarhistory/{user_id}") as r: 
+        async with cs.get(f"https://api.akari.bot/avatarhistory/{user_id}") as r: 
             data = await r.text()
             if data == "No avatars found":
                 return data
             
             data = json.loads(data)
-            user_avatars = [f"https://images.evict.cc/images/{av}" for av in data]
+            user_avatars = [f"https://images.akari.bot/images/{av}" for av in data]
             
             await app.cache.set(
                 f"user-avatars-{user_id}", 

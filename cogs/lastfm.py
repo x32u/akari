@@ -179,10 +179,10 @@ class Lastfm(Cog):
 
         params = {"username": username, "size": size, "period": period}
 
-        headers = {"api-key": self.bot.Akari_api}
+        headers = {"api-key": self.bot.akari_api}
 
         x = await self.bot.session.get_json(
-            "https://v1.Akari.bot/lastfm/chart", params=params, headers=headers
+            "https://api.akari.bot/lastfm/chart", params=params, headers=headers
         )
 
         if detail := x.get("detail"):

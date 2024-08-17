@@ -19,8 +19,8 @@ class Snapchat(BaseModel):
 
 class SnapUser(commands.Converter): 
     async def convert(self, ctx: AkariContext, argument: str) -> Snapchat: 
-      async with aiohttp.ClientSession(headers={"api-key": ctx.bot.Akari_api}) as cs: 
-        async with cs.get("https://v1.Akari.bot/snapchat", params={"username": argument}) as r: 
+      async with aiohttp.ClientSession(headers={"api-key": ctx.bot.akari_api}) as cs: 
+        async with cs.get("https://api.akari.bot/snapchat", params={"username": argument}) as r: 
             if r.status != 200: 
              raise commands.BadArgument(f"Couldn't get information about **{argument}** (`{r.status}`)")
             

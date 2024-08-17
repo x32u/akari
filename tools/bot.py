@@ -19,7 +19,7 @@ from copy import copy
 from num2words import num2words
 from humanize import precisedelta
 
-from PretendAPI import API
+from AkariAPI import API
 
 from discord.gateway import DiscordWebSocket
 

@@ -1142,8 +1142,8 @@ class Utility(commands.Cog):
         """
 
         results = await self.bot.session.get_json(
-            "https://v1.Akari.bot/snapstory",
-            headers={"api-key": self.bot.Akari_api},
+            "https://api.akari.bot/snapstory",
+            headers={"api-key": self.bot.akari_api},
             params={"username": username},
         )
 
