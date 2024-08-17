@@ -99,9 +99,7 @@ class Emoji(Cog):
         await ctx.invoke(self.bot.get_command("emojilist"))
 
     @emoji_group.command(name="info")
-    async def emoji_info(
-        self, ctx: AkariContext, *, emoji: Union[Emoji, PartialEmoji]
-    ):
+    async def emoji_info(self, ctx: AkariContext, *, emoji: Union[Emoji, PartialEmoji]):
         """
         Information about an emoji
         """
@@ -125,7 +123,9 @@ class Emoji(Cog):
         """
 
         emojis = [
-            f"{e} `{e.id}` - {e.name}" for e in self.bot.emojis if query in e.name and e.guild.id not in (1138702865033089105,)
+            f"{e} `{e.id}` - {e.name}"
+            for e in self.bot.emojis
+            if query in e.name and e.guild.id not in (1138702865033089105,)
         ]
 
         if not emojis:
@@ -191,9 +191,7 @@ class Emoji(Cog):
                 e.code == 50035
                 and " String value did not match validation regex" in str(e)
             ):
-                return await ctx.warning(
-                    f"Invalid characters are in the emoji name"
-                )
+                return await ctx.warning(f"Invalid characters are in the emoji name")
 
         return await ctx.success(
             f"Created {emoji_created} as [**{name or emoji_created.name}**]({emoji_created.url})"
@@ -294,9 +292,7 @@ class Emoji(Cog):
                 await ctx.reply(emoji)
 
     @command(aliases=["ei"])
-    async def emojiinfo(
-        self, ctx: AkariContext, *, emoji: Union[Emoji, PartialEmoji]
-    ):
+    async def emojiinfo(self, ctx: AkariContext, *, emoji: Union[Emoji, PartialEmoji]):
         """
         Information about an emoji
         """
@@ -407,9 +403,7 @@ class Emoji(Cog):
         """
 
         if len(ctx.guild.stickers) >= ctx.guild.sticker_limit:
-            return await ctx.warning(
-                "This server cannot have new stickers anymore"
-            )
+            return await ctx.warning("This server cannot have new stickers anymore")
 
         sticker = await ctx.get_sticker()
 

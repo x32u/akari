@@ -270,23 +270,35 @@ class Utility(commands.Cog):
         "Get a random TikTok video"
 
         async with ctx.typing():
-            recommended = await self.bot.session.get_json(url="https://www.tiktok.com/api/recommend/item_list/?WebIdLastTime=1709562791&aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F124.0.0.0%20Safari%2F537.36&channel=tiktok_web&clientABVersions=70508271%2C72097972%2C72118536%2C72139452%2C72142433%2C72147654%2C72156694%2C72157773%2C72174908%2C72183344%2C72191581%2C72191933%2C72203590%2C72211002%2C70405643%2C71057832%2C71200802%2C71957976&cookie_enabled=true&count=9&coverFormat=2&device_id=7342516164603889184&device_platform=web_pc&device_type=web_h264&focus_state=true&from_page=fyp&history_len=3&isNonPersonalized=false&is_fullscreen=false&is_page_visible=true&language=en&odinId=7342800074206741537&os=windows&priority_region=&pullType=1&referer=&region=BA&screen_height=1440&screen_width=2560&showAboutThisAd=true&showAds=false&tz_name=Europe%2FLondon&watchLiveLastTime=1713523355360&webcast_language=en&msToken=W3zoVLSFi9M0BsPE6uC63GCdeoVC7hmjRNelZIe-7FP7x-1LRee6WYHYfpWXg3NYPoreJf_dMxfRWTZprVN8UU70_IaHnBMNirtZIRNp2QuR1nBivJgnetgiM-XTh7_KGbNswVs=&X-Bogus=DFSzswVOmtvANegtt2bDG-OckgSu&_signature=_02B4Z6wo00001BozSvQAAIDBhqj5OL8769AaM05AAGCne")
-            recommended = recommended['itemList'][0]
+            recommended = await self.bot.session.get_json(
+                url="https://www.tiktok.com/api/recommend/item_list/?WebIdLastTime=1709562791&aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F124.0.0.0%20Safari%2F537.36&channel=tiktok_web&clientABVersions=70508271%2C72097972%2C72118536%2C72139452%2C72142433%2C72147654%2C72156694%2C72157773%2C72174908%2C72183344%2C72191581%2C72191933%2C72203590%2C72211002%2C70405643%2C71057832%2C71200802%2C71957976&cookie_enabled=true&count=9&coverFormat=2&device_id=7342516164603889184&device_platform=web_pc&device_type=web_h264&focus_state=true&from_page=fyp&history_len=3&isNonPersonalized=false&is_fullscreen=false&is_page_visible=true&language=en&odinId=7342800074206741537&os=windows&priority_region=&pullType=1&referer=&region=BA&screen_height=1440&screen_width=2560&showAboutThisAd=true&showAds=false&tz_name=Europe%2FLondon&watchLiveLastTime=1713523355360&webcast_language=en&msToken=W3zoVLSFi9M0BsPE6uC63GCdeoVC7hmjRNelZIe-7FP7x-1LRee6WYHYfpWXg3NYPoreJf_dMxfRWTZprVN8UU70_IaHnBMNirtZIRNp2QuR1nBivJgnetgiM-XTh7_KGbNswVs=&X-Bogus=DFSzswVOmtvANegtt2bDG-OckgSu&_signature=_02B4Z6wo00001BozSvQAAIDBhqj5OL8769AaM05AAGCne"
+            )
+            recommended = recommended["itemList"][0]
             embed = discord.Embed(color=self.bot.color)
             embed.description = f'[{recommended["desc"]}](https://tiktok.com/@{recommended["author"]["uniqueId"]}/video/{recommended["id"]})'
 
             embed.set_footer(
                 text=f"❤️ {self.bot.session.human_format(recommended['stats']['diggCount'])} 💬 {self.bot.session.human_format(recommended['stats']['commentCount'])} 🔗 {self.bot.session.human_format(recommended['stats']['shareCount'])} ({self.bot.session.human_format(recommended['stats']['playCount'])} views)"
             )
-            
-            final = await self.bot.session.get_json("https://tikwm.com/api/", params={"url": f'https://tiktok.com/@{recommended["author"]["uniqueId"]}/video/{recommended["id"]}'})
+
+            final = await self.bot.session.get_json(
+                "https://tikwm.com/api/",
+                params={
+                    "url": f'https://tiktok.com/@{recommended["author"]["uniqueId"]}/video/{recommended["id"]}'
+                },
+            )
             await ctx.reply(
                 embed=embed,
-                file=discord.File(fp=await self.bot.session.getbyte(url=final['data']['play']), filename='resenttiktok.mp4')
+                file=discord.File(
+                    fp=await self.bot.session.getbyte(url=final["data"]["play"]),
+                    filename="resenttiktok.mp4",
+                ),
             )
-            try: await ctx.message.delete()
-            except: pass
-  
+            try:
+                await ctx.message.delete()
+            except:
+                pass
+
     @commands.command(aliases=["avh"])
     async def avatarhistory(
         self, ctx: AkariContext, *, member: discord.User = commands.Author
@@ -400,7 +412,9 @@ class Utility(commands.Cog):
         """
 
         if member.guild_avatar is None:
-            return await ctx.warning(f"{member.mention} **doesn't** have a guild avatar set.")
+            return await ctx.warning(
+                f"{member.mention} **doesn't** have a guild avatar set."
+            )
 
         embed = discord.Embed(
             color=await self.bot.dominant_color(member.guild_avatar.url),
@@ -462,9 +476,7 @@ class Utility(commands.Cog):
         await self.bot.db.execute(
             "DELETE FROM stickymessage WHERE channel_id = $1", channel.id
         )
-        return await ctx.success(
-            f"Deleted the sticky message from {channel.mention}"
-        )
+        return await ctx.success(f"Deleted the sticky message from {channel.mention}")
 
     @commands.command(aliases=["pastusernanes", "usernames", "oldnames", "pastnames"])
     async def names(self, ctx: AkariContext, *, user: discord.User = commands.Author):
@@ -561,9 +573,7 @@ class Utility(commands.Cog):
         return await ctx.reply(embed=embed)
 
     @commands.hybrid_command(aliases=["ri"])
-    async def roleinfo(
-        self, ctx: AkariContext, *, role: Optional[discord.Role] = None
-    ):
+    async def roleinfo(self, ctx: AkariContext, *, role: Optional[discord.Role] = None):
         """
         Information about a role
         """
@@ -1355,7 +1365,9 @@ class Utility(commands.Cog):
 
         try:
             translator = GoogleTranslator(source="auto", target=language)
-            translated = await self.bot.loop.run_in_executor(self.bot.executor, translator.translate, message)
+            translated = await self.bot.loop.run_in_executor(
+                self.bot.executor, translator.translate, message
+            )
             embed = discord.Embed(
                 color=self.bot.color,
                 title=f"translated to {language}",
@@ -1680,9 +1692,7 @@ class Utility(commands.Cog):
                 return await ctx.error("Role not found")
 
         if len(role.members) > 200:
-            return await ctx.warning(
-                "Cannot view roles with more than **200** members"
-            )
+            return await ctx.warning("Cannot view roles with more than **200** members")
 
         return await ctx.paginate(
             [f"{m} (`{m.id}`)" for m in role.members],
@@ -1735,9 +1745,7 @@ class Utility(commands.Cog):
         await ctx.reply(user.url, file=discord.File(user.qr, filename="cashapp_qr.png"))
 
     @commands.group(aliases=["tz"], invoke_without_command=True)
-    async def timezone(
-        self, ctx: AkariContext, *, member: TimezoneMember = None
-    ):
+    async def timezone(self, ctx: AkariContext, *, member: TimezoneMember = None):
         """
         Get the member's current date
         """
@@ -1799,9 +1807,7 @@ class Utility(commands.Cog):
         )
 
     @commands.group(aliases=["bday"], invoke_without_command=True)
-    async def birthday(
-        self, ctx: AkariContext, *, member: Optional[BdayMember] = None
-    ):
+    async def birthday(self, ctx: AkariContext, *, member: Optional[BdayMember] = None):
         """
         Get the birthday of an user
         """
@@ -2264,21 +2270,24 @@ class Utility(commands.Cog):
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         if not re.findall(regex, url):
             return await ctx.error("The image provided is not an url")
-        
+
         try:
             async with ctx.channel.typing(), asyncio.timeout(15):
                 return await ctx.reply(
                     file=discord.File(
-                        BytesIO(await self.bot.loop.run_in_executor(self.bot.executor, rembg.bg.remove, await self.bot.session.get_bytes(url))),
-                        "transparent.png"
+                        BytesIO(
+                            await self.bot.loop.run_in_executor(
+                                self.bot.executor,
+                                rembg.bg.remove,
+                                await self.bot.session.get_bytes(url),
+                            )
+                        ),
+                        "transparent.png",
                     )
                 )
-                
-        except Exception: 
-            return await ctx.warning(
-                f"Couldn't make the image **transparent**"
-            )
-                
+
+        except Exception:
+            return await ctx.warning(f"Couldn't make the image **transparent**")
 
     @commands.command(name="image", aliases=["img", "im"])
     @commands.cooldown(1, 1, commands.BucketType.member)
@@ -2314,6 +2323,7 @@ class Utility(commands.Cog):
         ]
 
         await ctx.paginator(entries)
-        
+
+
 async def setup(bot: Akari) -> None:
     return await bot.add_cog(Utility(bot))

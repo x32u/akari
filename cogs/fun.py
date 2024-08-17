@@ -24,7 +24,7 @@ from discord.ext.commands import (
     hybrid_command,
     hybrid_group,
     Author,
-    command
+    command,
 )
 
 from typing import List
@@ -1096,9 +1096,7 @@ class Fun(Cog):
                 self.bot.session.get_json("https://icanhazdadjoke.com/slack"), timeout=2
             )
         except asyncio.TimeoutError:
-            return await ctx.warning(
-                "Womp Womp! Couldn't get a dad joke at this time."
-            )
+            return await ctx.warning("Womp Womp! Couldn't get a dad joke at this time.")
         return await ctx.akari_send(f"{joke['attachments'][0]['text']}")
 
     @command(name="meme")
@@ -1148,7 +1146,7 @@ class Fun(Cog):
         """
         m = 15
         mn = 1
-        if member.id in (461914901624127489, 1174502631696252962, 732610694842810449):
+        if member.id in (461914901624127489, 598125772754124823, 863914425445908490):
             m = 100
             mn = 20
         embed = Embed(

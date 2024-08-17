@@ -8,7 +8,8 @@ from discord.ui import View, Button
 
 from platform import python_version
 
-REPO_PATH = '/root/AkariBot/.git'
+REPO_PATH = "/root/AkariBot/.git"
+
 
 class Info(Cog):
     def __init__(self, bot: Akari):
@@ -91,17 +92,16 @@ class Info(Cog):
         """
         Displays information about the bot
         """
-        
+
         repo = git.Repo(REPO_PATH)
         commit = repo.head.commit
         commit_hash = commit.hexsha[:7]
 
         embed = (
-            
             Embed(
                 color=self.bot.color,
                 description=f"Premium multi-purpose Discord bot made by [**The Akari Team**](https://discord.gg/akaribot)\nUsed by **{sum(g.member_count for g in self.bot.guilds):,}** members in **{len(self.bot.guilds):,}** servers\nDevelopers: [Nick](https://discord.com/users/863914425445908490) **&** [Sin](https://discord.com/users/598125772754124823)",
-                timestamp=datetime.datetime.now()
+                timestamp=datetime.datetime.now(),
             )
             .set_author(
                 name=self.bot.user.name, icon_url=self.bot.user.display_avatar.url
@@ -111,8 +111,9 @@ class Info(Cog):
                 value=f"**commands:** {len(set(self.bot.walk_commands()))}\n**discord.py:** {__version__}\n**Python:** {python_version()}\n**Lines:** {self.bot.lines:,}\n**Uptime:** {self.bot.uptime}",
             )
             .set_footer(text=f"Latest Commit: {commit_hash}")
-            .set_thumbnail(url=self.bot.user.avatar.url))
-        
+            .set_thumbnail(url=self.bot.user.avatar.url)
+        )
+
         await ctx.reply(embed=embed)
 
     @hybrid_command()
@@ -152,9 +153,11 @@ class Info(Cog):
 
         embed = Embed(
             description=f"[**Nick**](<https://discord.com/users/863914425445908490>): Developer\n[**Sin**](<https://discord.com/users/598125772754124823>): Developer\n[**Lina**](https://discord.com/users/1082206057213988864): Akari name idea",
-            color=self.bot.color).set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+            color=self.bot.color,
+        ).set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
 
         await ctx.reply(embed=embed)
+
 
 async def setup(bot: Akari) -> None:
     return await bot.add_cog(Info(bot))

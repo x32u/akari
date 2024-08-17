@@ -149,7 +149,7 @@ class Owner(Cog):
             [f"{g.name} - {g.member_count:,} members" for g in servers],
             "Akari's servers",
         )
-    
+
     @group(invoke_without_command=True)
     @is_owner()
     async def donor(self, ctx):
@@ -242,9 +242,7 @@ class Owner(Cog):
         )
         if result:
             if result.get("disabled"):
-                return await ctx.warning(
-                    "This command is already globally disabled."
-                )
+                return await ctx.warning("This command is already globally disabled.")
         await self.bot.db.execute(
             "INSERT INTO global_disabled_cmds (cmd, disabled, disabled_by) VALUES ($1, $2, $3) "
             "ON CONFLICT (cmd) DO UPDATE SET disabled = EXCLUDED.disabled, disabled_by = EXCLUDED.disabled_by;",
@@ -274,21 +272,32 @@ class Owner(Cog):
             f"Globally Disabled Commands:",
             {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
         )
-    
+
     @command()
     @is_owner()
     async def apikey(self, ctx: AkariContext, user: discord.User, key: str, role: str):
-        
+
         url = "https://api.akari.bot"
-        
-        check = await self.bot.db.fetchrow("SELECT * FROM api_key WHERE user_id = {}".format(user.id))
-        
-        if check is not None: return await ctx.warning(f"The user **{user.name}** already has a **valid** API key.")
-        
-        embed=discord.Embed(description=f"Your API key for {url} is listed above.", color=self.bot.color)
-        
-        await self.bot.db.execute("INSERT INTO api_key VALUES ($1,$2,$3)", key, user.id, role)
-        await ctx.success(f"I have **successfully** added the API key **{key}** to {user.mention}.")
+
+        check = await self.bot.db.fetchrow(
+            "SELECT * FROM api_key WHERE user_id = {}".format(user.id)
+        )
+
+        if check is not None:
+            return await ctx.warning(
+                f"The user **{user.name}** already has a **valid** API key."
+            )
+
+        embed = discord.Embed(
+            description=f"Your API key for {url} is listed above.", color=self.bot.color
+        )
+
+        await self.bot.db.execute(
+            "INSERT INTO api_key VALUES ($1,$2,$3)", key, user.id, role
+        )
+        await ctx.success(
+            f"I have **successfully** added the API key **{key}** to {user.mention}."
+        )
         await user.send(f"{key}", embed=embed)
 
     @command(aliases=["trace"])
@@ -296,7 +305,11 @@ class Owner(Cog):
         """
         View information about an error code
         """
-        if not ctx.author.id in self.bot.owner_ids and not ctx.author.id in (0, 732610694842810449, 1169601140804042842):
+        if not ctx.author.id in self.bot.owner_ids and not ctx.author.id in (
+            0,
+            732610694842810449,
+            1169601140804042842,
+        ):
             return await ctx.warning("You are not authorized to use this command.")
         fl = await self.bot.db.fetch("SELECT * FROM error_codes;")
         error_details = [x for x in fl if x.get("code") == code]
@@ -403,14 +416,10 @@ class Owner(Cog):
             guild = self.bot.get_guild(server_id)
             if guild:
                 await guild.leave()
-            return await ctx.success(
-                f"Blacklisted server {server_id} from Akari"
-            )
+            return await ctx.success(f"Blacklisted server {server_id} from Akari")
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", server_id)
-            return await ctx.success(
-                f"Unblacklisted server {server_id} from Akari"
-            )
+            return await ctx.success(f"Unblacklisted server {server_id} from Akari")
 
     @command(name="reload", aliases=["rl"])
     @is_owner()
@@ -429,9 +438,7 @@ class Owner(Cog):
                 try:
                     await self.bot.reload_extension(module)
                 except Exception as e:
-                    return await ctx.warning(
-                        f"Couldn't reload **{module}**\n```{e}```"
-                    )
+                    return await ctx.warning(f"Couldn't reload **{module}**\n```{e}```")
                 reloaded.append(module)
 
                 return await ctx.success(f"Reloaded **{len(reloaded)}** modules")
@@ -441,17 +448,13 @@ class Owner(Cog):
                 try:
                     await self.bot.reload_extension(module)
                 except Exception as e:
-                    return await ctx.warning(
-                        f"Couldn't reload **{module}**\n```{e}```"
-                    )
+                    return await ctx.warning(f"Couldn't reload **{module}**\n```{e}```")
             else:
                 try:
                     _module = importlib.import_module(module)
                     importlib.reload(_module)
                 except Exception as e:
-                    return await ctx.warning(
-                        f"Couldn't reload **{module}**\n```{e}```"
-                    )
+                    return await ctx.warning(f"Couldn't reload **{module}**\n```{e}```")
             reloaded.append(module)
 
         await ctx.success(

@@ -272,5 +272,6 @@ class Music(Cog):
             player.current_track = track
             await player.do_next(track)
 
+
 async def setup(bot) -> None:
     await bot.add_cog(Music(bot))

@@ -26,7 +26,7 @@ from discord.ext.commands import (
     command,
     group,
     CurrentChannel,
-    bot_has_guild_permissions
+    bot_has_guild_permissions,
 )
 from discord.abc import GuildChannel
 
@@ -600,9 +600,7 @@ class Moderation(Cog):
     @hybrid_command(brief="manage channels")
     @has_guild_permissions(manage_channels=True)
     @bot_has_guild_permissions(manage_channels=True)
-    async def unlock(
-        self, ctx: AkariContext, *, channel: TextChannel = CurrentChannel
-    ):
+    async def unlock(self, ctx: AkariContext, *, channel: TextChannel = CurrentChannel):
         """
         unlock a channel
         """
@@ -1167,9 +1165,7 @@ class Moderation(Cog):
             return await ctx.invoke(self.thread_rename(ctx, channel, name))
 
         if len(name) > 150:
-            return await ctx.error(
-                f"Channel names can't be over **150 characters**"
-            )
+            return await ctx.error(f"Channel names can't be over **150 characters**")
 
         name = name.replace(" ", "-")
 
@@ -1193,9 +1189,7 @@ class Moderation(Cog):
         try:
             await channel.edit(category=category)
         except Forbidden:
-            return await ctx.warning(
-                f"Couldn't change {channel.mention}'s category"
-            )
+            return await ctx.warning(f"Couldn't change {channel.mention}'s category")
 
         await ctx.success(f"Moved {channel.mention} under {category.mention}")
 
@@ -1210,9 +1204,7 @@ class Moderation(Cog):
         try:
             await channel.edit(nsfw=not channel.nsfw)
         except Forbidden:
-            return await ctx.warning(
-                f"Couldn't mark/unmark {channel.mention} as NSFW"
-            )
+            return await ctx.warning(f"Couldn't mark/unmark {channel.mention} as NSFW")
 
         await ctx.message.add_reaction("✅")
 
@@ -1307,9 +1299,7 @@ class Moderation(Cog):
 
     @category.command(name="duplicate", aliases=["clone", "remake"])
     @has_guild_permissions(manage_channels=True)
-    async def category_duplicate(
-        self, ctx: AkariContext, *, category: CategoryChannel
-    ):
+    async def category_duplicate(self, ctx: AkariContext, *, category: CategoryChannel):
         """
         Clone an already existing category in your server
         """
@@ -1439,9 +1429,7 @@ class Moderation(Cog):
             return await ctx.warning(f"{thread.mention} is not a thread")
 
         if len(name) > 100:
-            return await ctx.warning(
-                f"Thread names can't be over **100 characters**"
-            )
+            return await ctx.warning(f"Thread names can't be over **100 characters**")
 
         await thread.edit(name=name, reason=f"Edited by {ctx.author} ({ctx.author.id})")
         await ctx.message.add_reaction("✅")
@@ -1459,9 +1447,7 @@ class Moderation(Cog):
         message: Message = message or ctx.message
 
         if len(name) > 100:
-            return await ctx.warning(
-                f"Thread names can't be over **100 characters**"
-            )
+            return await ctx.warning(f"Thread names can't be over **100 characters**")
 
         thread = await message.create_thread(
             name=name, reason=f"Opened by {ctx.author} ({ctx.author.id})"
@@ -1520,9 +1506,7 @@ class Moderation(Cog):
         member: Member = member
 
         if ctx.channel.overwrites_for(member).add_reactions is False:
-            return await ctx.warning(
-                f"{member.mention} is **already** reaction muted"
-            )
+            return await ctx.warning(f"{member.mention} is **already** reaction muted")
 
         overwrites = ctx.channel.overwrites_for(member)
         overwrites.add_reactions = False
@@ -1679,9 +1663,7 @@ class Moderation(Cog):
         """
 
         if not state.lower() in ("on", "off"):
-            return await ctx.warning(
-                f"Invalid state- please provide **on** or **off**"
-            )
+            return await ctx.warning(f"Invalid state- please provide **on** or **off**")
 
         if state.lower().strip() == "on":
             overwrite = ctx.channel.overwrites_for(member)
@@ -1717,9 +1699,7 @@ class Moderation(Cog):
             member.id,
         )
         if not data:
-            return await ctx.warning(
-                f"There are no **notes** for {member.mention}"
-            )
+            return await ctx.warning(f"There are no **notes** for {member.mention}")
 
         embeds = list()
         for note in data:
@@ -1784,9 +1764,7 @@ class Moderation(Cog):
                 member.id,
             )
             if not _note:
-                return await ctx.warning(
-                    f"Note ID `{note}` not found for **{member}**"
-                )
+                return await ctx.warning(f"Note ID `{note}` not found for **{member}**")
 
             query = [
                 "DELETE FROM notes WHERE guild_id = $1 AND user_id = $2 AND id = $3",

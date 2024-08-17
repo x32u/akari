@@ -394,5 +394,6 @@ class Messages(Cog):
                 if not message.attachments:
                     await message.delete()
 
+
 async def setup(bot) -> None:
     return await bot.add_cog(Messages(bot))

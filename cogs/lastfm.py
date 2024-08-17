@@ -645,7 +645,9 @@ class Lastfm(Cog):
             ),
             filename="cover.png",
         )
-        return await ctx.reply(f"**{a['recenttracks']['track'][0]['name']}**", file=file)
+        return await ctx.reply(
+            f"**{a['recenttracks']['track'][0]['name']}**", file=file
+        )
 
     @lastfm.command(name="recent")
     async def lf_recent(self, ctx: AkariContext, *, member: Member = Author):

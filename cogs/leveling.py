@@ -372,9 +372,7 @@ class Leveling(Cog):
             message,
             ctx.guild.id,
         )
-        return await ctx.success(
-            f"Level up message configured to:\n```{message}```"
-        )
+        return await ctx.success(f"Level up message configured to:\n```{message}```")
 
     @level_cmd.group(
         name="multiplier", brief="manage server", invoke_without_command=True
@@ -504,9 +502,7 @@ class Leveling(Cog):
                 int((100 * level + 1) ** 0.9),
             )
 
-        await ctx.success(
-            f"Set the level for {member.mention} to **Level {level}**"
-        )
+        await ctx.success(f"Set the level for {member.mention} to **Level {level}**")
 
     @level_cmd.command(name="reset", brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -616,9 +612,7 @@ class Leveling(Cog):
 
     @level_rewards.command(name="remove", brief="manage server")
     @has_guild_permissions(manage_guild=True)
-    async def level_rewards_remove(
-        self, ctx: AkariContext, *, role: NewRoleConverter
-    ):
+    async def level_rewards_remove(self, ctx: AkariContext, *, role: NewRoleConverter):
         """remove a reward from a level"""
 
         if check := await self.bot.db.fetchrow(

@@ -1,4 +1,4 @@
-# <-- Made by Cop --> 
+# <-- Made by Cop -->
 
 import asyncio, contextlib, time
 from datetime import timedelta

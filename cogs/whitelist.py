@@ -97,9 +97,7 @@ class Whitelist(Cog):
                 "default",
                 ctx.guild.id,
             )
-            return await ctx.success(
-                f"Set your **whitelist** message to the default"
-            )
+            return await ctx.success(f"Set your **whitelist** message to the default")
         else:
             await self.bot.db.execute(
                 """

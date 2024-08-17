@@ -142,9 +142,7 @@ class Boosterrole(Cog):
             ctx.guild.id,
             role.id,
         ):
-            return await ctx.warning(
-                "This role is **already** a booster role award"
-            )
+            return await ctx.warning("This role is **already** a booster role award")
 
         await self.bot.db.execute(
             "INSERT INTO br_award VALUES ($1,$2)", ctx.guild.id, role.id
@@ -170,9 +168,7 @@ class Boosterrole(Cog):
             ctx.guild.id,
             role.id,
         )
-        return await ctx.success(
-            f"Removed {role.mention} from the booster role awards"
-        )
+        return await ctx.success(f"Removed {role.mention} from the booster role awards")
 
     @br_award.command(name="list")
     async def br_award_list(self, ctx: AkariContext):
@@ -204,9 +200,7 @@ class Boosterrole(Cog):
         )
         if role is None:
             if check is None:
-                return await ctx.warning(
-                    "Booster role module **base role** isn't set"
-                )
+                return await ctx.warning("Booster role module **base role** isn't set")
 
             await self.bot.db.execute(
                 "UPDATE booster_module SET base = $1 WHERE guild_id = $2",

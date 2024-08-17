@@ -8,6 +8,8 @@ from tools.helpers import AkariContext
 from tools.validators import ValidReskinName
 from tools.predicates import has_perks, create_reskin
 
+from AkariAPI import API
+
 from discord import User, utils, Embed, Member, AllowedMentions, Interaction
 from discord.ext import commands
 from discord.ext.commands import (
@@ -25,10 +27,9 @@ class Donor(Cog):
     def __init__(self, bot: Akari):
         self.bot = bot
         self.description = "Premium commands"
-        
+
         genai.configure(api_key="AIzaSyCDSm6b1aI84TJtzWKzdb6oVozeWe3etD8")
         self.model = genai.GenerativeModel("gemini-pro")
-
 
     def shorten(self, value: str, length: int = 32):
         if len(value) > length:
@@ -149,33 +150,49 @@ class Donor(Cog):
                     member.id,
                     nickname,
                 )
-            await ctx.success(
-                f"Force nicknamed {member.mention} to **{nickname}**"
-            )
+            await ctx.success(f"Force nicknamed {member.mention} to **{nickname}**")
 
     @group(invoke_without_command=True)
     async def reskin(self, ctx: AkariContext):
         await ctx.create_pages()
 
     @reskin.command(name="enable", brief="donor")
+    @has_perks()
     async def reskin_enable(self, ctx: AkariContext):
         """Enable reskin"""
-    
-        reskin = await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2", ctx.author.id, False)
-    
-        if reskin == None or reskin['toggled'] == False:   
-      
-            if not await self.bot.db.fetchrow("SELECT * FROM reskin_user WHERE user_id = $1", ctx.author.id):
-                await self.bot.db.execute("INSERT INTO reskin_user (user_id, toggled, name, avatar) VALUES ($1, $2, $3, $4)", ctx.author.id, True, ctx.author.name, ctx.author.avatar.url)
-      
-            else:   
-                await self.bot.db.execute("UPDATE reskin_user SET toggled = $1 WHERE user_id = $2", True, ctx.author.id)
-      
+
+        reskin = await self.bot.db.fetchrow(
+            "SELECT * FROM reskin_user WHERE user_id = $1 AND toggled = $2",
+            ctx.author.id,
+            False,
+        )
+
+        if reskin == None or reskin["toggled"] == False:
+
+            if not await self.bot.db.fetchrow(
+                "SELECT * FROM reskin_user WHERE user_id = $1", ctx.author.id
+            ):
+                await self.bot.db.execute(
+                    "INSERT INTO reskin_user (user_id, toggled, name, avatar) VALUES ($1, $2, $3, $4)",
+                    ctx.author.id,
+                    True,
+                    ctx.author.name,
+                    ctx.author.avatar.url,
+                )
+
+            else:
+                await self.bot.db.execute(
+                    "UPDATE reskin_user SET toggled = $1 WHERE user_id = $2",
+                    True,
+                    ctx.author.id,
+                )
+
             return await ctx.success("**Reskin** has been **enabled**.")
-      
+
         return await ctx.warning("**Reskin** is already **enabled**.")
 
     @reskin.command(name="disable", brief="donor")
+    @has_perks()
     async def reskin_disable(self, ctx: AkariContext):
         """Disable the reskin feature for yourself"""
         if not await self.bot.db.fetchrow(
@@ -259,8 +276,11 @@ class Donor(Cog):
         """
 
         async with ctx.channel.typing():
-            response = await self.bot.loop.run_in_executor(self.bot.executor, self.model.generate_content, query)
+            response = await self.bot.loop.run_in_executor(
+                self.bot.executor, self.model.generate_content, query
+            )
             await ctx.reply(response.text, allowed_mentions=AllowedMentions.none())
+
 
 async def setup(bot: Akari) -> None:
     await bot.add_cog(Donor(bot))

@@ -47,7 +47,7 @@ from .misc.tasks import (
     gw_loop,
     reminder_task,
     counter_update,
-    shard_stats
+    shard_stats,
 )
 
 from .handlers.embedbuilder import EmbedScript
@@ -107,10 +107,7 @@ class Akari(commands.AutoShardedBot):
             command_prefix=getprefix,
             intents=intents,
             help_command=AkariHelp(),
-            owner_ids=[
-                863914425445908490,  # nick
-                598125772754124823   # sin
-            ],
+            owner_ids=[863914425445908490, 598125772754124823],  # nick  # sin
             case_insensitive=True,
             shard_count=1,
             chunk_guilds_at_startup=False,
@@ -235,10 +232,9 @@ class Akari(commands.AutoShardedBot):
         img.thumbnail((100, 100))
 
         colors = await self.loop.run_in_executor(
-            self.executor,
-            colorgram.extract, img, 1
+            self.executor, colorgram.extract, img, 1
         )
-        
+
         return discord.Color.from_rgb(*list(colors[0].rgb)).value
 
     async def getbyte(self, url: str) -> BytesIO:
@@ -412,36 +408,42 @@ class Akari(commands.AutoShardedBot):
 
         if type(error) in ignored:
             return
-        
+
         if isinstance(error, commands.MemberNotFound):
             return await ctx.warning(f"Member not found")
-        
+
         elif isinstance(error, commands.UserNotFound):
             return await ctx.warning(f"User not found")
-        
-        elif isinstance(error, commands.ThreadNotFound): 
-            return await ctx.warning(f"I was unable to find the thread **{error.argument}**")
-        
-        elif isinstance(error, commands.EmojiNotFound): 
-            return await ctx.warning(f"Unable to convert {error.argument} into an **emoji**")
-        
+
+        elif isinstance(error, commands.ThreadNotFound):
+            return await ctx.warning(
+                f"I was unable to find the thread **{error.argument}**"
+            )
+
+        elif isinstance(error, commands.EmojiNotFound):
+            return await ctx.warning(
+                f"Unable to convert {error.argument} into an **emoji**"
+            )
+
         elif isinstance(error, commands.RoleNotFound):
             return await ctx.warning(f"Role not found")
-        
+
         elif isinstance(error, commands.ChannelNotFound):
             return await ctx.warning(f"Channel not found")
-        
+
         elif isinstance(error, commands.GuildNotFound):
             return await ctx.warning(f"Guild not found")
-        
-        elif isinstance(error, commands.UserConverter): 
+
+        elif isinstance(error, commands.UserConverter):
             return await ctx.warning(f"Couldn't convert that into an **user** ")
-        
-        elif isinstance(error, commands.MemberConverter): 
+
+        elif isinstance(error, commands.MemberConverter):
             return await ctx.warning("Couldn't convert that into a **member**")
-        
-        elif isinstance(error, commands.BotMissingPermissions): 
-            return await ctx.warning(f"I do not have enough **permissions** to execute this command")
+
+        elif isinstance(error, commands.BotMissingPermissions):
+            return await ctx.warning(
+                f"I do not have enough **permissions** to execute this command"
+            )
 
         elif isinstance(error, commands.MissingPermissions):
             return await ctx.warning(
@@ -481,18 +483,16 @@ class Akari(commands.AutoShardedBot):
                 return await self.process_commands(message)
             else:
                 return
-            
-        elif isinstance(error, commands.BadInviteArgument): 
+
+        elif isinstance(error, commands.BadInviteArgument):
             return await ctx.warning(f"Invalid **invite code** given")
-        
-        elif isinstance(error, discord.NotFound): 
+
+        elif isinstance(error, discord.NotFound):
             return await ctx.warning(f"**Not found** - the **ID** is invalid")
 
         elif isinstance(error, discord.HTTPException):
             if error.code == 50035:
-                return await ctx.warning(
-                    f"Failed to send **embed**\n```{error}```"
-                )
+                return await ctx.warning(f"Failed to send **embed**\n```{error}```")
         elif isinstance(error, aiohttp.ClientConnectionError):
             return await ctx.error(f"Failed to connect to the **API**")
         elif isinstance(error, aiohttp.ClientResponseError):

@@ -44,9 +44,7 @@ class Events(Cog):
     @welcome.command(name="add", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
     @query_limit("welcome")
-    async def welcome_add(
-        self, ctx: AkariContext, channel: TextChannel, *, code: str
-    ):
+    async def welcome_add(self, ctx: AkariContext, channel: TextChannel, *, code: str):
         """add a welcome message to the server"""
         check = await self.bot.db.fetchrow(
             "SELECT * FROM welcome WHERE channel_id = $1", channel.id
@@ -85,9 +83,7 @@ class Events(Cog):
         await self.bot.db.execute(
             "DELETE FROM welcome WHERE channel_id = $1", channel.id
         )
-        return await ctx.success(
-            f"Deleted the welcome message from {channel.mention}"
-        )
+        return await ctx.success(f"Deleted the welcome message from {channel.mention}")
 
     @welcome.command(name="config", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -134,9 +130,7 @@ class Events(Cog):
         )
 
         if len(check) == 0:
-            return await ctx.error(
-                "You have **no** welcome messages in this server"
-            )
+            return await ctx.error("You have **no** welcome messages in this server")
 
         async def yes_callback(interaction: Interaction):
             await interaction.client.db.execute(
@@ -211,9 +205,7 @@ class Events(Cog):
             )
 
         await self.bot.db.execute("DELETE FROM leave WHERE channel_id = $1", channel.id)
-        return await ctx.success(
-            f"Deleted the leave message from {channel.mention}"
-        )
+        return await ctx.success(f"Deleted the leave message from {channel.mention}")
 
     @leave.command(name="config", brief="manage guild")
     @has_guild_permissions(manage_guild=True)
@@ -337,9 +329,7 @@ class Events(Cog):
             )
 
         await self.bot.db.execute("DELETE FROM boost WHERE channel_id = $1", channel.id)
-        return await ctx.success(
-            f"Deleted the boost message from {channel.mention}"
-        )
+        return await ctx.success(f"Deleted the boost message from {channel.mention}")
 
     @boost.command(name="config", brief="manage guild")
     @has_guild_permissions(manage_guild=True)

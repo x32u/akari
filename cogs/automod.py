@@ -182,7 +182,9 @@ class Automod(Cog):
                         if not await self.whitelisted_antispam(message):
                             messages = self.antispam_threshold(message)
                             if len(messages) > check["rate"]:
-                                async with self.locks[message.guild.id+message.author.id]:
+                                async with self.locks[
+                                    message.guild.id + message.author.id
+                                ]:
                                     res = self.bot.cache.get(
                                         f"antispam-{message.author.id}"
                                     )
@@ -196,7 +198,8 @@ class Automod(Cog):
                                         await asyncio.gather(
                                             message.channel.delete_messages(messages),
                                             message.author.timeout(
-                                                timeout, reason="Flagged by the antispam"
+                                                timeout,
+                                                reason="Flagged by the antispam",
                                             ),
                                             message.channel.send(
                                                 embed=Embed(
@@ -204,7 +207,7 @@ class Automod(Cog):
                                                     description=f"> {self.bot.warning} {message.author.mention} has been muted for **{humanfriendly.format_timespan(check['timeout'])}** - ***spamming messages***",
                                                 ),
                                                 delete_after=5,
-                                            )
+                                            ),
                                         )
                                         await self.bot.cache.set(
                                             f"antispam-{message.author.id}",
@@ -434,9 +437,7 @@ class Automod(Cog):
             check = json.loads(check)
 
             if not member.id in check:
-                return await ctx.warning(
-                    "This user is **not** anti spam whitelisted"
-                )
+                return await ctx.warning("This user is **not** anti spam whitelisted")
 
             check.remove(member.id)
         else:
@@ -466,9 +467,7 @@ class Automod(Cog):
 
             check.remove(channel.id)
         else:
-            return await ctx.warning(
-                "This channel is **not** anti spam whitelisted"
-            )
+            return await ctx.warning("This channel is **not** anti spam whitelisted")
 
         await self.bot.db.execute(
             "UPDATE antispam SET channels = $1 WHERE guild_id = $2",
@@ -596,9 +595,7 @@ class Automod(Cog):
                     await mod.edit(
                         enabled=True, reason=f"invites filter enabled by {ctx.author}"
                     )
-                    return await ctx.success(
-                        f"Enabled the filter for discord invites"
-                    )
+                    return await ctx.success(f"Enabled the filter for discord invites")
                 return await ctx.warning(
                     "The filter for discord invites is **already** enabled"
                 )
@@ -922,9 +919,7 @@ class Automod(Cog):
         await mod.edit(
             exempt_channels=channels, reason=f"Word filter rule edited by {ctx.author}"
         )
-        await ctx.success(
-            f"{channel.mention} is now **exempted** from the word filter"
-        )
+        await ctx.success(f"{channel.mention} is now **exempted** from the word filter")
 
     @chat_filter_words.command(
         name="unwhitelist", brief="manage server", aliases=["uwl"]

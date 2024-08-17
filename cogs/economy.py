@@ -87,9 +87,7 @@ class Economy(Cog):
                 return await ctx.error("You do not have enough money to dice")
 
             if amount < 20:
-                return await ctx.error(
-                    f"You cannot bet less than **20** {self.card}"
-                )
+                return await ctx.error(f"You cannot bet less than **20** {self.card}")
 
             user_dice = random.randint(1, 6) + random.randint(1, 6)
             bot_dice = random.randint(1, 6) + random.randint(1, 6)
@@ -256,17 +254,13 @@ class Economy(Cog):
             )
 
             if amount < 20:
-                return await ctx.error(
-                    f"You cannot bet less than **20** {self.cash}"
-                )
+                return await ctx.error(f"You cannot bet less than **20** {self.cash}")
 
             if cash < amount:
                 return await ctx.error("Not enough money to gamble")
 
             if not bet.lower() in ["heads", "tails"]:
-                return await ctx.warning(
-                    "You can only bet on **heads** or **tails**"
-                )
+                return await ctx.warning("You can only bet on **heads** or **tails**")
 
             embed = discord.Embed(
                 color=self.bot.color,
@@ -411,9 +405,7 @@ class Economy(Cog):
         )
 
         if not check:
-            return await ctx.error(
-                f"Member doesn't have any **credits** {self.cash}"
-            )
+            return await ctx.error(f"Member doesn't have any **credits** {self.cash}")
 
         daily = "Available"
         if check["daily"]:

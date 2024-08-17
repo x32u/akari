@@ -165,9 +165,7 @@ class Auth(commands.Cog):
 
     @auth.command(name="update")
     @auth_perms()
-    async def auth_update(
-        self, ctx: AkariContext, invite: Union[discord.Invite, int]
-    ):
+    async def auth_update(self, ctx: AkariContext, invite: Union[discord.Invite, int]):
         """
         Update the monthly authorization for a server
         """
@@ -200,9 +198,7 @@ class Auth(commands.Cog):
 
     @auth.command(name="inspect")
     @auth_perms()
-    async def auth_inspect(
-        self, ctx: AkariContext, invite: Union[discord.Invite, int]
-    ):
+    async def auth_inspect(self, ctx: AkariContext, invite: Union[discord.Invite, int]):
         """
         check a guild authorization status
         """
@@ -252,9 +248,7 @@ class Auth(commands.Cog):
                 or list(map(lambda invite: invite.url, await guild.invites))[0]
             )
         except IndexError:
-            return await ctx.warning(
-                "This server doesn't have any available invites"
-            )
+            return await ctx.warning("This server doesn't have any available invites")
 
         embed = discord.Embed(
             color=self.bot.color,
@@ -369,9 +363,7 @@ class Auth(commands.Cog):
         )
 
         if not results:
-            return await ctx.warning(
-                "There are no guilds authorized for this member"
-            )
+            return await ctx.warning("There are no guilds authorized for this member")
 
         await ctx.paginate(
             [

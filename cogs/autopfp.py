@@ -28,9 +28,7 @@ class Autopfp(commands.Cog):
         self,
         ctx: AkariContext,
         channel: discord.TextChannel,
-        category: Literal[
-            "random", "roadmen", "girl", "egirl", "anime", "ceinory"
-        ] = "random",
+        category: Literal["random", "roadmen", "girl", "egirl", "anime"] = "random",
     ):
         """
         Add an autopfp channel
@@ -52,18 +50,14 @@ class Autopfp(commands.Cog):
             self.bot.pfps_send = True
             asyncio.ensure_future(self.bot.autoposting("pfps"))
 
-        return await ctx.success(
-            f"Sending **{category}** pfps to {channel.mention}"
-        )
+        return await ctx.success(f"Sending **{category}** pfps to {channel.mention}")
 
     @autopfp.command(name="remove", brief="manage server")
     @commands.has_guild_permissions(manage_guild=True)
     async def autopfp_remove(
         self,
         ctx: AkariContext,
-        category: Literal[
-            "random", "roadmen", "girl", "egirl", "anime", "ceinory"
-        ] = "random",
+        category: Literal["random", "roadmen", "girl", "egirl", "anime"] = "random",
     ):
         """
         Remove an autopfp channel
@@ -118,9 +112,7 @@ class Autopfp(commands.Cog):
             self.bot.banners_send = True
             asyncio.ensure_future(self.bot.autoposting("banners"))
 
-        return await ctx.success(
-            f"Sending **{category}** banners to {channel.mention}"
-        )
+        return await ctx.success(f"Sending **{category}** banners to {channel.mention}")
 
     @autobanner.command(name="remove", brief="manage server")
     @commands.has_guild_permissions(manage_guild=True)
@@ -144,6 +136,7 @@ class Autopfp(commands.Cog):
         )
 
         return await ctx.success(f"Stopped sending **{category}** banners")
+
 
 async def setup(bot):
     await bot.add_cog(Autopfp(bot))

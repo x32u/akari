@@ -479,9 +479,7 @@ class Voicemaster(Cog):
             return await ctx.reply("why would u wanna kick urself >_<")
 
         if not member in ctx.author.voice.channel.members:
-            return await ctx.error(
-                f"{member.mention} isn't in **your** voice channel"
-            )
+            return await ctx.error(f"{member.mention} isn't in **your** voice channel")
 
         await member.move_to(channel=None)
         return await ctx.success(
@@ -527,9 +525,7 @@ class Voicemaster(Cog):
         """
 
         if not member in ctx.author.voice.channel.members:
-            return await ctx.warning(
-                f"{member.mention} is not in your voice channel"
-            )
+            return await ctx.warning(f"{member.mention} is not in your voice channel")
 
         if member == ctx.author:
             return await ctx.warning(
@@ -541,14 +537,9 @@ class Voicemaster(Cog):
             member.id,
             ctx.author.voice.channel.id,
         )
-        return await ctx.success(
-            f"Transfered the voice ownership to {member.mention}"
-        )
+        return await ctx.success(f"Transfered the voice ownership to {member.mention}")
 
-    @voice.command(
-        name="status",
-        brief="vc owner"
-    )
+    @voice.command(name="status", brief="vc owner")
     @check_vc_owner()
     async def voice_status(self, ctx: AkariContext, *, status: str):
         """
@@ -557,9 +548,10 @@ class Voicemaster(Cog):
 
         if len(status) > 500:
             return await ctx.warning(f"Status can't be over **500 characters**")
-        
+
         await ctx.author.voice.channel.edit(status=status)
         await ctx.message.add_reaction("✅")
+
 
 async def setup(bot) -> None:
     await bot.add_cog(Voicemaster(bot))

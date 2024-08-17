@@ -294,9 +294,7 @@ class Config(Cog):
             ctx.guild.id,
             role.id,
         ):
-            return await ctx.warning(
-                "This role is **not** configured as an autorole"
-            )
+            return await ctx.warning("This role is **not** configured as an autorole")
 
         await self.bot.db.execute(
             "DELETE FROM autorole WHERE guild_id = $1 AND role_id = $2",
@@ -525,9 +523,7 @@ class Config(Cog):
         )
 
         if check is None:
-            return await ctx.warning(
-                "Confessions aren't **enabled** in this server"
-            )
+            return await ctx.warning("Confessions aren't **enabled** in this server")
 
         re = await self.bot.db.fetchrow(
             "SELECT * FROM confess_members WHERE guild_id = $1 AND confession = $2",
@@ -546,16 +542,12 @@ class Config(Cog):
         )
 
         if r:
-            return await ctx.warning(
-                "This **member** is **already** confession muted"
-            )
+            return await ctx.warning("This **member** is **already** confession muted")
 
         await self.bot.db.execute(
             "INSERT INTO confess_mute VALUES ($1,$2)", ctx.guild.id, member_id
         )
-        return await ctx.success(
-            f"The author of confession #{confession} is muted"
-        )
+        return await ctx.success(f"The author of confession #{confession} is muted")
 
     @confessions.command(name="unmute", brief="manage messages")
     @has_guild_permissions(manage_messages=True)
@@ -565,9 +557,7 @@ class Config(Cog):
         )
 
         if check is None:
-            return await ctx.warning(
-                "Confessions aren't **enabled** in this server"
-            )
+            return await ctx.warning("Confessions aren't **enabled** in this server")
 
         if confession == "all":
             await self.bot.db.execute(
@@ -633,9 +623,7 @@ class Config(Cog):
         )
 
         if check is None:
-            return await ctx.warning(
-                "Confessions aren't **enabled** in this server"
-            )
+            return await ctx.warning("Confessions aren't **enabled** in this server")
 
         await self.bot.db.execute(
             "DELETE FROM confess WHERE guild_id = $1", ctx.guild.id
@@ -679,7 +667,7 @@ class Config(Cog):
                 "DELETE FROM selfprefix WHERE user_id = $1", ctx.author.id
             )
             return await ctx.success("Self prefix removed")
-        
+
         if len(prefix) > 7:
             raise BadArgument("Prefix is too long!")
 
@@ -694,9 +682,7 @@ class Config(Cog):
                 ctx.author.id,
             )
         finally:
-            return await ctx.success(
-                f"Self prefix now **configured** as `{prefix}`"
-            )
+            return await ctx.success(f"Self prefix now **configured** as `{prefix}`")
 
     @hybrid_command(brief="manage server")
     @has_guild_permissions(manage_guild=True)
@@ -708,9 +694,7 @@ class Config(Cog):
                 "SELECT prefix FROM prefixes WHERE guild_id = $1", ctx.guild.id
             )
             if not check:
-                return await ctx.warning(
-                    "This server does **not** have any prefix"
-                )
+                return await ctx.warning("This server does **not** have any prefix")
 
             await self.bot.db.execute(
                 "DELETE FROM prefixes WHERE guild_id = $1", ctx.guild.id
@@ -990,9 +974,7 @@ class Config(Cog):
             str(emoji),
         )
         if not check:
-            return await ctx.error(
-                "No reaction role found for the message provided"
-            )
+            return await ctx.error("No reaction role found for the message provided")
 
         await self.bot.db.execute(
             "DELETE FROM reactionrole WHERE guild_id = $1 AND channel_id = $2 AND message_id = $3 AND emoji = $4",
@@ -1002,9 +984,7 @@ class Config(Cog):
             str(emoji),
         )
         await message.remove_reaction(emoji, ctx.guild.me)
-        return await ctx.success(
-            "Removed the reaction role from the message provided"
-        )
+        return await ctx.success("Removed the reaction role from the message provided")
 
     @reactionrole.command(
         name="add",
@@ -1030,9 +1010,7 @@ class Config(Cog):
             str(emoji),
         )
         if check:
-            return await ctx.warning(
-                "A similar reaction role is **already** added"
-            )
+            return await ctx.warning("A similar reaction role is **already** added")
 
         await self.bot.db.execute(
             "INSERT INTO reactionrole VALUES ($1,$2,$3,$4,$5)",
@@ -1043,9 +1021,7 @@ class Config(Cog):
             role.id,
         )
         await message.add_reaction(emoji)
-        return await ctx.success(
-            f"Added reaction role [**here**]({message.jump_url})"
-        )
+        return await ctx.success(f"Added reaction role [**here**]({message.jump_url})")
 
     @group(invoke_without_command=True)
     async def editrole(self, ctx):
@@ -1226,9 +1202,7 @@ class Config(Cog):
 
     @restrictcommand.command(name="add", aliases=["make"], brief="manage sever")
     @has_guild_permissions(manage_guild=True)
-    async def restrictcommand_add(
-        self, ctx: AkariContext, command: str, *, role: Role
-    ):
+    async def restrictcommand_add(self, ctx: AkariContext, command: str, *, role: Role):
         """
         Restrict a command to the given role
         """
@@ -1354,9 +1328,7 @@ class Config(Cog):
         """
 
         if len(name) > 200:
-            return await ctx.warning(
-                f"Server names can't be over **200 characters**"
-            )
+            return await ctx.warning(f"Server names can't be over **200 characters**")
 
         _name = ctx.guild.name
         await ctx.guild.edit(name=name)
@@ -1523,9 +1495,7 @@ class Config(Cog):
             ctx.guild.id,
             channel.id,
         )
-        await ctx.success(
-            f"{channel.mention} is no longer an **image only** channel"
-        )
+        await ctx.success(f"{channel.mention} is no longer an **image only** channel")
 
     @imageonly.command(name="list", brief="manage channels")
     @has_guild_permissions(manage_channels=True)
@@ -1586,9 +1556,7 @@ class Config(Cog):
             ctx.guild.id,
             module,
         ):
-            return await ctx.warning(
-                f"The `{module}` module is **already** disabled"
-            )
+            return await ctx.warning(f"The `{module}` module is **already** disabled")
 
         await self.bot.db.execute(
             """

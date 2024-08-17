@@ -750,9 +750,7 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.warning(
-                "Channel delete protection is **not** enabled"
-            )
+            return await ctx.warning("Channel delete protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
@@ -816,9 +814,7 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.warning(
-                "Channel create protection is **not** enabled"
-            )
+            return await ctx.warning("Channel create protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
@@ -1309,9 +1305,7 @@ class Antinuke(Cog):
             ctx.guild.id,
         )
         if not check:
-            return await ctx.warning(
-                "Spammer accounts protection is **not** enabled"
-            )
+            return await ctx.warning("Spammer accounts protection is **not** enabled")
 
         await self.bot.db.execute(
             "DELETE FROM antinuke_modules WHERE guild_id = $1 AND module = $2",
@@ -1502,9 +1496,7 @@ class Antinuke(Cog):
             whitelisted = json.loads(whitelisted)
 
             if not member.id in whitelisted:
-                return await ctx.warning(
-                    "This member is **not** antinuke whitelisted"
-                )
+                return await ctx.warning("This member is **not** antinuke whitelisted")
 
             whitelisted.remove(member.id)
             await self.bot.db.execute(
@@ -1512,9 +1504,7 @@ class Antinuke(Cog):
                 json.dumps(whitelisted),
                 ctx.guild.id,
             )
-            return await ctx.success(
-                f"Unwhitelisted {member.mention} from antinuke"
-            )
+            return await ctx.success(f"Unwhitelisted {member.mention} from antinuke")
 
         return await ctx.warning("There is **no** antinuke whitelisted member")
 
@@ -1544,9 +1534,7 @@ class Antinuke(Cog):
             admins = json.loads(admins)
 
             if member.id in admins:
-                return await ctx.warning(
-                    "This member is **already** an antinuke admin"
-                )
+                return await ctx.warning("This member is **already** an antinuke admin")
 
             admins.append(member.id)
         else:

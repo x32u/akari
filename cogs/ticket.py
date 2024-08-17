@@ -148,9 +148,7 @@ class Ticket(Cog):
                 role.id,
                 ctx.guild.id,
             )
-            return await ctx.success(
-                f"Updated ticket support role to {role.mention}"
-            )
+            return await ctx.success(f"Updated ticket support role to {role.mention}")
         else:
             await self.bot.db.execute(
                 "UPDATE tickets SET support_id = $1 WHERE guild_id = $2",
@@ -172,9 +170,7 @@ class Ticket(Cog):
                 category.id,
                 ctx.guild.id,
             )
-            return await ctx.success(
-                f"Updated ticket category to {category.mention}"
-            )
+            return await ctx.success(f"Updated ticket category to {category.mention}")
         else:
             await self.bot.db.execute(
                 "UPDATE tickets SET category_id = $1 WHERE guild_id = $2",
@@ -281,9 +277,7 @@ class Ticket(Cog):
         )
 
         if not check:
-            return await ctx.error(
-                "Ticket module is **not** enabled in this server"
-            )
+            return await ctx.error("Ticket module is **not** enabled in this server")
 
         results = await self.bot.db.fetch(
             "SELECT * FROM ticket_topics WHERE guild_id = $1", ctx.guild.id
