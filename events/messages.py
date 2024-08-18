@@ -37,7 +37,7 @@ class Messages(Cog):
 
         for webhook in await channel.webhooks():
 
-            if webhook.user == self.me:
+            if webhook.user == self.bot.user:
                 return webhook
 
         return await channel.create_webhook(name="akari")
