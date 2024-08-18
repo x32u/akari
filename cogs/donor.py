@@ -280,7 +280,21 @@ class Donor(Cog):
                 self.bot.executor, self.model.generate_content, query
             )
             await ctx.reply(response.text, allowed_mentions=AllowedMentions.none())
-
+    @command(brief="donor")
+    @has_perks()
+    async def uwulock(self, ctx: AkariContext, user: User):
+        """uwulock"""
+        if await self.bot.db.fetchrow(
+            "SELECT * FROM uwu_lock WHERE user_id = $1", user.id
+        ):
+            await self.bot.db.execute(
+                "DELETE FROM uwu_lock WHERE user_id = $1", user.id
+            )
+            return await ctx.success(f"{user.mention} is no longer uwulocked")
+        await self.bot.db.execute(
+            "INSERT INTO uwu_lock VALUES ($1)", user.id
+        )
+        return await ctx.success(f"{user.mention} is now uwulocked")
 
 async def setup(bot: Akari) -> None:
     await bot.add_cog(Donor(bot))
