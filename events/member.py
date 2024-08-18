@@ -17,7 +17,7 @@ class Members(Cog):
         self.bot = bot
         self.locks = defaultdict(asyncio.Lock)
 
-    async def get_user_avatar_url(self, member: User) -> Optional[str]:
+    """async def get_user_avatar_url(self, member: User) -> Optional[str]:
         try:
             data = await member.display_avatar.read()
         except:
@@ -26,15 +26,15 @@ class Members(Cog):
         token = member.display_avatar.url.split(".")[2].split("/")[-1]
         await self.bot.db.execute(
             """
-        INSERT INTO avatar_urls 
-        VALUES ($1,$2,$3)
-        """,
+    """INSERT INTO avatar_urls 
+        VALUES ($1,$2,$3)"""
+    """,
             member.id,
             token,
             data,
         )
 
-        return f"https://Akari.bot/images/{member.id}/{token}.{'gif' if member.display_avatar.is_animated() else 'png'}"
+        return f"https://Akari.bot/images/{member.id}/{token}.{'gif' if member.display_avatar.is_animated() else 'png'}" """
 
     @Cog.listener("on_user_update")
     async def username_change(self, before: User, after: User):

@@ -299,13 +299,11 @@ class Utility(commands.Cog):
             except:
                 pass
 
-    @commands.command(aliases=["avh"])
+    """@commands.command(aliases=["avh"])
     async def avatarhistory(
         self, ctx: AkariContext, *, member: discord.User = commands.Author
     ):
-        """
-        Check a member's avatar history
-        """
+
         results = await self.bot.db.fetchrow(
             "SELECT * FROM avatar_history WHERE user_id = $1", str(member.id)
         )
@@ -321,13 +319,11 @@ class Utility(commands.Cog):
             url=f"https://images.Akari.bot/avatarhistory/{member.id}",
             title=f"{member.name}'s avatar history ({length})",
         )
-        return await ctx.reply(embed=embed)
+        return await ctx.reply(embed=embed)"""
 
-    @commands.command(aliases=["clearavs", "clearavh", "clearavatarhistory"])
+    """@commands.command(aliases=["clearavs", "clearavh", "clearavatarhistory"])
     async def clearavatars(self, ctx: AkariContext):
-        """
-        Clear your avatar history
-        """
+
 
         check = await self.bot.db.fetchrow(
             "SELECT * FROM avatar_history WHERE user_id = $1", str(ctx.author.id)
@@ -359,7 +355,7 @@ class Utility(commands.Cog):
 
         await ctx.confirmation_send(
             "Are you sure you want to **clear** your avatar history?", yes_func, no_func
-        )
+        )"""
 
     @commands.command(aliases=["firstmsg"])
     async def firstmessage(
@@ -1145,23 +1141,6 @@ class Utility(commands.Cog):
 
         await ctx.reply(embed=embed, view=view)
 
-    @commands.hybrid_command(aliases=["snapstory"])
-    async def snapchatstory(self, ctx: AkariContext, *, username: str):
-        """
-        Get someone's snapchat stories
-        """
-
-        results = await self.bot.session.get_json(
-            "https://api.akari.bot/snapstory",
-            headers={"api-key": self.bot.akari_api},
-            params={"username": username},
-        )
-
-        if results.get("detail"):
-            return await ctx.error(results["detail"])
-
-        await ctx.paginator(list(map(lambda s: s["url"], results["stories"])))
-
     @commands.hybrid_command(aliases=["ig"])
     async def instagram(self, ctx: AkariContext, *, user: InstagramUser):
         """
@@ -1450,26 +1429,6 @@ class Utility(commands.Cog):
             .add_field(name="RGB", value=hex_info["rgb"]["value"])
             .add_field(name="HEX", value=hex_info["hex"]["value"])
         )
-
-        await ctx.reply(embed=embed)
-
-    @commands.command()
-    async def perks(self, ctx: AkariContext):
-        """
-        Check the perks that you get for donating $3 to us / boost our server
-        """
-
-        commands = [
-            f"**{c.qualified_name}** - {c.help}"
-            for c in set(self.bot.walk_commands())
-            if "has_perks" in [check.__qualname__.split(".")[0] for check in c.checks]
-        ]
-
-        embed = discord.Embed(
-            color=self.bot.color,
-            title="Perks",
-            description="\n".join(commands) + "\n\n + 20% more daily income",
-        ).set_footer(text="use ;donate to check payment methods")
 
         await ctx.reply(embed=embed)
 
