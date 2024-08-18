@@ -499,7 +499,7 @@ class AkariContext(Context):
                 )
             else:
                 kwargs.update(
-                    {"avatar_url": self.author.avatar_url, "username": self.author.name, "wait": True}
+                    {"avatar_url": self.author.avatar.url, "username": self.author.name, "wait": True}
                 )
 
             if kwargs.get("delete_after"):
@@ -539,7 +539,7 @@ class AkariContext(Context):
                 )
             else:
                 kwargs.update(
-                    {"avatar_url": self.author.avatar_url, "username": self.author.name, "wait": True}
+                    {"avatar_url": self.author.avatar.url, "username": self.author.name, "wait": True}
                 )
 
             if kwargs.get("delete_after"):
