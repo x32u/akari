@@ -3,6 +3,7 @@ import orjson
 import aiohttp
 import asyncio
 import datetime
+import uwuify
 
 from collections import defaultdict
 from bs4 import BeautifulSoup
@@ -285,7 +286,34 @@ class Messages(Cog):
                     if x:
                         await message.add_reaction(x)
                 return
+    @Cog.listener("on_message")
+    async def uwulock(self, message: Message):
+        if message.author.bot:
+            return
 
+        uwulock_enabled = await self.bot.db.fetchval(
+            "SELECT EXISTS(SELECT 1 FROM uwu_lock WHERE guild_id = $1 AND user_id = $2)",
+            message.guild.id,
+            message.author.id
+        )
+
+        if uwulock_enabled:
+            flags = uwuify.YU | uwuify.STUTTER
+            uwuified_content = uwuify.uwu(message.content, flags=flags)
+            await message.delete()
+            webhooks = await message.channel.webhooks()
+
+            if webhooks:
+                webhook = webhooks[0]
+            else:
+                webhook = await message.channel.create_webhook(name="Uwulock")
+
+            await webhook.send(
+                content=uwuified_content,
+                username=message.author.name,
+                avatar_url=message.author.avatar.url,
+            )
+       
     @Cog.listener("on_message_delete")
     async def snipes(self, message: Message):
         if message.author.bot:

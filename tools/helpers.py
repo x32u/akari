@@ -4,7 +4,6 @@ import asyncio
 import datetime
 import humanize
 import discord
-import uwuify
 
 from discord.ext.commands.cog import Cog
 from discord.interactions import Interaction
@@ -464,16 +463,16 @@ class AkariContext(Context):
             True,
         )
 
-    async def uwulock_enabled(self) -> bool:
-        return await self.bot.db.fetchval(
-            "SELECT EXISTS(SELECT 1 FROM uwu_lock WHERE guild_id = $1 AND user_id = $2)", self.guild.id, self.author.id
+    async def reply(self, *args, **kwargs) -> WebhookMessage:
+        check = await self.bot.db.fetchrow(
+            "SELECT * FROM reskin_user WHERE user_id = $1", self.author.id
         )
 
-    async def reply(self, *args, **kwargs) -> WebhookMessage:
-        check_reskin = await self.reskin_enabled()
-        check_uwulock = await self.uwulock_enabled()
-
-        if check_reskin or check_uwulock:
+        if (
+            check
+            and self.guild.me.guild_permissions.manage_webhooks
+            and await self.reskin_enabled()
+        ):
             if isinstance(self.channel, Thread):
                 return await super().send(*args, **kwargs)
 
@@ -488,19 +487,9 @@ class AkariContext(Context):
             else:
                 webhook = await self.channel.create_webhook(name="Akari - reskin")
 
-            if check_uwulock:
-                flags = uwuify.YU | uwuify.STUTTER
-                args = tuple(uwuify.uwu(arg, flags=flags) for arg in args)  # Apply uwuify to message content
-                kwargs = {k: uwuify.uwu(v, flags=flags) if isinstance(v, str) else v for k, v in kwargs.items()}
-
-            if check_reskin:
-                kwargs.update(
-                    {"avatar_url": check_reskin["avatar"], "username": check_reskin["name"], "wait": True}
-                )
-            else:
-                kwargs.update(
-                    {"avatar_url": self.author.avatar.url, "username": self.author.name, "wait": True}
-                )
+            kwargs.update(
+                {"avatar_url": check["avatar"], "username": check["name"], "wait": True}
+            )
 
             if kwargs.get("delete_after"):
                 kwargs.pop("delete_after")
@@ -510,10 +499,15 @@ class AkariContext(Context):
             return await super().reply(*args, **kwargs)
 
     async def send(self, *args, **kwargs) -> Union[Message, WebhookMessage]:
-        check_reskin = await self.reskin_enabled()
-        check_uwulock = await self.uwulock_enabled()
+        check = await self.bot.db.fetchrow(
+            "SELECT * FROM reskin_user WHERE user_id = $1", self.author.id
+        )
 
-        if check_reskin or check_uwulock:
+        if (
+            check
+            and self.guild.me.guild_permissions.manage_webhooks
+            and await self.reskin_enabled()
+        ):
             if isinstance(self.channel, Thread):
                 return await super().send(*args, **kwargs)
 
@@ -528,19 +522,9 @@ class AkariContext(Context):
             else:
                 webhook = await self.channel.create_webhook(name="Akari - reskin")
 
-            if check_uwulock:
-                flags = uwuify.YU | uwuify.STUTTER
-                args = tuple(uwuify.uwu(arg, flags=flags) for arg in args)  # Apply uwuify to message content
-                kwargs = {k: uwuify.uwu(v, flags=flags) if isinstance(v, str) else v for k, v in kwargs.items()}
-
-            if check_reskin:
-                kwargs.update(
-                    {"avatar_url": check_reskin["avatar"], "username": check_reskin["name"], "wait": True}
-                )
-            else:
-                kwargs.update(
-                    {"avatar_url": self.author.avatar.url, "username": self.author.name, "wait": True}
-                )
+            kwargs.update(
+                {"avatar_url": check["avatar"], "username": check["name"], "wait": True}
+            )
 
             if kwargs.get("delete_after"):
                 kwargs.pop("delete_after")
@@ -550,11 +534,13 @@ class AkariContext(Context):
             return await super().send(*args, **kwargs)
 
     async def webhook(self, channel) -> discord.Webhook:
+
         for webhook in await channel.webhooks():
+
             if webhook.user == self.me:
                 return webhook
-        return await channel.create_webhook(name="Akari - reskin")
 
+        return await channel.create_webhook(name="akari")
 
     async def get_attachment(self) -> Optional[Attachment]:
         """get a discord attachment from the channel"""
