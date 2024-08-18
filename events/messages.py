@@ -11,8 +11,7 @@ from typing import Optional
 
 from discord.ui import View, Button
 from discord.ext.commands import Cog, CooldownMapping, BucketType
-
-from discord import AllowedMentions, Message, MessageType, File, Embed
+from discord import AllowedMentions, Message, MessageType, File, Embed, Webhook
 
 from tools.bot import Akari
 from tools.exceptions import ApiError
@@ -34,7 +33,14 @@ class Messages(Cog):
 
         bucket = self.autoreact_cd.get_bucket(message)
         return bucket.update_rate_limit()
+    async def webhook(self, channel) -> Webhook:
 
+        for webhook in await channel.webhooks():
+
+            if webhook.user == self.me:
+                return webhook
+
+        return await channel.create_webhook(name="akari")
     async def get_ratelimit(self, message: Message) -> Optional[int]:
         """
         custom rate limit for reposters
@@ -301,12 +307,7 @@ class Messages(Cog):
             flags = uwuify.YU | uwuify.STUTTER
             uwuified_content = uwuify.uwu(message.content, flags=flags)
             await message.delete()
-            webhooks = await message.channel.webhooks()
-
-            if webhooks:
-                webhook = webhooks[0]
-            else:
-                webhook = await message.channel.create_webhook(name="Uwulock")
+            webhook = await self.webhook(message.channel)
 
             await webhook.send(
                 content=uwuified_content,
