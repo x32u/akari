@@ -101,24 +101,24 @@ class Owner(Cog):
     @command()
     @is_owner()
     async def portal(self, ctx: AkariContext, id: int):
-        
+
         guild = self.bot.get_guild(id)
 
         if guild is None:
             return await ctx.warning(f"I could not find a a guild for ``{id}``.")
 
         embed = discord.Embed(
-            description=f"> The invite for ``{ctx.guild.name}`` is listed above.", 
-            color=self.bot.color)
+            description=f"> The invite for ``{ctx.guild.name}`` is listed above.",
+            color=self.bot.color,
+        )
 
         for c in guild.text_channels:
-            
+
             if c.permissions_for(guild.me).create_instant_invite:
                 invite = await c.create_invite()
-            
+
                 await ctx.author.send(f"{invite}", embed=embed)
                 break
-
 
     @command()
     @is_owner()
@@ -162,51 +162,51 @@ class Owner(Cog):
     @is_owner()
     async def donor_add(self, ctx: AkariContext, *, member: User):
         """add donator perks to a member"""
-        
+
         check = await self.bot.db.fetchrow(
             "SELECT * FROM donor WHERE user_id = $1", member.id
         )
-        
+
         if check:
             return await ctx.error("This member is **already** a donor")
 
         await self.add_donor_role(member)
-        
+
         await self.bot.db.execute(
             "INSERT INTO donor VALUES ($1,$2,$3)",
             member.id,
             datetime.datetime.now().timestamp(),
             "purchased",
         )
-        
+
         return await ctx.success(f"{member.mention} can use donator perks now!")
 
     @donor.command(name="remove")
     @is_owner()
     async def donor_remove(self, ctx: AkariContext, *, member: User):
         """Remove donator perks from a member"""
-        
+
         check = await self.bot.db.fetchrow(
             "SELECT * FROM donor WHERE user_id = $1 AND status = $2",
             member.id,
             "purchased",
         )
-        
+
         if not check:
             return await ctx.error("This member cannot have their perks removed")
 
         await self.remove_donor_role(member)
         await self.bot.db.execute("DELETE FROM donor WHERE user_id = $1", member.id)
-        
+
         return await ctx.success(f"Removed {member.mention}'s perks")
 
     @command()
     @is_owner()
     async def mutuals(self, ctx: AkariContext, *, user: User):
         """Returns mutual servers between the member and the bot"""
-        
+
         if len(user.mutual_guilds) == 0:
-            
+
             return await ctx.reply(
                 f"This member doesn't share any server with {self.bot.user.name}"
             )
@@ -223,25 +223,25 @@ class Owner(Cog):
         """
         Globally enable a command.
         """
-        
+
         if not cmd:
             return await ctx.warning("Please provide a command to enable.")
-        
+
         if cmd in ["*", "all", "ALL"]:
-            
+
             await self.bot.db.execute("DELETE FROM global_disabled_cmds;")
             return await ctx.success(f"All commands have been globally enabled.")
-        
+
         if not self.bot.get_command(cmd):
-            
+
             return await ctx.warning("Command does not exist.")
-        
+
         cmd = self.bot.get_command(cmd).name
-        
+
         await self.bot.db.execute(
             "DELETE FROM global_disabled_cmds WHERE cmd = $1;", cmd
         )
-        
+
         return await ctx.success(f"The command {cmd} has been globally enabled.")
 
     @command(name="globaldisable")
@@ -252,22 +252,22 @@ class Owner(Cog):
         """
         if not cmd:
             return await ctx.warning("Please provide a command to disable.")
-        
+
         if cmd in ["globalenable", "globaldisable"]:
             return await ctx.warning("Unable to globally disable this command.")
-        
+
         if not self.bot.get_command(cmd):
             return await ctx.warning("Command does not exist.")
-        
+
         cmd = self.bot.get_command(cmd).name
         result = await self.bot.db.fetchrow(
             "SELECT disabled FROM global_disabled_cmds WHERE cmd = $1;", cmd
         )
-        
+
         if result:
             if result.get("disabled"):
                 return await ctx.warning("This command is already globally disabled.")
-        
+
         await self.bot.db.execute(
             "INSERT INTO global_disabled_cmds (cmd, disabled, disabled_by) VALUES ($1, $2, $3) "
             "ON CONFLICT (cmd) DO UPDATE SET disabled = EXCLUDED.disabled, disabled_by = EXCLUDED.disabled_by;",
@@ -275,7 +275,7 @@ class Owner(Cog):
             True,
             str(ctx.author.id),
         )
-        
+
         return await ctx.success(f"The command {cmd} has been globally disabled.")
 
     @command(name="globaldisabledlist", aliases=["gdl"])
@@ -284,19 +284,19 @@ class Owner(Cog):
         """
         Show all commands that are globally disabled.
         """
-        
+
         global_disabled_cmds = await self.bot.db.fetch(
             "SELECT * FROM global_disabled_cmds;"
         )
-        
+
         if len(global_disabled_cmds) <= 0:
             return await ctx.warning("There are no globally disabled commands.")
-        
+
         disabled_list = [
             f"{obj.get('cmd')} - disabled by <@{obj.get('disabled_by')}>"
             for obj in global_disabled_cmds
         ]
-        
+
         return await ctx.paginate(
             disabled_list,
             f"Globally Disabled Commands:",
@@ -308,10 +308,10 @@ class Owner(Cog):
         """
         View information about an error code
         """
-        
+
         if not ctx.author.id in self.bot.owner_ids:
             return await ctx.warning("You are not authorized to use this command.")
-        
+
         fl = await self.bot.db.fetch("SELECT * FROM error_codes;")
         error_details = [x for x in fl if x.get("code") == code]
 
@@ -320,7 +320,7 @@ class Owner(Cog):
 
         error_details = error_details[0]
         error_details = json.loads(error_details.get("info"))
-        
+
         guild = self.bot.get_guild(error_details["guild_id"])
 
         embed = (
@@ -353,7 +353,7 @@ class Owner(Cog):
         reason: str = "Globally banned by a bot owner",
     ):
         """Ban an user globally"""
-        
+
         if user.id in [598125772754124823, 863914425445908490]:
             return await ctx.error("Do not global ban a bot owner, retard")
 
@@ -369,7 +369,7 @@ class Owner(Cog):
             )
 
         mutual_guilds = len(user.mutual_guilds)
-        
+
         tasks = [
             g.ban(user, reason=reason)
             for g in user.mutual_guilds
@@ -377,12 +377,12 @@ class Owner(Cog):
             and g.me.top_role > g.get_member(user.id).top_role
             and g.owner_id != user.id
         ]
-        
+
         await asyncio.gather(*tasks)
         await self.bot.db.execute(
             "INSERT INTO globalban VALUES ($1,$2)", user.id, reason
         )
-        
+
         return await ctx.success(
             f"{user.mention} was succesfully global banned in {len(tasks)}/{mutual_guilds} servers"
         )
@@ -396,7 +396,7 @@ class Owner(Cog):
     @is_owner()
     async def blacklist_user(self, ctx: AkariContext, *, user: User):
         """blacklist or unblacklist a member"""
-        
+
         if user.id in self.bot.owner_ids:
             return await ctx.error("Do not blacklist a bot owner, retard")
 
@@ -405,7 +405,7 @@ class Owner(Cog):
                 "INSERT INTO blacklist VALUES ($1,$2)", user.id, "user"
             )
             return await ctx.success(f"Blacklisted {user.mention} from Akari")
-        
+
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", user.id)
             return await ctx.success(f"Unblacklisted {user.mention} from Akari")
@@ -421,12 +421,12 @@ class Owner(Cog):
             await self.bot.db.execute(
                 "INSERT INTO blacklist VALUES ($1,$2)", server_id, "server"
             )
-            
+
             guild = self.bot.get_guild(server_id)
             if guild:
                 await guild.leave()
             return await ctx.success(f"Blacklisted server {server_id} from Akari")
-        
+
         except:
             await self.bot.db.execute("DELETE FROM blacklist WHERE id = $1", server_id)
             return await ctx.success(f"Unblacklisted server {server_id} from Akari")
@@ -472,6 +472,7 @@ class Owner(Cog):
             if len(reloaded) == 1
             else f"Reloaded **{len(reloaded)}** modules"
         )
+
 
 async def setup(bot: Akari) -> None:
     await bot.add_cog(Owner(bot))

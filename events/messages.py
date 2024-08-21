@@ -33,6 +33,7 @@ class Messages(Cog):
 
         bucket = self.autoreact_cd.get_bucket(message)
         return bucket.update_rate_limit()
+
     async def webhook(self, channel) -> Webhook:
 
         for webhook in await channel.webhooks():
@@ -41,6 +42,7 @@ class Messages(Cog):
                 return webhook
 
         return await channel.create_webhook(name="akari")
+
     async def get_ratelimit(self, message: Message) -> Optional[int]:
         """
         custom rate limit for reposters
@@ -292,6 +294,7 @@ class Messages(Cog):
                     if x:
                         await message.add_reaction(x)
                 return
+
     @Cog.listener("on_message")
     async def uwulock(self, message: Message):
         if message.author.bot:
@@ -300,7 +303,7 @@ class Messages(Cog):
         uwulock_enabled = await self.bot.db.fetchval(
             "SELECT EXISTS(SELECT 1 FROM uwu_lock WHERE guild_id = $1 AND user_id = $2)",
             message.guild.id,
-            message.author.id
+            message.author.id,
         )
 
         if uwulock_enabled:
@@ -314,7 +317,7 @@ class Messages(Cog):
                 username=message.author.name,
                 avatar_url=message.author.avatar.url,
             )
-       
+
     @Cog.listener("on_message_delete")
     async def snipes(self, message: Message):
         if message.author.bot:

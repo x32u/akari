@@ -8,8 +8,6 @@ from tools.helpers import AkariContext
 from tools.validators import ValidReskinName
 from tools.predicates import has_perks, create_reskin
 
-from AkariAPI import API
-
 from discord import User, utils, Embed, Member, AllowedMentions, Interaction
 from discord.ext import commands
 from discord.ext.commands import (
@@ -280,6 +278,7 @@ class Donor(Cog):
                 self.bot.executor, self.model.generate_content, query
             )
             await ctx.reply(response.text, allowed_mentions=AllowedMentions.none())
+
     @command(brief="donor")
     @has_perks()
     async def uwulock(self, ctx: AkariContext, user: User):

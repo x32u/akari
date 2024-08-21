@@ -555,7 +555,7 @@ class AkariContext(Context):
         if len(messages) > 0:
             return messages[0].attachments[0]
         return None
-    
+
     async def get_sticker(self) -> StickerItem:
         """get a sticker from the channel"""
         if self.message.stickers:
