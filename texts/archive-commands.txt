@@ -1,0 +1,57 @@
+    """@commands.command(aliases=["avh"])
+    async def avatarhistory(
+        self, ctx: AkariContext, *, member: discord.User = commands.Author
+    ):
+
+        results = await self.bot.db.fetchrow(
+            "SELECT * FROM avatar_history WHERE user_id = $1", str(member.id)
+        )
+        length = len(json.loads(results["avatars"])) if results else 0
+        if not results:
+            does = "don't" if member == ctx.author else f"doesn't"
+            return await ctx.error(
+                f"{'You' if member == ctx.author else f'{member.mention}'} {does} have an **avatar history**"
+            )
+
+        embed = discord.Embed(
+            color=self.bot.color,
+            url=f"https://images.Akari.bot/avatarhistory/{member.id}",
+            title=f"{member.name}'s avatar history ({length})",
+        )
+        return await ctx.reply(embed=embed)"""
+
+    """@commands.command(aliases=["clearavs", "clearavh", "clearavatarhistory"])
+    async def clearavatars(self, ctx: AkariContext):
+
+
+        check = await self.bot.db.fetchrow(
+            "SELECT * FROM avatar_history WHERE user_id = $1", str(ctx.author.id)
+        )
+        if not check:
+            return await ctx.warning("There are no avatars saved for you")
+
+        async def yes_func(interaction: discord.Interaction):
+            await self.bot.db.execute(
+                "DELETE FROM avatar_history WHERE user_id = $1",
+                str(interaction.user.id),
+            )
+            return await interaction.response.edit_message(
+                embed=discord.Embed(
+                    color=self.bot.yes_color,
+                    description=f"{self.bot.yes} {interaction.user.mention}: Cleared your avatar history",
+                ),
+                view=None,
+            )
+
+        async def no_func(interaction: discord.Interaction):
+            return await interaction.response.edit_message(
+                embed=discord.Embed(
+                    color=self.bot.color,
+                    description=f"{interaction.user.mention}: Aborting action",
+                ),
+                view=None,
+            )
+
+        await ctx.confirmation_send(
+            "Are you sure you want to **clear** your avatar history?", yes_func, no_func
+        )"""

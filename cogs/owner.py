@@ -473,6 +473,5 @@ class Owner(Cog):
             else f"Reloaded **{len(reloaded)}** modules"
         )
 
-
 async def setup(bot: Akari) -> None:
     await bot.add_cog(Owner(bot))

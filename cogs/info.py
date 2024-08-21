@@ -8,7 +8,7 @@ from discord.ui import View, Button
 
 from platform import python_version
 
-REPO_PATH = "/root/AkariBot/.git"
+REPO_PATH = "/home/damon/akaribot/.git"
 
 
 class Info(Cog):

@@ -1,15 +1,4 @@
-import uwuify
-import random
-import asyncio
-import discord
-import datetime
-import humanize
-import humanfriendly
-import dateutil.parser
-import validators
-import os
-import aiohttp
-import json
+import uwuify, random, asyncio, discord, datetime, humanize, humanfriendly, dateutil.parser, validators, os, aiohttp, string, re, rembg
 
 from nudenet import NudeDetector
 
@@ -17,7 +6,21 @@ nude_detector = NudeDetector()
 
 from discord.ext import commands
 from discord.ext.commands import has_guild_permissions
-from discord import TextChannel
+from discord import Member, User, Forbidden, TextChannel
+
+from tools.predicates import whitelist_enabled
+from discord.ext.commands import group, has_permissions
+
+from typing import Literal
+
+from tools.validators import ValidWebhookCode
+from tools.handlers.embedbuilder import EmbedScript
+
+from discord.ext.commands import (
+    group,
+    has_guild_permissions,
+    bot_has_guild_permissions,
+)
 
 from playwright.async_api import async_playwright
 from io import BytesIO
@@ -25,7 +28,6 @@ from typing import Union, Optional, Any
 from shazamio import Shazam
 
 from tools.bot import Akari
-from tools.misc.views import Donate
 from tools.validators import ValidTime
 from tools.helpers import AkariContext
 from tools.predicates import is_afk, is_there_a_reminder, reminder_exists
@@ -50,10 +52,6 @@ from deep_translator import GoogleTranslator
 from deep_translator.exceptions import LanguageNotSupportedException
 
 from io import BytesIO
-
-import re
-import rembg
-
 
 class Color(commands.Converter):
     async def convert(self, ctx: AkariContext, argument: str):
@@ -298,64 +296,6 @@ class Utility(commands.Cog):
                 await ctx.message.delete()
             except:
                 pass
-
-    """@commands.command(aliases=["avh"])
-    async def avatarhistory(
-        self, ctx: AkariContext, *, member: discord.User = commands.Author
-    ):
-
-        results = await self.bot.db.fetchrow(
-            "SELECT * FROM avatar_history WHERE user_id = $1", str(member.id)
-        )
-        length = len(json.loads(results["avatars"])) if results else 0
-        if not results:
-            does = "don't" if member == ctx.author else f"doesn't"
-            return await ctx.error(
-                f"{'You' if member == ctx.author else f'{member.mention}'} {does} have an **avatar history**"
-            )
-
-        embed = discord.Embed(
-            color=self.bot.color,
-            url=f"https://images.Akari.bot/avatarhistory/{member.id}",
-            title=f"{member.name}'s avatar history ({length})",
-        )
-        return await ctx.reply(embed=embed)"""
-
-    """@commands.command(aliases=["clearavs", "clearavh", "clearavatarhistory"])
-    async def clearavatars(self, ctx: AkariContext):
-
-
-        check = await self.bot.db.fetchrow(
-            "SELECT * FROM avatar_history WHERE user_id = $1", str(ctx.author.id)
-        )
-        if not check:
-            return await ctx.warning("There are no avatars saved for you")
-
-        async def yes_func(interaction: discord.Interaction):
-            await self.bot.db.execute(
-                "DELETE FROM avatar_history WHERE user_id = $1",
-                str(interaction.user.id),
-            )
-            return await interaction.response.edit_message(
-                embed=discord.Embed(
-                    color=self.bot.yes_color,
-                    description=f"{self.bot.yes} {interaction.user.mention}: Cleared your avatar history",
-                ),
-                view=None,
-            )
-
-        async def no_func(interaction: discord.Interaction):
-            return await interaction.response.edit_message(
-                embed=discord.Embed(
-                    color=self.bot.color,
-                    description=f"{interaction.user.mention}: Aborting action",
-                ),
-                view=None,
-            )
-
-        await ctx.confirmation_send(
-            "Are you sure you want to **clear** your avatar history?", yes_func, no_func
-        )"""
 
     @commands.command(aliases=["firstmsg"])
     async def firstmessage(
@@ -2283,6 +2223,504 @@ class Utility(commands.Cog):
 
         await ctx.paginator(entries)
 
+    @group(
+        name="whitelist",
+        aliases=["wl"],
+        invoke_without_command=True,
+        brief="administrator",
+    )
+    @has_permissions(administrator=True)
+    async def whitelist(self, ctx: AkariContext):
+        """
+        Manage the whitelist module
+        """
+
+        await ctx.create_pages()
+
+    @whitelist.command(name="enable", brief="administrator")
+    @has_permissions(administrator=True)
+    async def whitelist_enable(self, ctx: AkariContext):
+        """
+        Turn on the whitelist system
+        """
+
+        if await self.bot.db.fetchrow(
+            """
+            SELECT * FROM whitelist_state
+            WHERE guild_id = $1
+            """,
+            ctx.guild.id,
+        ):
+            return await ctx.warning(f"The whitelist is **already** enabled")
+
+        await self.bot.db.execute(
+            """
+            INSERT INTO whitelist_state
+            VALUES ($1, $2)
+            """,
+            ctx.guild.id,
+            "default",
+        )
+        await ctx.success(f"Enabled the **whitelist**")
+
+    @whitelist.command(name="disable", brief="administrator")
+    @has_permissions(administrator=True)
+    @whitelist_enabled()
+    async def whitelist_disable(self, ctx: AkariContext):
+        """
+        Turn off the whitelist system
+        """
+
+        await self.bot.db.execute(
+            """
+            DELETE FROM whitelist_state
+            WHERE guild_id = $1
+            """,
+            ctx.guild.id,
+        )
+        await ctx.success(f"Disabled the **whitelist**")
+
+    @whitelist.command(name="message", aliases=["msg", "dm"], brief="administrator")
+    @has_permissions(administrator=True)
+    @whitelist_enabled()
+    async def whitelist_message(self, ctx: AkariContext, *, code: str):
+        """
+        Change the message sent to users when not in the whitelist
+        """
+
+        if code.lower().strip() == "none":
+            await self.bot.db.execute(
+                """
+                UPDATE whitelist_state SET embed = $1
+                WHERE guild_id = $2
+                """,
+                "none",
+                ctx.guild.id,
+            )
+            return await ctx.success(
+                f"Removed your **whitelist** message- users will no longer be notified"
+            )
+        elif code.lower().strip() == "default":
+            await self.bot.db.execute(
+                """
+                UPDATE whitelist_state SET embed = $1
+                WHERE guild_id = $2
+                """,
+                "default",
+                ctx.guild.id,
+            )
+            return await ctx.success(f"Set your **whitelist** message to the default")
+        else:
+            await self.bot.db.execute(
+                """
+                UPDATE whitelist_state SET embed = $1
+                WHERE guild_id = $2
+                """,
+                code,
+                ctx.guild.id,
+            )
+            await ctx.success(f"Set your **custom** whitelist message")
+
+    @whitelist.command(name="add", brief="administrator")
+    @has_permissions(administrator=True)
+    @whitelist_enabled()
+    async def whitelist_add(self, ctx: AkariContext, user: User):
+        """
+        Add someone to the server whitelist
+        """
+
+        if await self.bot.db.fetchrow(
+            """
+            SELECT * FROM whitelist
+            WHERE guild_id = $1
+            AND user_id = $2
+            """,
+            ctx.guild.id,
+            user.id,
+        ):
+            return await ctx.warning(f"{user.mention} is already **whitelisted**")
+
+        await self.bot.db.execute(
+            """
+            INSERT INTO whitelist
+            VALUES ($1, $2)
+            """,
+            ctx.guild.id,
+            user.id,
+        )
+        await ctx.success(f"Added {user.mention} to the **whitelist**")
+
+    @whitelist.command(name="remove", brief="administrator")
+    @has_permissions(administrator=True)
+    @whitelist_enabled()
+    async def whitelist_remove(self, ctx: AkariContext, user: Member | User):
+        """
+        Remove someone from the server whitelist
+        """
+
+        if not await self.bot.db.fetchrow(
+            """
+            SELECT * FROM whitelist
+            WHERE guild_id = $1
+            AND user_id = $2
+            """,
+            ctx.guild.id,
+            user.id,
+        ):
+            return await ctx.warning(f"{user.mention} is not **whitelisted**")
+
+        await self.bot.db.execute(
+            """
+            DELETE FROM whitelist
+            WHERE guild_id = $1
+            AND user_id = $2
+            """,
+            ctx.guild.id,
+            user.id,
+        )
+
+        if isinstance(user, Member):
+            try:
+                await ctx.guild.kick(
+                    user,
+                    reason=f"Removed from the whitelist by {ctx.author} ({ctx.author.id})",
+                )
+                i = True
+            except Forbidden:
+                i = False
+
+        await ctx.success(
+            f"Removed {user.mention} from the **whitelist**"
+            if i is True
+            else f"Removed {user.mention} from the **whitelist** - failed to kick the member"
+        )
+
+    @whitelist.command(name="list", brief="administrator")
+    @has_permissions(administrator=True)
+    @whitelist_enabled()
+    async def whitelist_list(self, ctx: AkariContext):
+        """
+        View all whitelisted members
+        """
+
+        results = await self.bot.db.fetch(
+            """
+            SELECT * FROM whitelist
+            WHERE guild_id = $1
+            """,
+            ctx.guild.id,
+        )
+
+        if not results:
+            return await ctx.error(f"No users are **whitelisted**")
+
+        await ctx.paginate(
+            [f"{self.bot.get_user(result['user_id']).mention}" for result in results],
+            title=f"Whitelist Users ({len(results)})",
+            author={"name": ctx.guild.name, "icon_url": ctx.guild.icon.url or None},
+        )
+
+    
+    @commands.hybrid_group(invoke_without_command=True)
+    async def autopfp(self, ctx: AkariContext):
+        """
+        Automatically send pfps to a channel in this server
+        """
+
+        return await ctx.create_pages()
+
+    @autopfp.command(name="add", brief="manage server")
+    @commands.has_guild_permissions(manage_guild=True)
+    @commands.bot_has_guild_permissions(manage_webhooks=True)
+    async def autopfp_add(
+        self,
+        ctx: AkariContext,
+        channel: discord.TextChannel,
+        category: Literal["random", "roadmen", "girl", "egirl", "anime"] = "random",
+    ):
+        """
+        Add an autopfp channel
+        """
+
+        await self.bot.db.execute(
+            """
+            INSERT INTO autopfp VALUES ($1,$2,$3,$4)
+            ON CONFLICT (guild_id, type, category) DO UPDATE
+            SET channel_id = $4
+            """,
+            ctx.guild.id,
+            "pfps",
+            category,
+            channel.id,
+        )
+
+        if not self.bot.pfps_send:
+            self.bot.pfps_send = True
+            asyncio.ensure_future(self.bot.autoposting("pfps"))
+
+        return await ctx.success(f"Sending **{category}** pfps to {channel.mention}")
+
+    @autopfp.command(name="remove", brief="manage server")
+    @commands.has_guild_permissions(manage_guild=True)
+    async def autopfp_remove(
+        self,
+        ctx: AkariContext,
+        category: Literal["random", "roadmen", "girl", "egirl", "anime"] = "random",
+    ):
+        """
+        Remove an autopfp channel
+        """
+
+        await self.bot.db.execute(
+            """
+            DELETE FROM autopfp WHERE guild_id = $1 
+            AND type = $2 AND category = $3
+            """,
+            ctx.guild.id,
+            "pfps",
+            category,
+        )
+
+        return await ctx.success(f"Stopped sending **{category}** pfps")
+
+    @commands.hybrid_group()
+    async def autobanner(self, ctx: AkariContext):
+        """
+        Automatically send banners to a channel
+        """
+
+        return await ctx.create_pages()
+
+    @autobanner.command(name="add", brief="manage server")
+    @commands.has_guild_permissions(manage_guild=True)
+    @commands.bot_has_guild_permissions(manage_webhooks=True)
+    async def autobanner_add(
+        self,
+        ctx: AkariContext,
+        channel: discord.TextChannel,
+        category: Literal["random", "cute", "mix", "imsg"] = "random",
+    ):
+        """
+        Add an autobanner channel
+        """
+
+        await self.bot.db.execute(
+            """
+            INSERT INTO autopfp VALUES ($1,$2,$3,$4)
+            ON CONFLICT (guild_id, type, category) DO UPDATE
+            SET channel_id = $4
+            """,
+            ctx.guild.id,
+            "banners",
+            category,
+            channel.id,
+        )
+
+        if not self.bot.banners_send:
+            self.bot.banners_send = True
+            asyncio.ensure_future(self.bot.autoposting("banners"))
+
+        return await ctx.success(f"Sending **{category}** banners to {channel.mention}")
+
+    @autobanner.command(name="remove", brief="manage server")
+    @commands.has_guild_permissions(manage_guild=True)
+    async def autobanner_remove(
+        self,
+        ctx: AkariContext,
+        category: Literal["random", "cute", "mix", "imsg"] = "random",
+    ):
+        """
+        Remove an autobanner channel
+        """
+
+        await self.bot.db.execute(
+            """
+            DELETE FROM autopfp WHERE guild_id = $1 
+            AND type = $2 AND category = $3
+            """,
+            ctx.guild.id,
+            "banners",
+            category,
+        )
+
+        return await ctx.success(f"Stopped sending **{category}** banners")
+    
+
+    @group(invoke_without_command=True, name="webhook")
+    async def webhook_editor(self, ctx):
+        await ctx.create_pages()
+
+    @webhook_editor.command(name="create", brief="manage webhooks")
+    @has_guild_permissions(manage_webhooks=True)
+    @bot_has_guild_permissions(manage_webhooks=True)
+    async def webhook_create(
+        self, ctx: AkariContext, channel: discord.TextChannel, *, name: str = None
+    ):
+        """
+        Create a webhook in a channel
+        """
+
+        webhook = await channel.create_webhook(
+            name="Akari - webhook", reason=f"Webhook created by {ctx.author}"
+        )
+        source = string.ascii_letters + string.digits
+        code = "".join((random.choice(source) for _ in range(8)))
+        await self.bot.db.execute(
+            """
+      INSERT INTO webhook 
+      VALUES ($1,$2,$3,$4,$5,$6)
+      """,
+            ctx.guild.id,
+            code,
+            webhook.url,
+            channel.mention,
+            name or self.bot.user.name,
+            self.bot.user.display_avatar.url,
+        )
+        return await ctx.success(
+            f"Created webhook named **{name or self.bot.user.name}** in {channel.mention} with the code `{code}`. Please save it in order to send webhooks with it"
+        )
+
+    @webhook_editor.group(
+        invoke_without_command=True, name="edit", brief="manage webhooks"
+    )
+    async def webhook_edit(self, ctx: AkariContext):
+        """
+        Edit the webhook's look
+        """
+
+        await ctx.create_pages()
+
+    @webhook_edit.command(name="name", brief="manage webhooks")
+    @has_guild_permissions(manage_webhooks=True)
+    async def webhook_edit_name(
+        self, ctx: AkariContext, code: ValidWebhookCode, *, name: str
+    ):
+        """
+        Edit a webhook's name
+        """
+
+        await self.bot.db.execute(
+            """
+      UPDATE webhook 
+      SET name = $1 
+      WHERE guild_id = $2 
+      AND code = $3
+      """,
+            name,
+            ctx.guild.id,
+            code,
+        )
+        return await ctx.success(f"Webhook name changed to **{name}**")
+
+    @webhook_edit.command(name="avatar", aliases=["icon"], brief="manage webhooks")
+    @has_guild_permissions(manage_webhooks=True)
+    async def webhook_edit_avatar(
+        self, ctx: AkariContext, code: ValidWebhookCode, url: str = None
+    ):
+        """
+        Edit the webhook's avatar
+        """
+
+        if not url:
+            if not ctx.message.attachments:
+                return await ctx.error("Avatar not found")
+
+            if not ctx.message.attachments[0].filename.endswith(
+                (".png", ".jpeg", ".jpg")
+            ):
+                return await ctx.error("Attachment must be a png or jpeg")
+
+            url = ctx.message.attachments[0].proxy_url
+
+        await self.bot.db.execute(
+            """
+      UPDATE webhook 
+      SET avatar = $1 
+      WHERE guild_id = $2 
+      AND code = $3
+      """,
+            url,
+            ctx.guild.id,
+            code,
+        )
+        return await ctx.success("Changed webhook's avatar")
+
+    @webhook_editor.command(name="send", brief="manage webhooks")
+    @has_guild_permissions(manage_webhooks=True)
+    async def webhook_send(
+        self, ctx: AkariContext, code: ValidWebhookCode, *, script: EmbedScript = None
+    ):
+        """
+        Send a webhook using a discohook json file / embed code
+        """
+        check = await self.bot.db.fetchrow(
+            "SELECT * FROM webhook WHERE guild_id = $1 AND code = $2",
+            ctx.guild.id,
+            code,
+        )
+        if script is None:
+            if ctx.message.attachments:
+                script = await self.embed_json(ctx.author, ctx.message.attachments[0])
+            else:
+                return await ctx.send_help(ctx.command)
+
+        script.update(
+            {"wait": True, "username": check["name"], "avatar_url": check["avatar"]}
+        )
+
+        async with aiohttp.ClientSession(headers=self.headers) as session:
+            webhook = discord.Webhook.from_url(url=check["url"], session=session)
+
+            if not webhook:
+                return await ctx.error("No webhook found with this code")
+
+            w = await self.bot.fetch_webhook(webhook.id)
+            mes = await w.send(**script)
+            await ctx.success(f"Sent webhook -> {mes.jump_url}")
+
+    @webhook_editor.command(name="list")
+    async def webhook_list(self, ctx: AkariContext):
+        """
+        Weturns a list of available server webhooks
+        """
+
+        results = await self.bot.db.fetch(
+            "SELECT * FROM webhook WHERE guild_id = $1", ctx.guild.id
+        )
+
+        if len(results) == 0:
+            return await ctx.error("There are no webhooks in this server")
+
+        await ctx.paginate(
+            [f"`{result['code']}` - {result['channel']}" for result in results],
+            f"Webhooks ({len(results)})",
+            {"name": ctx.guild.name, "icon_url": ctx.guild.icon},
+        )
+
+    @webhook_editor.command(name="delete", brief="manage webhooks")
+    @has_guild_permissions(manage_webhooks=True)
+    @bot_has_guild_permissions(manage_webhooks=True)
+    async def webhook_delete(self, ctx: AkariContext, code: ValidWebhookCode):
+        """
+        Delete a webhook created by the bot
+        """
+
+        check = await self.bot.db.fetchrow(
+            "SELECT * FROM webhook WHERE guild_id = $1 AND code = $2",
+            ctx.guild.id,
+            code,
+        )
+        async with aiohttp.ClientSession(headers=self.headers) as session:
+            webhook = discord.Webhook.from_url(check["url"], session=session)
+            await self.bot.db.execute(
+                "DELETE FROM webhook WHERE guild_id = $1 AND code = $2",
+                ctx.guild.id,
+                code,
+            )
+            await webhook.delete(reason=f"Webhook deleted by {ctx.author}")
+
+        return await ctx.success("Deleted webhook")
 
 async def setup(bot: Akari) -> None:
     return await bot.add_cog(Utility(bot))
