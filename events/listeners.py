@@ -1,14 +1,15 @@
-import asyncio, aiohttp, datetime, discord, datetime, io
+import asyncio, aiohttp, datetime, discord, datetime, io, re, orjson, uwuify
 
 from discord.ext.commands import Cog
 
 from collections import defaultdict
 from discord.ext.commands import Cog
-from discord import User, Member
+from discord import User, Member, AllowedMentions, Message, MessageType
 
 from collections import defaultdict
 
 from tools.bot import Akari
+from tools.validators import ValidAutoreact
 
 
 class Listeners(Cog):
@@ -495,6 +496,254 @@ class Listeners(Cog):
                 }
             ]
             await self.bot.cache.set("reaction_snipe", payload)
+
+
+    @Cog.listener("on_message")
+    async def bump_event(self, message: Message):
+        if message.type == MessageType.chat_input_command:
+            if (
+                message.interaction.name == "bump"
+                and message.author.id == 302050872383242240
+            ):
+                if (
+                    "Bump done!" in message.embeds[0].description
+                    or "Bump done!" in message.content
+                ):
+                    check = await self.bot.db.fetchrow(
+                        "SELECT thankyou FROM bumpreminder WHERE guild_id = $1",
+                        message.guild.id,
+                    )
+                    if check is not None:
+                        x = await self.bot.embed_build.alt_convert(
+                            message.interaction.user, check[0]
+                        )
+                        x["allowed_mentions"] = AllowedMentions.all()
+                        await message.channel.send(**x)
+                        await self.bot.db.execute(
+                            "UPDATE bumpreminder SET time = $1, channel_id = $2, user_id = $3 WHERE guild_id = $4",
+                            datetime.datetime.now() + datetime.timedelta(hours=2),
+                            message.channel.id,
+                            message.interaction.user.id,
+                            message.guild.id,
+                        )
+
+    @Cog.listener("on_message")
+    async def on_boost(self, message: Message):
+        if message.guild:
+            if "MessageType.premium_guild" in str(message.type):
+                if message.guild.id == 1005150492382478377:
+                    res = await self.bot.db.fetchrow(
+                        "SELECT * FROM donor WHERE user_id = $1", message.author.id
+                    )
+                    if not res:
+                        await self.bot.db.execute(
+                            "INSERT INTO donor VALUES ($1,$2,$3)",
+                            message.author.id,
+                            datetime.datetime.now().timestamp(),
+                            "boosted",
+                        )
+
+                member = message.author
+
+                results = await self.bot.db.fetch(
+                    "SELECT * FROM boost WHERE guild_id = $1", message.guild.id
+                )
+                for result in results:
+                    channel = self.bot.get_channel(result["channel_id"])
+                    if channel:
+                        perms = channel.permissions_for(member.guild.me)
+                        if perms.send_messages and perms.embed_links:
+                            x = await self.bot.embed_build.alt_convert(
+                                member, result["message"]
+                            )
+                            await channel.send(**x)
+                            await asyncio.sleep(0.4)
+
+    @Cog.listener("on_message")
+    async def on_autoresponder(self, message: Message):
+        if message.author.bot:
+            return
+
+        if not message.guild:
+            return
+
+        for row in await self.bot.db.fetch(
+            "SELECT * FROM autoresponder WHERE guild_id = $1", message.guild.id
+        ):
+            if row["strict"] is True:
+                if str(row["trigger"]).lower() == message.content.lower():
+                    ctx = await self.bot.get_context(message)
+                    x = await self.bot.embed_build.convert(ctx, row["response"])
+
+                    await ctx.send(**x)
+            else:
+                if str(row["trigger"]).lower() in message.content.lower():
+                    ctx = await self.bot.get_context(message)
+                    x = await self.bot.embed_build.convert(ctx, row["response"])
+
+                    await ctx.send(**x)
+
+    @Cog.listener("on_message")
+    async def on_autoreact(self, message: Message):
+        if message.author.bot:
+            return
+
+        if not message.guild:
+            return
+
+        if not message.guild.me.guild_permissions.add_reactions:
+            return
+
+        words = message.content.lower().split()
+        results = await self.bot.db.fetch(
+            "SELECT * FROM autoreact WHERE guild_id = $1", message.guild.id
+        )
+        for result in results:
+            if result["trigger"] in words:
+                bucket = await self.get_autoreact_cd(message)
+
+                if bucket:
+                    return
+
+                reactions = orjson.loads(result["reactions"])
+                ctx = await self.bot.get_context(message)
+                for reaction in reactions:
+                    x = await ValidAutoreact().convert(ctx, reaction)
+                    if x:
+                        await message.add_reaction(x)
+                return
+
+    @Cog.listener("on_message")
+    async def uwulock(self, message: Message):
+        if message.author.bot:
+            return
+
+        uwulock_enabled = await self.bot.db.fetchval(
+            "SELECT EXISTS(SELECT 1 FROM uwu_lock WHERE guild_id = $1 AND user_id = $2)",
+            message.guild.id,
+            message.author.id,
+        )
+
+        if uwulock_enabled:
+            flags = uwuify.YU | uwuify.STUTTER
+            uwuified_content = uwuify.uwu(message.content, flags=flags)
+            await message.delete()
+            webhook = await self.webhook(message.channel)
+
+            await webhook.send(
+                content=uwuified_content,
+                username=message.author.name,
+                avatar_url=message.author.avatar.url,
+            )
+
+    @Cog.listener("on_message_delete")
+    async def snipes(self, message: Message):
+        if message.author.bot:
+            return
+
+        get_snipes = self.bot.cache.get("snipe")
+        payload = [
+            {
+                "channel": message.channel.id,
+                "name": str(message.author),
+                "avatar": message.author.display_avatar.url,
+                "message": message.content,
+                "attachments": message.attachments,
+                "stickers": message.stickers,
+                "created_at": message.created_at.timestamp(),
+            }
+        ]
+
+        if get_snipes:
+            lol = self.bot.cache.get("snipe")
+            lol.append(
+                {
+                    "channel": message.channel.id,
+                    "name": str(message.author),
+                    "avatar": message.author.display_avatar.url,
+                    "message": message.content,
+                    "attachments": message.attachments,
+                    "stickers": message.stickers,
+                    "created_at": message.created_at.timestamp(),
+                }
+            )
+            return await self.bot.cache.set("snipe", lol)
+        else:
+            await self.bot.cache.set("snipe", payload)
+
+    @Cog.listener("on_message_edit")
+    async def edit_snipe(self, before: Message, after: Message):
+        if before.author.bot:
+            return
+        if before.content == after.content:
+            return
+
+        get_snipes = self.bot.cache.get("edit_snipe")
+        if get_snipes:
+            lol = self.bot.cache.get("edit_snipe")
+            lol.append(
+                {
+                    "channel": before.channel.id,
+                    "name": str(before.author),
+                    "avatar": before.author.display_avatar.url,
+                    "before": before.content,
+                    "after": after.content,
+                }
+            )
+            return await self.bot.cache.set("edit_snipe", lol)
+        else:
+            payload = [
+                {
+                    "channel": before.channel.id,
+                    "name": str(before.author),
+                    "avatar": before.author.display_avatar.url,
+                    "before": before.content,
+                    "after": after.content,
+                }
+            ]
+            return await self.bot.cache.set("edit_snipe", payload)
+
+    @Cog.listener("on_message")
+    async def reposter(self, message: Message):
+        if (
+            message.guild
+            and not message.author.bot
+            and message.content.startswith("Akari")
+        ):
+            if re.search(
+                r"\bhttps?:\/\/(?:m|www|vm)\.tiktok\.com\/\S*?\b(?:(?:(?:usr|v|embed|user|video)\/|\?shareId=|\&item_id=)(\d+)|(?=\w{7})(\w*?[A-Z\d]\w*)(?=\s|\/$))\b",
+                message.content[len("Akari") + 1 :],
+            ):
+                return await self.repost_tiktok(message)
+            elif re.search(
+                r"((?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:p|reel)\/([^/?#&]+)).*",
+                message.content[len("Akari") + 1 :],
+            ):
+                return await self.repost_instagram(message)
+
+    @Cog.listener("on_message")
+    async def imageonly_check(self, message: Message):
+
+        if not message.guild:
+            return
+
+        if not message.guild.me.guild_permissions.manage_messages:
+            return
+
+        if await self.bot.db.fetchrow(
+            """
+       SELECT * FROM imgonly
+       WHERE guild_id = $1
+       AND channel_id = $2
+       """,
+            message.guild.id,
+            message.channel.id,
+        ):
+            if not message.author.guild_permissions.manage_messages:
+                cooldown = await self.get_ratelimit(message)
+                if not message.attachments:
+                    await message.delete()
+
 
 
 async def setup(bot: Akari) -> None:
